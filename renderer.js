@@ -99,6 +99,7 @@ rootScene.add(sceneLowPriority);
 // const avatarScene = new THREE.Scene();
 
 const camera = new THREE.PerspectiveCamera(minFov, window.innerWidth / window.innerHeight, 0.1, 1000);
+window.camera = camera
 camera.position.set(0, 1.6, 0);
 camera.rotation.order = 'YXZ';
 camera.name = 'sceneCamera';
