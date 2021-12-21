@@ -98,6 +98,7 @@ class CharacterPhysics {
 
       this.player.characterControllerObject.updateMatrixWorld();
       this.player.characterControllerObject.matrixWorld.decompose(localVector, localQuaternion, localVector2);
+      // this.player.characterControllerObject.matrixWorld.decompose(localVector, new THREE.Quaternion(), new THREE.Vector3());
       // this.player.characterControllerObject.matrixWorld.decompose(this.player.position,this.player.quaternion,this.player.scale) // TEST
 
       localQuaternion.copy(this.player.quaternion);
