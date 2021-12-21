@@ -38,6 +38,10 @@ export const getEyePosition = (() => {
   return function(modelBones) {
     // const vrmExtension = object?.parser?.json?.extensions?.VRM;
     modelBones.Root.updateMatrix();
+    // modelBones.Root.traverse(child=>{
+    //   child.updateMatrix()
+    // })
+    // modelBones.Root.updateMatrixWorld(true);
     modelBones.Head.updateMatrix();
     return modelBones.Head.getWorldPosition(localVector)
       // .add(localVector2.set(0, 0.06, 0));

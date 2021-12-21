@@ -309,7 +309,7 @@ export default class Webaverse extends EventTarget {
         // console.log('update role')
 
         window.localPlayer.position.copy(window.localPlayer.characterControllerObject.position)
-        window.localPlayer.quaternion.copy(window.camera.quaternion)
+        // window.localPlayer.quaternion.copy(window.camera.quaternion)
       }
 
       timestamp = timestamp ?? performance.now();

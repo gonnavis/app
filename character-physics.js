@@ -107,24 +107,24 @@ class CharacterPhysics {
       // capsule physics
       if (!this.player.hasAction('sit')) {
         // avatar facing direction
-        // if (velocityAvatarDirection) { // FORMAL
-        //   const horizontalVelocity = localVector5.set(
-        //     this.velocity.x,
-        //     0,
-        //     this.velocity.z
-        //   );
-        //   if (horizontalVelocity.lengthSq() > 0.001) {
-        //     localQuaternion.setFromRotationMatrix(
-        //       localMatrix.lookAt(
-        //         zeroVector,
-        //         horizontalVelocity,
-        //         upVector
-        //       )
-        //     );
-        //   }
-        // } else {
+        if (velocityAvatarDirection) { // FORMAL
+          const horizontalVelocity = localVector5.set(
+            this.velocity.x,
+            0,
+            this.velocity.z
+          );
+          if (horizontalVelocity.lengthSq() > 0.001) {
+            localQuaternion.setFromRotationMatrix(
+              localMatrix.lookAt(
+                zeroVector,
+                horizontalVelocity,
+                upVector
+              )
+            );
+          }
+        } else {
           localQuaternion.copy(camera.quaternion);
-        // }
+        }
 
         const jumpAction = this.player.getAction('jump');
         const _ensureJumpAction = () => {

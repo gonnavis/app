@@ -1453,6 +1453,8 @@ class Avatar {
   }
   static applyModelBoneOutputs(modelBones, modelBoneOutputs, /*topEnabled,*/ bottomEnabled, lHandEnabled, rHandEnabled) {
     for (const k in modelBones) {
+      if(k === 'Neck') continue
+
       const modelBone = modelBones[k];
       const modelBoneOutput = modelBoneOutputs[k];
       // modelBoneOutput.updateMatrixWorld(true);
@@ -1484,7 +1486,7 @@ class Avatar {
         }
       }
     }
-    modelBones.Root.updateMatrixWorld();
+    modelBones.Root.updateMatrixWorld(true);
   }
   static modelBoneRenames = {
     spine: 'Spine',
@@ -1605,7 +1607,7 @@ class Avatar {
     this.legsManager.rightLeg.foot.position.copy(setups.rightFoot);
     if (setups.rightToe) this.legsManager.rightLeg.toe.position.copy(setups.rightToe);
 
-    this.shoulderTransforms.root.updateMatrixWorld();
+    this.shoulderTransforms.root.updateMatrixWorld(true);
   }
   setHandEnabled(i, enabled) {
     this.shoulderTransforms.handsEnabled[i] = enabled;
@@ -2460,22 +2462,22 @@ class Avatar {
       if (needsEyeTarget) {
         localQuaternion.copy(this.startEyeTargetQuaternion)
           .slerp(globalQuaternion, cubicBezier(eyeTargetFactor));
-        this.modelBoneOutputs.Neck.matrixWorld.compose(localVector, localQuaternion, localVector2)
-        this.modelBoneOutputs.Neck.matrix.copy(this.modelBoneOutputs.Neck.matrixWorld)
-          .premultiply(localMatrix2.copy(this.modelBoneOutputs.Neck.parent.matrixWorld).invert())
-          .decompose(this.modelBoneOutputs.Neck.position, this.modelBoneOutputs.Neck.quaternion, localVector2);
+        // this.modelBoneOutputs.Neck.matrixWorld.compose(localVector, localQuaternion, localVector2)
+        // this.modelBoneOutputs.Neck.matrix.copy(this.modelBoneOutputs.Neck.matrixWorld)
+          // .premultiply(localMatrix2.copy(this.modelBoneOutputs.Neck.parent.matrixWorld).invert())
+          // .decompose(this.modelBoneOutputs.Neck.position, this.modelBoneOutputs.Neck.quaternion, localVector2);
       } else {
         localMatrix.compose(localVector.set(0, 0, 0), this.startEyeTargetQuaternion, localVector2.set(1, 1, 1))
           .premultiply(localMatrix2.copy(this.modelBoneOutputs.Neck.parent.matrixWorld).invert())
           .decompose(localVector, localQuaternion, localVector2);
         localQuaternion
           .slerp(localQuaternion2.identity(), cubicBezier(eyeTargetFactor));
-        this.modelBoneOutputs.Neck.quaternion.copy(localQuaternion);
+        // this.modelBoneOutputs.Neck.quaternion.copy(localQuaternion);
       }
       
     };
     _updateEyeTarget();
-    this.modelBoneOutputs.Root.updateMatrixWorld();
+    this.modelBoneOutputs.Root.updateMatrixWorld(true);
     
     Avatar.applyModelBoneOutputs(
       this.foundModelBones,
