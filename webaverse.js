@@ -295,7 +295,8 @@ export default class Webaverse extends EventTarget {
     
     let lastTimestamp = performance.now();
 
-    const animate = (timestamp, frame) => { 
+    const animate = (timestamp, frame) => {
+      // mark:
 
       // console.log('tick')
 
@@ -308,6 +309,7 @@ export default class Webaverse extends EventTarget {
         // console.log('update role')
 
         window.localPlayer.position.copy(window.localPlayer.characterControllerObject.position)
+        window.localPlayer.quaternion.copy(window.camera.quaternion)
       }
 
       timestamp = timestamp ?? performance.now();
