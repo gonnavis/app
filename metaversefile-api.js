@@ -262,8 +262,13 @@ const localPlayer = new LocalPlayer({
   state: new Z.Doc(),
 });
 window.localPlayer = localPlayer // TEST
+// localPlayer.avatar.model.traverse(child => {
+//   child.matrixAutoUpdate = true
+// })
 localPlayer.position.y = initialPosY;
-localPlayer.updateMatrixWorld();
+localPlayer.traverse(child => child.updateMatrix())
+localPlayer.updateMatrixWorld(true);
+// localPlayer.avatar.model.updateMatrixWorld(true);
 const remotePlayers = new Map();
 
 class ErrorBoundary extends React.Component {
