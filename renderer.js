@@ -88,7 +88,7 @@ sceneLowPriority.name = 'lowPriorioty';
 const rootScene = new THREE.Scene();
 window.rootScene = rootScene
 rootScene.name = 'root';
-rootScene.autoUpdate = false;
+// rootScene.autoUpdate = false;
 const postScene = new THREE.Scene();
 postScene.name = 'postScene';
 rootScene.add(sceneHighPriority);

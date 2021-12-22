@@ -3201,7 +3201,7 @@
                     throw new Error('Could not find VRM extension on the GLTF');
                 }
                 const scene = gltf.scene;
-                scene.updateMatrixWorld(false);
+                // scene.updateMatrixWorld(false);
                 // Skinned object should not be frustumCulled
                 // Since pre-skinned position might be outside of view
                 scene.traverse((object3d) => {
@@ -3571,7 +3571,7 @@
                     throw new Error('Could not find VRM extension on the GLTF');
                 }
                 const scene = gltf.scene;
-                scene.updateMatrixWorld(false);
+                // scene.updateMatrixWorld(false);
                 // Skinned object should not be frustumCulled
                 // Since pre-skinned position might be outside of view
                 scene.traverse((object3d) => {

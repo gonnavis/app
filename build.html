@@ -106,7 +106,7 @@ splitFormEl.addEventListener('submit', async e => {
       }
       return g;
     };
-    mesh.updateMatrixWorld();
+    // mesh.updateMatrixWorld();
     const {geometry} = mesh;
     for (let i = 0; i < geometry.index.array.length; i += 3) {
       const a = geometry.index.array[i];
@@ -617,7 +617,7 @@ bakeFormEl.addEventListener('submit', async e => {
         });
       });
       w.cookGeometryPhysics = (physics, mesh) => {
-        mesh.updateMatrixWorld();
+        // mesh.updateMatrixWorld();
         const {geometry} = mesh;
 
         const allocator = new Allocator();

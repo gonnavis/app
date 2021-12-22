@@ -96,7 +96,7 @@ class CharacterPhysics {
       // const collided = flags !== 0;
       const grounded = !!(flags & 0x1); 
 
-      this.player.characterControllerObject.updateMatrixWorld();
+      // this.player.characterControllerObject.updateMatrixWorld();
       this.player.characterControllerObject.matrixWorld.decompose(localVector, localQuaternion, localVector2);
       localQuaternion.copy(this.player.quaternion);
       localVector.y += this.player.avatar.height * 0.5;
@@ -185,7 +185,7 @@ class CharacterPhysics {
             )
             .premultiply(localQuaternion2.setFromAxisAngle(localVector3.set(0, 1, 0), Math.PI));
         }
-        controlledApp.updateMatrixWorld();
+        // controlledApp.updateMatrixWorld();
 
         localMatrix.copy(sitPos.matrixWorld)
           .decompose(localVector, localQuaternion, localVector2);
@@ -212,7 +212,7 @@ class CharacterPhysics {
         .decompose(this.player.position, this.player.quaternion, this.player.scale);
       this.player.matrixWorld.copy(this.player.matrix);
 
-      this.player.updateMatrixWorld();
+      // this.player.updateMatrixWorld();
 
       if (this.avatar) {
         if (this.player.hasAction('jump')) {
@@ -220,7 +220,7 @@ class CharacterPhysics {
         } else {
           this.avatar.setFloorHeight(localVector.y - this.player.avatar.height);
         }
-        this.avatar.updateMatrixWorld();
+        // this.avatar.updateMatrixWorld();
       }
     }
   }
@@ -336,7 +336,7 @@ class CharacterPhysics {
           .applyQuaternion(camera.quaternion)
       );
     camera.position.y -= crouchOffset;
-    camera.updateMatrixWorld();
+    // camera.updateMatrixWorld();
   }
   updateVelocity(timeDiffS) {
     const timeDiff = timeDiffS * 1000;

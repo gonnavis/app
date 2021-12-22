@@ -97,7 +97,7 @@ class ShaderToyPass {
       })
     );
     this.scene = new THREE.Scene();
-    this.scene.autoUpdate = false;
+    // this.scene.autoUpdate = false;
     this.mesh.name = 'meshOfShadertoyJs'
     this.scene.add(this.mesh);
     

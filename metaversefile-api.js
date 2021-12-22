@@ -252,7 +252,7 @@ const defaultComponents = {
           }
         }
         
-        app.updateMatrixWorld();
+        // app.updateMatrixWorld();
       });
     }
   },
@@ -262,7 +262,7 @@ const localPlayer = new LocalPlayer({
   state: new Z.Doc(),
 });
 localPlayer.position.y = initialPosY;
-localPlayer.updateMatrixWorld();
+// localPlayer.updateMatrixWorld();
 const remotePlayers = new Map();
 
 class ErrorBoundary extends React.Component {
@@ -567,7 +567,7 @@ metaversefile.setApi({
         const basePosition = position;
         const baseQuaternion = quaternion;
         const baseScale = size;
-        app.updateMatrixWorld();
+        // app.updateMatrixWorld();
         localMatrix
           .compose(position, quaternion, size)
           .premultiply(app.matrixWorld)
@@ -586,7 +586,7 @@ metaversefile.setApi({
         physicsMesh.quaternion.copy(baseQuaternion);
         physicsMesh.scale.copy(baseScale);
         // app.add(physicsObject);
-        physicsObject.updateMatrixWorld();
+        // physicsObject.updateMatrixWorld();
         
         app.physicsObjects.push(physicsObject);
         // physicsManager.pushUpdate(app, physicsObject);
@@ -618,7 +618,7 @@ metaversefile.setApi({
 
         //physicsMesh.scale.copy(baseScale);
         // app.add(physicsObject);
-        physicsObject.updateMatrixWorld();
+        // physicsObject.updateMatrixWorld();
 
         // const localPlayer = metaversefile.useLocalPlayer();
 
@@ -657,7 +657,7 @@ metaversefile.setApi({
         physicsMesh.quaternion.copy(baseQuaternion);
         //physicsMesh.scale.copy(baseScale);
         // app.add(physicsObject);
-        physicsObject.updateMatrixWorld();
+        // physicsObject.updateMatrixWorld();
         
         app.physicsObjects.push(physicsObject);
         // physicsManager.pushUpdate(app, physicsObject);
@@ -671,18 +671,18 @@ metaversefile.setApi({
         parentMesh.quaternion.copy(app.quaternion);
         parentMesh.scale.copy(app.scale);
         parentMesh.add(mesh);
-        parentMesh.updateMatrixWorld();
+        // parentMesh.updateMatrixWorld();
         
         const physicsObject = addGeometry.call(this, mesh);
         physicsObject.position.copy(app.position);
         physicsObject.quaternion.copy(app.quaternion);
         physicsObject.scale.copy(app.scale);
-        physicsObject.updateMatrixWorld();
+        // physicsObject.updateMatrixWorld();
         // window.physicsObject = physicsObject;
         
         if (oldParent) {
           oldParent.add(mesh);
-          mesh.updateMatrixWorld();
+          // mesh.updateMatrixWorld();
         }
         
         // app.add(physicsObject);

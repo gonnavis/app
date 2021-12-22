@@ -796,7 +796,7 @@ class LocalPlayer extends UninterpolatedPlayer {
           .add(localVector.set(0, -avatarHeight + 0.5, -0.5).applyQuaternion(this.quaternion));
         app.quaternion.identity();
         app.scale.set(1, 1, 1);
-        app.updateMatrixWorld();
+        // app.updateMatrixWorld();
       }
 
       const physicsObjects = app.getPhysicsObjects();
@@ -824,7 +824,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     :
       camera;
 
-    app.updateMatrixWorld();
+    // app.updateMatrixWorld();
     app.savedRotation = app.rotation.clone();
     app.startQuaternion = quaternion.clone();
 
@@ -872,7 +872,7 @@ class LocalPlayer extends UninterpolatedPlayer {
       )
     );
     camera.position.sub(localVector.copy(cameraOffset).applyQuaternion(camera.quaternion));
-    camera.updateMatrixWorld();
+    // camera.updateMatrixWorld();
     
     /* this.quaternion.setFromRotationMatrix(
       localMatrix.lookAt(this.position, p, upVector)
@@ -927,13 +927,13 @@ class LocalPlayer extends UninterpolatedPlayer {
           // .premultiply(localMatrix.makeTranslation(localVector2.x, localVector2.y, localVector2.z))
           .premultiply(localMatrix.makeTranslation(0, relation === 'floor' ? avatarHeight : 0, 0))
           .decompose(dolly.position, dolly.quaternion, dolly.scale);
-        dolly.updateMatrixWorld();
+        // dolly.updateMatrixWorld();
       } else {
         camera.position.copy(position)
           .sub(localVector2.copy(cameraManager.getCameraOffset()).applyQuaternion(camera.quaternion));
         camera.position.y += relation === 'floor' ? avatarHeight : 0;
         camera.quaternion.copy(quaternion);
-        camera.updateMatrixWorld();
+        // camera.updateMatrixWorld();
       }
 
       this.resetPhysics();

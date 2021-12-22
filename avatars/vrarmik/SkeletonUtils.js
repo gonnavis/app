@@ -85,7 +85,7 @@ function updateTransformations(parentBone, worldPos, averagedDirs, preRotations)
         //set quaternion
         parentBone.quaternion.copy(RESETQUAT);
         // parentBone.quaternion.premultiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI*2));
-        parentBone.updateMatrixWorld();
+        // parentBone.updateMatrixWorld();
 
         //get the child bone position in local coordinates
         // var childBoneDir = parentBone.worldToLocal(averagedDir.clone()).normalize();
@@ -97,7 +97,7 @@ function updateTransformations(parentBone, worldPos, averagedDirs, preRotations)
     var preRot = preRotations[parentBone.id] || preRotations[parentBone.name];
     if (preRot) parentBone.quaternion.multiply(preRot);
     // parentBone.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI));
-    parentBone.updateMatrixWorld();
+    // parentBone.updateMatrixWorld();
 
     //set child bone position relative to the new parent matrix.
     const childBones = parentBone.children.filter(c => c.isBone);

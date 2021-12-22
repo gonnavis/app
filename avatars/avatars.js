@@ -1257,7 +1257,7 @@ class Avatar {
   }
   static bindAvatar(object) {
     const model = object.scene;
-    model.updateMatrixWorld(true);
+    // model.updateMatrixWorld(true);
     
     const skinnedMeshes = getSkinnedMeshes(object);
     const skeleton = getSkeleton(object);
@@ -1463,7 +1463,7 @@ class Avatar {
     modelBones.Left_elbow.quaternion
       .premultiply(ql)
       .premultiply(ql2.clone().invert());
-	  model.updateMatrixWorld(true);
+	  // model.updateMatrixWorld(true);
     
     modelBones.Root.traverse(bone => {
       bone.initialQuaternion = bone.quaternion.clone();
@@ -1512,7 +1512,7 @@ class Avatar {
         }
       }
     }
-    modelBones.Root.updateMatrixWorld();
+    // modelBones.Root.updateMatrixWorld();
   }
   static modelBoneRenames = {
     spine: 'Spine',
@@ -1633,7 +1633,7 @@ class Avatar {
     this.legsManager.rightLeg.foot.position.copy(setups.rightFoot);
     if (setups.rightToe) this.legsManager.rightLeg.toe.position.copy(setups.rightToe);
 
-    this.shoulderTransforms.root.updateMatrixWorld();
+    // this.shoulderTransforms.root.updateMatrixWorld();
   }
   setHandEnabled(i, enabled) {
     this.shoulderTransforms.handsEnabled[i] = enabled;
@@ -2503,7 +2503,7 @@ class Avatar {
       
     };
     _updateEyeTarget();
-    this.modelBoneOutputs.Root.updateMatrixWorld();
+    // this.modelBoneOutputs.Root.updateMatrixWorld();
     
     Avatar.applyModelBoneOutputs(
       this.foundModelBones,

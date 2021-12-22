@@ -82,7 +82,7 @@ const requestPointerLock = async () => {
 };
 const focusCamera = position => {
   camera.lookAt(position);
-  camera.updateMatrixWorld();
+  // camera.updateMatrixWorld();
 };
 
 const cameraManager = {
@@ -109,7 +109,7 @@ const cameraManager = {
       camera.position.add(localVector.copy(cameraOffset).applyQuaternion(camera.quaternion));
       
       camera.position.sub(localVector.copy(cameraOffset).applyQuaternion(camera.quaternion));
-      camera.updateMatrixWorld();
+      // camera.updateMatrixWorld();
       
       cameraOffsetTargetZ = Math.min(cameraOffsetTargetZ - e.deltaY * 0.01, 0);
 
@@ -255,7 +255,7 @@ const cameraManager = {
       camera.position.add(localVector.copy(cameraOffset).applyQuaternion(camera.quaternion));
       cameraOffset.z = cameraOffsetZ;
       camera.position.sub(localVector.copy(cameraOffset).applyQuaternion(camera.quaternion));
-      camera.updateMatrixWorld();
+      // camera.updateMatrixWorld();
     }
 
   },

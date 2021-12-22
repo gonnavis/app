@@ -32,7 +32,7 @@ const _makeRenderer = (width, height) => {
   renderer.setSize(width, height);
 
   const scene = new THREE.Scene();
-  scene.autoUpdate = false;
+  // scene.autoUpdate = false;
 
   /* const cubeMesh = new THREE.Mesh(new THREE.BoxBufferGeometry(1, 1, 1), new THREE.MeshBasicMaterial({
     color: 0x0000FF,
@@ -294,7 +294,7 @@ const _getType = id => {
       o.avatar.setBottomEnabled(false);
       o.avatar.inputs.hmd.position.y = o.avatar.height;
       o.avatar.inputs.hmd.quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
-      o.avatar.inputs.hmd.updateMatrixWorld();
+      // o.avatar.inputs.hmd.updateMatrixWorld();
       o.avatar.update(1000);
     }
   };
@@ -436,7 +436,7 @@ const _getType = id => {
               .multiplyScalar(Math.max(size.x/2, size.z/2) * 2.2)
           );
         camera.lookAt(center);
-        camera.updateMatrixWorld();
+        // camera.updateMatrixWorld();
         renderer.render(scene, camera);
 
         // read
@@ -490,7 +490,7 @@ const _getType = id => {
       const {renderer, scene, camera} = _makeRenderer(width, height);
 
       scene.add(o);
-      o.updateMatrixWorld();
+      // o.updateMatrixWorld();
 
       if (o) {
         const boundingBox = new THREE.Box3().setFromObject(o);

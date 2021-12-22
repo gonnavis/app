@@ -33,7 +33,7 @@ const update = (timestamp, timeDiff) => {
       const f = (timestamp - damageAnimation.startTime) / animationDuration;
       damagePhysicsMesh.material.uniforms.uTime.value = 1-f;
       damagePhysicsMesh.material.uniforms.uTime.needsUpdate = true;
-      damagePhysicsMesh.updateMatrixWorld();
+      // damagePhysicsMesh.updateMatrixWorld();
     } else {
       damageAnimation = null;
     }
@@ -49,7 +49,7 @@ const triggerDamageAnimation = collisionId => {
   damagePhysicsMesh.matrix.copy(physicsMesh.matrixWorld);
   damagePhysicsMesh.matrixWorld.copy(physicsMesh.matrixWorld)
     .decompose(damagePhysicsMesh.position, damagePhysicsMesh.quaternion, damagePhysicsMesh.scale);
-  damagePhysicsMesh.updateMatrixWorld();
+  // damagePhysicsMesh.updateMatrixWorld();
   damageAnimation = {
     startTime: timestamp,
     endTime: timestamp + hitAnimationLength,
@@ -100,7 +100,7 @@ const makeHitTracker = ({
       
       const scale = (1-hitTime/hitAnimationLength) * 0.1;
       jitterObject.position.set((-1+Math.random()*2)*scale, (-1+Math.random()*2)*scale, (-1+Math.random()*2)*scale);
-      jitterObject.updateMatrixWorld();
+      // jitterObject.updateMatrixWorld();
       if (hitTime > hitAnimationLength) {
         hitTime = -1;
       }
