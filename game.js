@@ -1216,6 +1216,7 @@ window.addEventListener('drop', async e => {
   let arrowLoader = metaverseUi.makeArrowLoader();
   arrowLoader.position.copy(position);
   arrowLoader.quaternion.copy(quaternion);
+  arrowLoader.name = 'arrowLoader'
   scene.add(arrowLoader);
   arrowLoader.updateMatrixWorld();
   const items = Array.from(e.dataTransfer.items);

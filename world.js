@@ -27,6 +27,7 @@ world.appManager = appManager;
 
 
 world.lights = new THREE.Object3D();
+world.lights.name = 'worldLights'
 scene.add(world.lights);
 
 // multiplayer
