@@ -66,7 +66,7 @@ const enterWorld = async worldSpec => {
     new Promise((resolve) => {
       setTimeout(() => {
         resolve()
-      }, 5000)
+      }, 10000)
     }),
   ])
   console.log(222)
@@ -74,16 +74,6 @@ const enterWorld = async worldSpec => {
   localPlayer.resetPhysics();
   physicsManager.setPhysicsEnabled(true);
   localPlayer.updatePhysics(0, 0);
-
-  window.rootScene.traverse((child) => {
-    if (child.type === 'vrm') {
-      window.role = child
-      window.role.position.y = 1
-    }
-    // child.matrixWorldNeedsUpdate = true
-    child.updateMatrix()
-  })
-  window.rootScene.updateMatrixWorld(true)
 
   currentWorld = worldSpec;
 };

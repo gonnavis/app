@@ -697,15 +697,15 @@ ioManager.mousemove = e => {
     game.updateWeaponWheel(e);
   } else { */
     if (document.pointerLockElement) {
-      console.log(11)
+      // console.log(11)
       _updateMouseMovement(e);
     } else {
       if (game.dragging) {
-        console.log(22)
+        // console.log(22)
         game.menuDrag(e);
         game.menuDragRight(e);
       } else {
-        console.log(33)
+        // console.log(33)
         _updateMouseHover(e);
       }
     }
