@@ -62,7 +62,7 @@ function makeId(length) {
   });
 
   const isHttps = !!certs.key && !!certs.cert;
-  const port = parseInt(process.env.PORT, 10) || (isProduction ? 443 : 3000);
+  const port = parseInt(process.env.PORT, 10) || (isProduction ? 443 : 5000);
   const wsPort = port + 1;
 
   const _makeHttpServer = () => isHttps ? https.createServer(certs, app) : http.createServer(app);

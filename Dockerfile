@@ -19,8 +19,8 @@ RUN npm list
 	
 
 # Expose API port to the outside
-EXPOSE 3000
-EXPOSE 3001
+EXPOSE 5000
+EXPOSE 5001
 	
 
 	# Launch application
