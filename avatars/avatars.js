@@ -1633,7 +1633,7 @@ class Avatar {
     this.legsManager.rightLeg.foot.position.copy(setups.rightFoot);
     if (setups.rightToe) this.legsManager.rightLeg.toe.position.copy(setups.rightToe);
 
-    // this.shoulderTransforms.root.updateMatrixWorld();
+    this.shoulderTransforms.root.updateMatrixWorld();
   }
   setHandEnabled(i, enabled) {
     this.shoulderTransforms.handsEnabled[i] = enabled;
