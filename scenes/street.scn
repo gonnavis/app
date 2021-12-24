@@ -53,7 +53,7 @@
         0,
         -30
       ],
-      "start_url": "https://avaer.github.io/shield/index.js"
+      "start_url": "http://localhost/lib/webaverse_avaer_github/shield/index.js"
     },
     {
       "position": [
@@ -67,7 +67,7 @@
         0,
         0.7071067811865475
       ],
-      "start_url": "https://avatar-models.exokit.org/model49.vrm",
+      "start_url": "http://localhost/lib/webaverse_resource/model49.vrm",
       "dynamic": true
     },
     {
@@ -103,7 +103,7 @@
         2
       ],
       "physics": false,
-      "start_url": "https://avaer.github.io/sakura/index.glbb",
+      "start_url": "http://localhost/lib/webaverse_avaer_github/sakura/index.glbb",
       "dynamic": true
     },
     {
@@ -119,7 +119,7 @@
         0.7071067811865475
       ],
       "physics": false,
-      "start_url": "https://avaer.github.io/rainbow-dash/",
+      "start_url": "http://localhost/lib/webaverse_avaer_github/rainbow-dash/",
       "dynamic": true
     },
     {
@@ -187,7 +187,7 @@
     {
       "position": [-2, 1, -1],
       "quaternion": [0, 0, 0, 1],
-      "start_url": "https://avaer.github.io/poster/.metaversefile"
+      "start_url": "http://localhost/lib/webaverse_avaer_github/poster/.metaversefile"
     },
     {
       "position": [-1, 1, -1],
@@ -202,7 +202,7 @@
         0,
         0.7071067811865475
       ],
-      "start_url": "https://avaer.github.io/physicscube/"
+      "start_url": "http://localhost/lib/webaverse_avaer_github/physicscube/"
     },
     {
       "position": [-2, 1, 1],

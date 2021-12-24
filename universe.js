@@ -61,14 +61,18 @@ const enterWorld = async worldSpec => {
   // await _doLoad().catch(err => {
   //   console.warn(err);
   // });
-  await Promise.race([
-    _doLoad(),
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve()
-      }, 10000)
-    }),
-  ])
+  try {
+    await Promise.race([
+      _doLoad(),
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve()
+        }, 10000)
+      }),
+    ])
+  } catch (e) {
+    console.log(e)
+  }
   console.log(222)
 
   localPlayer.resetPhysics();
