@@ -10,7 +10,6 @@ import {initialPosY} from './constants.js';
 import {parseQuery, parseCoord} from './util.js';
 import metaversefile from 'metaversefile';
 import sceneNames from './scenes/scenes.json';
-import { rootScene } from './renderer'
 
 let currentWorld = null;
 const getWorldsHost = () => window.location.protocol + '//' + window.location.hostname + ':' +
@@ -19,12 +18,13 @@ const enterWorld = async worldSpec => {
   world.disconnectRoom();
   
   const localPlayer = metaversefile.useLocalPlayer();
+  window.localPlayer = localPlayer
   /* localPlayer.teleportTo(new THREE.Vector3(0, 1.5, 0), camera.quaternion, {
     relation: 'float',
   }); */
   localPlayer.position.set(0, initialPosY, 0);
   localPlayer.resetPhysics();
-  localPlayer.updateMatrixWorld(true);
+  localPlayer.updateMatrixWorld();
   physicsManager.setPhysicsEnabled(true);
   localPlayer.updatePhysics(0, 0);
   physicsManager.setPhysicsEnabled(false);
@@ -56,18 +56,28 @@ const enterWorld = async worldSpec => {
     
     await Promise.all(promises);
   };
-  await _doLoad().catch(err => {
-    console.warn(err);
-  });
+
+  console.log(111)
+  // await _doLoad().catch(err => {
+  //   console.warn(err);
+  // });
+  try {
+    await Promise.race([
+      _doLoad(),
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve()
+        }, 10000)
+      }),
+    ])
+  } catch (e) {
+    console.log(e)
+  }
+  console.log(222)
 
   localPlayer.resetPhysics();
   physicsManager.setPhysicsEnabled(true);
   localPlayer.updatePhysics(0, 0);
-
-  rootScene.traverse((child) => {
-    child.updateMatrix()
-  })
-  rootScene.updateMatrixWorld(true)
 
   currentWorld = worldSpec;
 };
