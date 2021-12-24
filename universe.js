@@ -80,12 +80,14 @@ const enterWorld = async worldSpec => {
   physicsManager.setPhysicsEnabled(true);
   localPlayer.updatePhysics(0, 0);
 
-  rootScene.traverse((child) => {
-    child.updateMatrix()
-  })
-  rootScene.updateMatrixWorld(true)
+  // rootScene.traverse((child) => {
+  //   child.updateMatrix()
+  // })
+  // rootScene.updateMatrixWorld(true)
 
   currentWorld = worldSpec;
+
+  console.log(333)
 };
 const reload = async () => {
   await enterWorld(currentWorld);
