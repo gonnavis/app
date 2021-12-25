@@ -824,7 +824,6 @@ const physxWorker = (() => {
     );
   };
   w.cookGeometryPhysics = (physics, mesh) => {
-    mesh.traverse(child => child.updateMatrix())
     mesh.updateMatrixWorld();
     const {geometry} = mesh;
 
@@ -879,7 +878,6 @@ const physxWorker = (() => {
   };
 
   w.addConvexGeometryPhysics = (physics, mesh, id) => {
-    mesh.traverse(child => child.updateMatrix())
     mesh.updateMatrixWorld();
     const {geometry} = mesh;
 
@@ -923,7 +921,6 @@ const physxWorker = (() => {
     );
   };  
   w.cookConvexGeometryPhysics = (physics, mesh) => {
-    mesh.traverse(child => child.updateMatrix())
     mesh.updateMatrixWorld();
     const {geometry} = mesh;
 

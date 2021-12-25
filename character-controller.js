@@ -825,7 +825,6 @@ class LocalPlayer extends UninterpolatedPlayer {
     :
       camera;
 
-    app.traverse(child => child.updateMatrix())
     app.updateMatrixWorld();
     app.savedRotation = app.rotation.clone();
     app.startQuaternion = quaternion.clone();

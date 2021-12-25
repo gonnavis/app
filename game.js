@@ -708,7 +708,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
         const {position, quaternion} = localPlayer.hands[i];
         localMatrix.compose(position, quaternion, localVector.set(1, 1, 1));
         
-        grabbedObject.traverse(child => child.updateMatrix())
         grabbedObject.updateMatrixWorld();
 
         /* const {handSnap} = */updateGrabbedObject(grabbedObject, localMatrix, localMatrix3.fromArray(grabAction.matrix), {
@@ -718,7 +717,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
           gridSnap: gameManager.getGridSnap(),
         });
 
-        grabbedObject.traverse(child => child.updateMatrix())
         grabbedObject.updateMatrixWorld();
         
         grabUseMesh.position.copy(camera.position)
@@ -729,7 +727,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
               .multiplyScalar(3)
           );
         grabUseMesh.quaternion.copy(camera.quaternion);
-        grabUseMesh.traverse(child => child.updateMatrix())
         grabUseMesh.updateMatrixWorld();
         // grabUseMesh.visible = true;
         grabUseMesh.target = grabbedObject;
@@ -752,7 +749,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
           object.getWorldPosition(grabUseMesh.position);
           grabUseMesh.quaternion.copy(camera.quaternion);
           // grabUseMesh.scale.copy(grabbedObject.scale);
-          grabUseMesh.traverse(child => child.updateMatrix())
           grabUseMesh.updateMatrixWorld();
           grabUseMesh.visible = true;
           grabUseMesh.target = object;
@@ -796,7 +792,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
     if (highlightedPhysicsObject) {
       const physicsId = highlightedPhysicsId;
 
-      highlightedPhysicsObject.traverse(child => child.updateMatrix())
       highlightedPhysicsObject.updateMatrixWorld();
 
       const physicsObject = /*window.lolPhysicsObject ||*/ metaversefileApi.getPhysicsObjectByPhysicsId(physicsId);
@@ -813,7 +808,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
         highlightPhysicsMesh.material.uniforms.uColor.value.setHex(buildMaterial.uniforms.uColor.value.getHex());
         highlightPhysicsMesh.material.uniforms.uColor.needsUpdate = true;
         highlightPhysicsMesh.visible = true;
-        highlightPhysicsMesh.traverse(child => child.updateMatrix())
         highlightPhysicsMesh.updateMatrixWorld();
       }
     }
@@ -837,7 +831,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
         mouseHighlightPhysicsMesh.material.uniforms.uTime.value = (now%1500)/1500;
         mouseHighlightPhysicsMesh.material.uniforms.uTime.needsUpdate = true;
         mouseHighlightPhysicsMesh.visible = true;
-        mouseHighlightPhysicsMesh.traverse(child => child.updateMatrix())
         mouseHighlightPhysicsMesh.updateMatrixWorld();
       }
     }
@@ -868,7 +861,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
           // mouseSelectPhysicsMesh.quaternion.identity();
           // mouseSelectPhysicsMesh.scale.set(1, 1, 1);
           mouseSelectPhysicsMesh.visible = true;
-          mouseSelectPhysicsMesh.traverse(child => child.updateMatrix())
           mouseSelectPhysicsMesh.updateMatrixWorld();
 
         }
@@ -901,7 +893,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
         mouseDomHoverPhysicsMesh.material.uniforms.uTime.value = (now%1500)/1500;
         mouseDomHoverPhysicsMesh.material.uniforms.uTime.needsUpdate = true;
         mouseDomHoverPhysicsMesh.visible = true;
-        mouseDomHoverPhysicsMesh.traverse(child => child.updateMatrix())
         mouseDomHoverPhysicsMesh.updateMatrixWorld();
       }
     }
@@ -924,7 +915,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
         mouseDomEquipmentHoverPhysicsMesh.material.uniforms.uTime.value = (now%1500)/1500;
         mouseDomEquipmentHoverPhysicsMesh.material.uniforms.uTime.needsUpdate = true;
         mouseDomEquipmentHoverPhysicsMesh.visible = true;
-        mouseDomEquipmentHoverPhysicsMesh.traverse(child => child.updateMatrix())
         mouseDomEquipmentHoverPhysicsMesh.updateMatrixWorld();
       }
     }
@@ -1092,7 +1082,6 @@ const _gameUpdate = (timestamp, timeDiff) => {
       .add(localVector.set(0, 0, -hitboxOffsetDistance).applyQuaternion(localPlayer.quaternion));
     cylinderMesh.quaternion.copy(localPlayer.quaternion);
     // cylinderMesh.startPosition.copy(localPlayer.position);
-    cylinderMesh.traverse(child => child.updateMatrix())
     cylinderMesh.updateMatrixWorld();
     const useAction = localPlayer.getAction('use');
     if (useAction && useAction.animation === 'combo') {
@@ -1227,7 +1216,6 @@ window.addEventListener('drop', async e => {
   arrowLoader.position.copy(position);
   arrowLoader.quaternion.copy(quaternion);
   scene.add(arrowLoader);
-  arrowLoader.traverse(child => child.updateMatrix())
   arrowLoader.updateMatrixWorld();
   const items = Array.from(e.dataTransfer.items);
   await Promise.all(items.map(async item => {
