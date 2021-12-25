@@ -58,6 +58,7 @@ const triggerDamageAnimation = collisionId => {
 const makeHitTracker = ({
   totalHp = 100,
 } = {}) => {
+  console.log('- hp-manager.js')
   const jitterObject = new THREE.Object3D();
   jitterObject.name = 'hitTracker';
   let hitTime = -1;

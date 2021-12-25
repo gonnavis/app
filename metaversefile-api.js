@@ -831,11 +831,11 @@ metaversefile.setApi({
     // console.log(name)
     const app = new App();
     if (name.indexOf('parcels') >= 0) {
-      console.log('found parcels')
       window.parcels = app
     } else if (name.indexOf('chest') >= 0) {
-      console.log('found chest')
       window.chest = app
+    } else if (name.indexOf('rainbow-dash') >= 0){
+      window.rainbowDash = app
     }
     app.name = name;
     app.type = type;
