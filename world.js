@@ -308,7 +308,7 @@ const _getBindSceneForRenderPriority = renderPriority => {
   }
 };
 const _bindHitTracker = app => {
-  console.log('- world.js')
+  console.log('- hitTracker - world.js')
   const bindScene = _getBindSceneForRenderPriority(app.getComponent('renderPriority'));
   
   const hitTracker = hpManager.makeHitTracker();
