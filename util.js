@@ -368,6 +368,7 @@ export function convertMeshToPhysicsMesh(topMesh) {
   const oldParent = topMesh.parent;
   oldParent && oldParent.remove(topMesh);
 
+  topMesh.traverse(child => child.updateMatrix())
   topMesh.updateMatrixWorld();
   // localMatrix.copy(topMesh.matrix).invert();
 
@@ -418,6 +419,7 @@ export function convertMeshToPhysicsMesh(topMesh) {
   });
   if (oldParent) {
     oldParent.add(topMesh);
+    topMesh.traverse(child => child.updateMatrix())
     topMesh.updateMatrixWorld();
   }
   if (newGeometries.length > 0) {

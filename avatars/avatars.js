@@ -1479,6 +1479,7 @@ class Avatar {
     modelBones.Left_elbow.quaternion
       .premultiply(ql)
       .premultiply(ql2.clone().invert());
+	  model.traverse(child => child.updateMatrix())
 	  model.updateMatrixWorld(true);
     
     modelBones.Root.traverse(bone => {

@@ -570,7 +570,8 @@ class AppManager extends EventTarget {
                   physicsObject.position.add(new THREE.Vector3(0, 1, 0));
                 } */
 
-                physicsObject.updateMatrix();
+                physicsObject.traverse(child => child.updateMatrix())
+                physicsObject.updateMatrixWorld(true);
                 
                 //physicsManager.pushUpdate(physicsObject);
                 physicsManager.setTransform(physicsObject);

@@ -106,6 +106,7 @@ splitFormEl.addEventListener('submit', async e => {
       }
       return g;
     };
+    mesh.traverse(child => child.updateMatrix())
     mesh.updateMatrixWorld();
     const {geometry} = mesh;
     for (let i = 0; i < geometry.index.array.length; i += 3) {
@@ -617,6 +618,7 @@ bakeFormEl.addEventListener('submit', async e => {
         });
       });
       w.cookGeometryPhysics = (physics, mesh) => {
+        mesh.traverse(child => child.updateMatrix())
         mesh.updateMatrixWorld();
         const {geometry} = mesh;
 

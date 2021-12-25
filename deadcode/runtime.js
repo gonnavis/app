@@ -617,11 +617,14 @@ const _loadGltf = async (file, {optimize = false, physics = false, physics_url =
       const arrayBuffer = await res.arrayBuffer();
       physicsBuffer = new Uint8Array(arrayBuffer);
     } else {
+      mesh.traverse(child => child.updateMatrix())
       mesh.updateMatrixWorld();
       physicsMesh = convertMeshToPhysicsMesh(gltfObject);
       physicsMesh.position.copy(mesh.position);
       physicsMesh.quaternion.copy(mesh.quaternion);
       physicsMesh.scale.copy(mesh.scale);
+      physicsMesh.traverse((child) => child.updateMatrix())
+      physicsMesh.updateMatrixWorld(true)
     }
     
     if (physicsMesh) {

@@ -100,6 +100,7 @@ class CharacterPhysics {
       this.player.characterControllerObject.matrixWorld.decompose(localVector, localQuaternion, localVector2);
       localQuaternion.copy(this.player.quaternion);
       localVector.y += this.player.avatar.height * 0.5;
+      this.player.characterControllerObject.traverse(child => child.updateMatrix())
       this.player.characterControllerObject.updateMatrixWorld();
       
       // capsule physics
@@ -186,6 +187,7 @@ class CharacterPhysics {
             )
             .premultiply(localQuaternion2.setFromAxisAngle(localVector3.set(0, 1, 0), Math.PI));
         }
+        controlledApp.traverse(child => child.updateMatrix())
         controlledApp.updateMatrixWorld(true);
 
         localMatrix.copy(sitPos.matrixWorld)
@@ -213,6 +215,7 @@ class CharacterPhysics {
         .decompose(this.player.position, this.player.quaternion, this.player.scale);
       this.player.matrixWorld.copy(this.player.matrix);
 
+      this.player.traverse(child => child.updateMatrix())
       this.player.updateMatrixWorld();
 
       if (this.avatar) {
@@ -221,6 +224,7 @@ class CharacterPhysics {
         } else {
           this.avatar.setFloorHeight(localVector.y - this.player.avatar.height);
         }
+        this.avatar.traverse(child => child.updateMatrix())
         this.avatar.updateMatrixWorld();
       }
     }

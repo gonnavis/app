@@ -82,6 +82,7 @@ physicsManager.addGeometry = mesh => {
       physicsMesh.quaternion,
       physicsMesh.scale
     );
+    physicsMesh.traverse(child => child.updateMatrix())
     physicsMesh.updateMatrixWorld();
   }
 
@@ -96,6 +97,7 @@ physicsManager.addGeometry = mesh => {
   physicsMesh.position.set(0, 0, 0);
   physicsMesh.quaternion.set(0, 0, 0, 1);
   physicsMesh.scale.set(1, 1, 1);
+  physicsMesh.traverse(child => child.updateMatrix())
   physicsMesh.updateMatrixWorld();
   physicsObject.physicsMesh = physicsMesh;
   return physicsObject;
@@ -121,6 +123,7 @@ physicsManager.addConvexGeometry = mesh => {
       physicsMesh.quaternion,
       physicsMesh.scale
     );
+    physicsMesh.traverse(child => child.updateMatrix())
     physicsMesh.updateMatrixWorld();
   }
   
@@ -215,8 +218,8 @@ physicsManager.simulatePhysics = timeDiff => {
       if (physicsObject) {
         physicsObject.position.copy(position);
         physicsObject.quaternion.copy(quaternion);
-        physicsObject.updateMatrix();
-        physicsObject.updateMatrixWorld();
+        physicsObject.traverse(child => child.updateMatrix())
+        physicsObject.updateMatrixWorld(true);
       } /* else {
         console.warn('failed to get physics object', id);
       } */
