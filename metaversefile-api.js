@@ -827,9 +827,17 @@ metaversefile.setApi({
   getNextInstanceId() {
     return getRandomString();
   },
-  createApp({/* name = '', */start_url = '', type = '', /*components = [], */in_front = false} = {}) {
+  createApp({name = '',start_url = '', type = '', /*components = [], */in_front = false} = {}) {
+    // console.log(name)
     const app = new App();
-    // app.name = name;
+    if (name.indexOf('parcels') >= 0) {
+      console.log('found parcels')
+      window.parcels = app
+    } else if (name.indexOf('chest') >= 0) {
+      console.log('found chest')
+      window.chest = app
+    }
+    app.name = name;
     app.type = type;
     app.contentId = start_url;
     // app.components = components;
@@ -852,7 +860,7 @@ metaversefile.setApi({
         localPlayer.removeActionIndex(wearActionIndex);
       }
     });
-    console.log(app)
+    // console.log(app)
     return app;
   },
   createModule: (() => {

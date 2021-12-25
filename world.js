@@ -313,6 +313,7 @@ const _bindHitTracker = app => {
   const hitTracker = hpManager.makeHitTracker();
   bindScene.add(hitTracker);
   hitTracker.add(app);
+  hitTracker.name += ': ' + app.name
   app.hitTracker = hitTracker;
 
   const frame = e => {
