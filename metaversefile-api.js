@@ -852,6 +852,7 @@ metaversefile.setApi({
         localPlayer.removeActionIndex(wearActionIndex);
       }
     });
+    console.log(app)
     return app;
   },
   createModule: (() => {
