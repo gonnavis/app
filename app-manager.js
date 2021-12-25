@@ -343,11 +343,13 @@ class AppManager extends EventTarget {
     // for (const app of this.appsArray) {
       const app = this.appsArray.get(i, Z.Map);
       if (app.get('instanceId') === instanceId) {
+        // debugger
         return app;
       }
     }
     
     const appMap = new Z.Map();
+    // debugger
     this.appsArray.push([appMap]);
     return appMap;
   }
@@ -395,6 +397,7 @@ class AppManager extends EventTarget {
     trackedApp.set('quaternion', quaternion);
     trackedApp.set('scale', scale);
     trackedApp.set('components', JSON.stringify(components));
+    // debugger
     return trackedApp;
   }
   addTrackedApp(
@@ -458,7 +461,11 @@ class AppManager extends EventTarget {
   addApp(app) {
     this.apps.push(app);
     
-    console.log(app.position)
+    let childsCount = 0
+    app.traverse(child => childsCount++)
+    console.log(app.position, app.name, childsCount)
+    // if(app.name.indexOf('sakura') >= 0) debugger
+
     app.traverse(child => child.updateMatrix())
     app.updateMatrixWorld()
     

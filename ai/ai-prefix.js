@@ -104,13 +104,13 @@ useFrame(() => {
 const htmlApp = getAppsByType('html')[0];
 download(htmlApp.start_url);
 
-/* Command: When the chest is activated, spawn a loot object (./loot.js) above the chest. */
-const chest = getAppByName('chest');
-chest.addEventListener('activate', e => {
-  const loot = createApp({start_url: './loot.js'});
-  loot.position.copy(chest.position).app(new Vector3(0, 1, 0));
-  addApp(loot);
-});
+// /* Command: When the chest is activated, spawn a loot object (./loot.js) above the chest. */
+// const chest = getAppByName('chest');
+// chest.addEventListener('activate', e => {
+//   const loot = createApp({start_url: './loot.js'});
+//   loot.position.copy(chest.position).app(new Vector3(0, 1, 0));
+//   addApp(loot);
+// });
 
 /* Command: Ride the nearest vehicle. */
 const p5 = useLocalPlayer();
