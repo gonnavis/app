@@ -707,7 +707,7 @@ metaversefile.setApi({
       physics.addGeometry = (addGeometry => function(mesh) {
         // debugger
         // console.log('- physics.add...()', mesh.name)
-        if( mesh.parent.name.indexOf('chest') >= 0) debugger
+        // if( mesh.parent.name.indexOf('chest') >= 0) debugger
 
         const oldParent = mesh.parent;
         
@@ -743,7 +743,7 @@ metaversefile.setApi({
       physics.addCookedGeometry = (addCookedGeometry => function(buffer, position, quaternion, scale) {
         // debugger
         // console.log('- physics.add...()', mesh.name)
-        if( mesh.parent.name.indexOf('chest') >= 0) debugger
+        // if( mesh.parent.name.indexOf('chest') >= 0) debugger
         
         const physicsObject = addCookedGeometry.apply(this, arguments);
         physicsObject.scale.setScalar(0) // TEST
@@ -757,7 +757,7 @@ metaversefile.setApi({
       physics.addConvexGeometry = (addConvexGeometry => function(mesh) {
         // debugger
         // console.log('- physics.add...()', mesh.name)
-        if( mesh.parent.name.indexOf('chest') >= 0) debugger
+        // if( mesh.parent.name.indexOf('chest') >= 0) debugger
         
         const physicsObject = addConvexGeometry.apply(this, arguments);
         physicsObject.scale.setScalar(0) // TEST
@@ -771,7 +771,7 @@ metaversefile.setApi({
       physics.addCookedConvexGeometry = (addCookedConvexGeometry => function(buffer, position, quaternion, scale) {
         // debugger
         // console.log('- physics.add...()', mesh.name)
-        if( mesh.parent.name.indexOf('chest') >= 0) debugger
+        // if( mesh.parent.name.indexOf('chest') >= 0) debugger
         
         const physicsObject = addCookedConvexGeometry.apply(this, arguments);
         physicsObject.scale.setScalar(0) // TEST
