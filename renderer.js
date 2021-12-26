@@ -27,6 +27,21 @@ THREE.Object3D.DefaultMatrixAutoUpdate = false;
 //   }
 // })()
 
+THREE.Object3D.prototype.updateMatrix = (function() {
+  var cachedFunction = THREE.Object3D.prototype.updateMatrix;
+
+  return function() {
+      // your code
+      this._updateCount++
+
+      var result = cachedFunction.apply(this, arguments); // use .apply() to call it
+
+      // more of your code
+
+      return result;
+  };
+})();
+
 let canvas = null, context = null, renderer = null, composer = null;
 
 function bindCanvas(c) {

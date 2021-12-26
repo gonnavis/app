@@ -295,7 +295,14 @@ export default class Webaverse extends EventTarget {
     
     let lastTimestamp = performance.now();
 
-    const animate = (timestamp, frame) => { 
+    const animate = (timestamp, frame) => {
+      // console.log('animate')
+      if (window.rootScene) {
+        window.rootScene.traverse(child => {
+          child._updateCount = 0
+        })
+      }
+
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
       const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100); 
@@ -341,6 +348,18 @@ export default class Webaverse extends EventTarget {
       xrCamera.updateMatrixWorld(true);
       this.render(timestamp, timeDiffCapped);
 
+      if (window.isDebugUpdateCount) {
+        let maxUpdateCount = 0
+        let maxUpdateCountObject = null
+        window.rootScene.traverse(child => {
+          if (child._updateCount > maxUpdateCount) {
+            maxUpdateCount = child._updateCount
+            maxUpdateCountObject = child
+          }
+        })
+        console.log('maxUpdateCountObject', maxUpdateCountObject, maxUpdateCountObject._updateCount, maxUpdateCount)
+        debugger
+      }
     }
     renderer.setAnimationLoop(animate);
   }
