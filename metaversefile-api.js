@@ -1111,26 +1111,26 @@ export default () => {
         }
       });
       
-      if (app.name.indexOf('stacks') >= 0) {
-        // debugger
-        window.stacks.children[0].add = (function () {
-          var cached_function = window.stacks.children[0].add
+      // if (app.name.indexOf('stacks') >= 0) {
+      //   // debugger
+      //   window.stacks.children[0].add = (function () {
+      //     var cached_function = window.stacks.children[0].add
 
-          return function () {
-            // your code
-            debugger
+      //     return function () {
+      //       // your code
+      //       debugger
 
-            var result = cached_function.apply(this, arguments) // use .apply() to call it
+      //       var result = cached_function.apply(this, arguments) // use .apply() to call it
 
-            // more of your code
-            debugger
-            arguments[0].traverse(child => child.updateMatrix())
-            arguments[0].updateMatrixWorld()
+      //       // more of your code
+      //       debugger
+      //       arguments[0].traverse(child => child.updateMatrix())
+      //       arguments[0].updateMatrixWorld()
 
-            return result
-          }
-        })()
-      }
+      //       return result
+      //     }
+      //   })()
+      // }
 
       // count=0
       // sakura.traverse(n=>count++)
