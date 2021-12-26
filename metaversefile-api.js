@@ -278,7 +278,6 @@ const localPlayer = new LocalPlayer({
 localPlayer.position.y = initialPosY;
 localPlayer.traverse(child => child.updateMatrix())
 localPlayer.updateMatrixWorld()
-localPlayer.updateMatrixWorld();
 const remotePlayers = new Map();
 
 class ErrorBoundary extends React.Component {
@@ -1085,12 +1084,16 @@ export default () => {
     }
 
     // console.log('gor react', React, ReactAll);
+    console.log(1, app.name) // has sakura
+    if (app.name.indexOf('sakura') >= 0) debugger
     if (renderSpec instanceof THREE.Object3D) {
+      console.log(3, app.name) // has sakura
       const o = renderSpec;
       if (o !== app) {
-        // debugger
+        console.log(2, app.name) // no sakura
+        // if (app.name.indexOf('sakura') >= 0) debugger
         app.add(o);
-        // debugger
+        // o.updateMatrixWorld(true)
       }
       
       app.addEventListener('destroy', () => {
@@ -1117,6 +1120,13 @@ export default () => {
       //     }
       //   })()
       // }
+
+      // count=0
+      // sakura.traverse(n=>count++)
+      // console.log(count)
+      // => 2
+      // after all loaded should => 3
+
       return app;
     } else if (React.isValidElement(renderSpec)) {
       const o = new THREE.Object3D();
