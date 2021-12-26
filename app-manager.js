@@ -249,6 +249,7 @@ class AppManager extends EventTarget {
         app.quaternion.fromArray(quaternion);
         app.scale.fromArray(scale);
         app.traverse(e => e.updateMatrix())
+        // app.updateMatrixWorld()
         app.contentId = contentId;
         app.instanceId = instanceId;
         app.setComponent('physics', true);
@@ -570,6 +571,7 @@ class AppManager extends EventTarget {
                 } */
 
                 physicsObject.updateMatrix();
+                // physicsObject.updateMatrixWorld();
                 
                 //physicsManager.pushUpdate(physicsObject);
                 physicsManager.setTransform(physicsObject);

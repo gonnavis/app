@@ -86,6 +86,7 @@ function updateGrabbedObject(o, grabMatrix, offsetMatrix, {collisionEnabled, han
     o.position.fromArray(point)
       // .add(localVector2.set(0, 0.01, 0));
     o.updateMatrix();
+    o.updateMatrixWorld();
     if (o.position.distanceTo(localVector) > offset) {
       collision = null;
     }
@@ -93,6 +94,7 @@ function updateGrabbedObject(o, grabMatrix, offsetMatrix, {collisionEnabled, han
   if (!collision) {
     o.position.copy(localVector5);
     o.updateMatrix();
+    o.updateMatrixWorld();
   }
 
   /* for (const physicsObject of grabbedPhysicsObjects) {
@@ -108,6 +110,7 @@ function updateGrabbedObject(o, grabMatrix, offsetMatrix, {collisionEnabled, han
   }
 
   o.updateMatrix();
+  o.updateMatrixWorld();
 
   return {
     handSnap,

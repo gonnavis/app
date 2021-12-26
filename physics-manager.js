@@ -137,6 +137,7 @@ physicsManager.addConvexGeometry = mesh => {
   physicsMesh.quaternion.set(0, 0, 0, 1);
   physicsMesh.scale.set(1, 1, 1);
   physicsMesh.updateMatrix();
+  physicsMesh.updateMatrixWorld();
   physicsObject.physicsMesh = physicsMesh;
   return physicsObject;
 };
