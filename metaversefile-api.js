@@ -904,6 +904,7 @@ metaversefile.setApi({
   createApp({name = '',start_url = '', type = '', /*components = [], */in_front = false} = {}) {
     // console.log(name)
     const app = new App();
+
     if (name.indexOf('parcels') >= 0) {
       window.parcels = app
     } else if (name.indexOf('chest') >= 0) {
@@ -921,7 +922,15 @@ metaversefile.setApi({
       let childsCount = 0
       app.traverse(child => childsCount++)
       console.log('- sakura childsCount', childsCount)
+    } else if (name.indexOf('stacks') >= 0) {
+      // debugger
+      window.stacks = app
+
+      let childsCount = 0
+      app.traverse(child => childsCount++)
+      console.log('- stacks childsCount', childsCount)
     }
+
     app.name = name;
     app.type = type;
     app.contentId = start_url;
@@ -1084,14 +1093,14 @@ export default () => {
     }
 
     // console.log('gor react', React, ReactAll);
-    console.log(1, app.name) // has sakura
-    if (app.name.indexOf('sakura') >= 0) debugger
+    // console.log(1, app.name) // has sakura
+    // if (app.name.indexOf('stacks') >= 0) debugger
     if (renderSpec instanceof THREE.Object3D) {
-      console.log(3, app.name) // has sakura
+      // console.log(3, app.name) // has sakura
       const o = renderSpec;
       if (o !== app) {
-        console.log(2, app.name) // no sakura
-        // if (app.name.indexOf('sakura') >= 0) debugger
+        // console.log(2, app.name) // no sakura
+        // if (app.name.indexOf('stacks') >= 0) debugger
         app.add(o);
         // o.updateMatrixWorld(true)
       }
@@ -1102,24 +1111,26 @@ export default () => {
         }
       });
       
-      // if (app.name.indexOf('sakura') >= 0) {
-      //   debugger
-      //   window.sakura.children[0].add = (function () {
-      //     var cached_function = window.sakura.children[0].add
+      if (app.name.indexOf('stacks') >= 0) {
+        // debugger
+        window.stacks.children[0].add = (function () {
+          var cached_function = window.stacks.children[0].add
 
-      //     return function () {
-      //       // your code
-      //       debugger
+          return function () {
+            // your code
+            debugger
 
-      //       var result = cached_function.apply(this, arguments) // use .apply() to call it
+            var result = cached_function.apply(this, arguments) // use .apply() to call it
 
-      //       // more of your code
-      //       debugger
+            // more of your code
+            debugger
+            arguments[0].traverse(child => child.updateMatrix())
+            arguments[0].updateMatrixWorld()
 
-      //       return result
-      //     }
-      //   })()
-      // }
+            return result
+          }
+        })()
+      }
 
       // count=0
       // sakura.traverse(n=>count++)

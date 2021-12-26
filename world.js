@@ -314,7 +314,7 @@ const _bindHitTracker = app => {
   const hitTracker = hpManager.makeHitTracker();
   bindScene.add(hitTracker);
   hitTracker.add(app);
-  // if (app.name.indexOf('sakura') >= 0) debugger
+  if (app.name.indexOf('stacks') >= 0) debugger
   hitTracker.name += ': ' + app.name
   app.hitTracker = hitTracker;
 

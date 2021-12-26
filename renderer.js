@@ -4,11 +4,28 @@ the purpose of this file is to hold these objects and to make sure they are corr
 */
 
 import * as THREE from 'three';
+window.THREE = THREE // TEST
 import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import {minFov} from './constants.js';
 
 // XXX enable this when the code is stable; then, we will have many more places to add missing matrix updates
 THREE.Object3D.DefaultMatrixAutoUpdate = false;
+
+// THREE.Object3D.prototype.add = (function () {
+//   const cachedFunction = THREE.Object3D.prototype.add
+
+//   return function () {
+//     // your code
+
+//     var result = cachedFunction.apply(this, arguments) // use .apply() to call it
+
+//     // more of your code
+//     arguments[0].traverse(child => child.updateMatrix())
+//     arguments[0].updateMatrixWorld()
+
+//     return result
+//   }
+// })()
 
 let canvas = null, context = null, renderer = null, composer = null;
 

@@ -464,7 +464,7 @@ class AppManager extends EventTarget {
     let childsCount = 0
     app.traverse(child => childsCount++)
     // console.log(app.position, app.name, childsCount)
-    // if(app.name.indexOf('sakura') >= 0) debugger
+    // if(app.name.indexOf('stacks') >= 0) debugger
 
     app.traverse(child => child.updateMatrix())
     app.updateMatrixWorld()
