@@ -296,6 +296,8 @@ export default class Webaverse extends EventTarget {
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => {
+      if (window.isDebug) debugger
+
       // console.log('animate')
       if (window.rootScene) {
         window.rootScene.traverse(child => {
@@ -360,6 +362,8 @@ export default class Webaverse extends EventTarget {
         console.log('maxUpdateCountObject', maxUpdateCountObject, maxUpdateCountObject._updateCount, maxUpdateCount)
         debugger
       }
+
+      if (window.isDebug) debugger
     }
     renderer.setAnimationLoop(animate);
   }
