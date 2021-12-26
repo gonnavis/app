@@ -827,12 +827,22 @@ metaversefile.setApi({
   getNextInstanceId() {
     return getRandomString();
   },
-  createApp({/* name = '', */start_url = '', type = '', /*components = [], */in_front = false} = {}) {
+  createApp({name = '',start_url = '', type = '', /*components = [], */in_front = false} = {}) {
     const app = new App();
     // app.name = name;
     app.type = type;
     app.contentId = start_url;
     // app.components = components;
+
+    if (name.indexOf('sakura') >= 0) {
+      // debugger
+      window.sakura = app
+
+      let childsCount = 0
+      app.traverse(child => childsCount++)
+      console.log('- sakura childsCount', childsCount)
+    }
+
     if (in_front) {
       app.position.copy(localPlayer.position).add(new THREE.Vector3(0, 0, -1).applyQuaternion(localPlayer.quaternion));
       app.quaternion.copy(localPlayer.quaternion);
