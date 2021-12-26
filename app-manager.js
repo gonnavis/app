@@ -248,7 +248,6 @@ class AppManager extends EventTarget {
         app.position.fromArray(position);
         app.quaternion.fromArray(quaternion);
         app.scale.fromArray(scale);
-        app.updateMatrix();
         app.traverse(e => e.updateMatrix())
         app.contentId = contentId;
         app.instanceId = instanceId;
