@@ -1530,7 +1530,7 @@ class Avatar {
       }
     }
     modelBones.Root.traverse(b=>{
-      if(b.isSpringBone) return;
+      if(b.isSpringBone) return; // NOTE: VRMSpringBone has it's own updateMatrix() in three-vrm.module.js.
       b.updateMatrix();
     });
     modelBones.Root.updateMatrixWorld();
