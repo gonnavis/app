@@ -1530,6 +1530,7 @@ class Avatar {
       }
     }
     modelBones.Root.traverse(b=>{
+      if(b.isSpringBone) return;
       b.updateMatrix();
     });
     modelBones.Root.updateMatrixWorld();
