@@ -300,7 +300,7 @@ export default class Webaverse extends EventTarget {
       
       if (window.isDebug) debugger
 
-      if (window.rootScene) {
+      if (window.isDebugUpdateCount && window.rootScene) {
         window.rootScene.traverse(child => {
           child._updateCount = 0
         })
@@ -360,7 +360,7 @@ export default class Webaverse extends EventTarget {
             maxUpdateCountObject = child
           }
         })
-        console.log('maxUpdateCountObject', maxUpdateCountObject, maxUpdateCountObject._updateCount, maxUpdateCount)
+        console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
         debugger
       }
 
