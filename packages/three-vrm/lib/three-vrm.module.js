@@ -2890,7 +2890,7 @@ class VRMSpringBone {
         const applyRotation = _quatA.setFromUnitVectors(this._boneAxis, _v3A$2.copy(this._nextTail).applyMatrix4(initialCenterSpaceMatrixInv).normalize());
         this.bone.quaternion.copy(this._initialLocalRotation).multiply(applyRotation);
         // We need to update its matrixWorld manually, since we tweaked the bone by our hand
-        // console.log(2)
+        // console.log(2) // mark, big problem, 54 times per frame.
         this.bone.updateMatrix();
         this.bone.matrixWorld.multiplyMatrices(this._getParentMatrixWorld(), this.bone.matrix);
     }
@@ -2986,10 +2986,10 @@ class VRMSpringBoneManager {
      * @param delta deltaTime
      */
     lateUpdate(delta) {
-        console.log(33) // no problem, one per frame.
+        // console.log(33) // no problem, one per frame.
         this.springBoneGroupList.forEach((springBoneGroup) => {
             springBoneGroup.forEach((springBone) => {
-                console.log(11) // mark, 54 times per frame
+                // console.log(11) // mark, 54 times per frame
                 springBone.update(delta);
             });
         });
@@ -3274,7 +3274,7 @@ class VRM {
             this.blendShapeProxy.update();
         }
         if (this.springBoneManager) {
-            console.log(22) // not called
+            // console.log(22) // not called
             this.springBoneManager.lateUpdate(delta);
         }
         if (this.materials) {
