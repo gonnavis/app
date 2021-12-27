@@ -37,6 +37,8 @@ window.initUpdateCount = () => {
       // your code
       this._updateCount++
 
+      // if (this._updateCount >= 2) debugger
+
       var result = cachedFunction.apply(this, arguments) // use .apply() to call it
 
       // more of your code

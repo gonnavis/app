@@ -1114,13 +1114,13 @@ export default () => {
       // if (app.name.indexOf('stacks') >= 0) {
       //   // debugger
       //   window.stacks.children[0].add = (function () {
-      //     var cached_function = window.stacks.children[0].add
+      //     var cachedFunction = window.stacks.children[0].add
 
       //     return function () {
       //       // your code
       //       debugger
 
-      //       var result = cached_function.apply(this, arguments) // use .apply() to call it
+      //       var result = cachedFunction.apply(this, arguments) // use .apply() to call it
 
       //       // more of your code
       //       debugger
