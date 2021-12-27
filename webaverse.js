@@ -351,20 +351,37 @@ export default class Webaverse extends EventTarget {
       xrCamera.updateMatrixWorld(true);
       this.render(timestamp, timeDiffCapped);
 
+      // // find maxUpdateCount
+      // if (window.isDebugUpdateCount) {
+      //   let maxUpdateCount = 0
+      //   let maxUpdateCountObject = null
+      //   window.rootScene.traverse(child => {
+      //     if (child._updateCount > maxUpdateCount) {
+      //       maxUpdateCount = child._updateCount
+      //       maxUpdateCountObject = child
+      //     }
+      //   })
+      //   console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
+      //   debugger
+      // }
+
+      // statistic 0 update rate
       if (window.isDebugUpdateCount) {
-        let maxUpdateCount = 0
-        let maxUpdateCountObject = null
+        let zeroCount = 0
+        let totalCount = 0
         window.rootScene.traverse(child => {
-          if (child._updateCount > maxUpdateCount) {
-            maxUpdateCount = child._updateCount
-            maxUpdateCountObject = child
+          totalCount++
+          if (child._updateCount === 0) {
+            zeroCount++
           }
         })
-        console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
+        console.log(zeroCount, totalCount, zeroCount / totalCount)
         debugger
       }
 
       if (window.isDebug) debugger
+
+      // mark animate end
     }
     renderer.setAnimationLoop(animate);
   }
