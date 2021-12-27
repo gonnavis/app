@@ -837,6 +837,7 @@ class Avatar {
 
     this.springBoneManager = null;
     this.springBoneTimeStep = new FixedTimeStep(timeDiff => {
+      // console.log(2) // no problem, one time per frame.
       const timeDiffS = timeDiff / 1000;
       this.springBoneManager.lateUpdate(timeDiffS);
     }, avatarInterpolationFrameRate);
@@ -2536,6 +2537,7 @@ class Avatar {
     // this.modelBones.Root.updateMatrixWorld();
 
     if (this.springBoneManager) {
+      // console.log(2) // no problem, one time per frame.
       this.springBoneTimeStep.update(timeDiff);
     }
     /* if (this.springBoneManager && wasDecapitated) {

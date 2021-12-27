@@ -296,9 +296,10 @@ export default class Webaverse extends EventTarget {
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => {
+      console.log('animate')
+      
       if (window.isDebug) debugger
 
-      // console.log('animate')
       if (window.rootScene) {
         window.rootScene.traverse(child => {
           child._updateCount = 0

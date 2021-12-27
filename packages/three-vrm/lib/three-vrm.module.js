@@ -2818,6 +2818,7 @@ class VRMSpringBone {
     reset() {
         this.bone.quaternion.copy(this._initialLocalRotation);
         // We need to update its matrixWorld manually, since we tweaked the bone by our hand
+        // console.log(1)
         this.bone.updateMatrix();
         this.bone.matrixWorld.multiplyMatrices(this._getParentMatrixWorld(), this.bone.matrix);
         this._centerSpacePosition.setFromMatrixPosition(this.bone.matrixWorld);
@@ -2889,6 +2890,7 @@ class VRMSpringBone {
         const applyRotation = _quatA.setFromUnitVectors(this._boneAxis, _v3A$2.copy(this._nextTail).applyMatrix4(initialCenterSpaceMatrixInv).normalize());
         this.bone.quaternion.copy(this._initialLocalRotation).multiply(applyRotation);
         // We need to update its matrixWorld manually, since we tweaked the bone by our hand
+        // console.log(2)
         this.bone.updateMatrix();
         this.bone.matrixWorld.multiplyMatrices(this._getParentMatrixWorld(), this.bone.matrix);
     }
@@ -2984,8 +2986,10 @@ class VRMSpringBoneManager {
      * @param delta deltaTime
      */
     lateUpdate(delta) {
+        console.log(33) // no problem, one per frame.
         this.springBoneGroupList.forEach((springBoneGroup) => {
             springBoneGroup.forEach((springBone) => {
+                console.log(11) // mark, 54 times per frame
                 springBone.update(delta);
             });
         });
@@ -3175,6 +3179,7 @@ class VRMImporter {
                 throw new Error('Could not find VRM extension on the GLTF');
             }
             const scene = gltf.scene;
+            // console.log(3)
             scene.updateMatrixWorld(false);
             // Skinned object should not be frustumCulled
             // Since pre-skinned position might be outside of view
@@ -3269,6 +3274,7 @@ class VRM {
             this.blendShapeProxy.update();
         }
         if (this.springBoneManager) {
+            console.log(22) // not called
             this.springBoneManager.lateUpdate(delta);
         }
         if (this.materials) {
@@ -3545,6 +3551,7 @@ class VRMImporterDebug extends VRMImporter {
                 throw new Error('Could not find VRM extension on the GLTF');
             }
             const scene = gltf.scene;
+            // console.log(4)
             scene.updateMatrixWorld(false);
             // Skinned object should not be frustumCulled
             // Since pre-skinned position might be outside of view
