@@ -59,7 +59,7 @@ function bindCanvas(c) {
   renderer.autoClear = false;
   renderer.sortObjects = false;
   renderer.physicallyCorrectLights = true;
-  // renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.outputEncoding = THREE.sRGBEncoding;
   // renderer.gammaFactor = 2.2;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -76,12 +76,12 @@ function bindCanvas(c) {
   {
     const size = renderer.getSize(new THREE.Vector2());
     const pixelRatio = renderer.getPixelRatio();
-    const encoding = THREE.sRGBEncoding;
+    // const encoding = THREE.sRGBEncoding;
     const renderTarget = new THREE.WebGLMultisampleRenderTarget(size.x * pixelRatio, size.y * pixelRatio, {
       minFilter: THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
       format: THREE.RGBAFormat,
-      encoding,
+      // encoding,
     });
     renderTarget.samples = context.MAX_SAMPLES;
     composer = new EffectComposer(renderer, renderTarget);
