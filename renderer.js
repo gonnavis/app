@@ -50,6 +50,7 @@ function bindCanvas(c) {
     rendererExtensionFragDepth: true,
     logarithmicDepthBuffer: true,
   });
+  window.renderer = renderer
 
   const rect = renderer.domElement.getBoundingClientRect();
   renderer.setSize(rect.width, rect.height);
