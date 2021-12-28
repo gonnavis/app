@@ -295,7 +295,14 @@ export default class Webaverse extends EventTarget {
     
     let lastTimestamp = performance.now();
 
-    const animate = (timestamp, frame) => { 
+    const animate = (timestamp, frame) => { // mark animate
+
+      if (window.isDebugUpdateCount && window.rootScene) {
+        window.rootScene.traverse(child => {
+          child._updateCount = 0
+        })
+      }
+      
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
       const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100); 
@@ -341,6 +348,35 @@ export default class Webaverse extends EventTarget {
         
       this.render(timestamp, timeDiffCapped);
 
+      // // find maxUpdateCount
+      // if (window.isDebugUpdateCount) {
+      //   let maxUpdateCount = 0
+      //   let maxUpdateCountObject = null
+      //   window.rootScene.traverse(child => {
+      //     if (child._updateCount > maxUpdateCount) {
+      //       maxUpdateCount = child._updateCount
+      //       maxUpdateCountObject = child
+      //     }
+      //   })
+      //   console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
+      //   debugger
+      // }
+
+      // statistic 0 update rate
+      if (window.isDebugUpdateCount) {
+        let zeroCount = 0
+        let totalCount = 0
+        window.rootScene.traverse(child => {
+          totalCount++
+          if (child._updateCount === 0) {
+            zeroCount++
+          }
+        })
+        console.log(zeroCount, totalCount, zeroCount / totalCount)
+        debugger
+      }
+
+      // mark animate end
     }
     renderer.setAnimationLoop(animate);
   }
