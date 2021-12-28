@@ -1,6 +1,6 @@
 throw new Error('dead code');
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import {rigManager} from './rig.js';
 import {camera} from './app-object.js';
 import {world} from './world.js';

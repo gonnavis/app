@@ -2,7 +2,7 @@ throw new Error('dead code');
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {VOXLoader} from './VOXLoader.js';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import React from 'react';
 import * as ReactThreeFiber from '@react-three/fiber';
 // import {KTX2Loader} from './KTX2Loader.js';

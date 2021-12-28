@@ -5,7 +5,7 @@ this file binds logical characters (local player, remote players, npcs) to metav
 throw new Error('dead code');
 
 import * as THREE from 'three';
-// import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+// import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 // import {makeRigCapsule} from './vr-ui.js';
 import {unFrustumCull} from './util.js';

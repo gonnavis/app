@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 // import atlaspack from './atlaspack.js';
 import { getAddressFromMnemonic } from './blockchain.js';
 import {playersMapName, maxGrabDistance, tokensHost, storageHost, accountsHost, loginEndpoint} from './constants.js';

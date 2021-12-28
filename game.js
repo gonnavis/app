@@ -5,7 +5,7 @@ general game logic goes here.
 
 import * as THREE from 'three';
 // import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import physx from './physx.js';
 import cameraManager from './camera-manager.js';
 // import uiManager from './ui-manager.js';

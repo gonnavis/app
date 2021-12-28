@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { BufferGeometryUtils } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 // import {scene} from './run.js';
 import {TextMesh} from './textmesh-standalone.esm.js';
 import {CapsuleGeometry} from './CapsuleGeometry.js';
