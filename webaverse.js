@@ -296,11 +296,13 @@ export default class Webaverse extends EventTarget {
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => { // mark animate
+      // debugger
 
       if (window.isDebugUpdateCount && window.rootScene) {
         window.rootScene.traverse(child => {
           child._updateCount = 0
         })
+        window.updateCountResults = []
       }
       
       timestamp = timestamp ?? performance.now();
@@ -348,34 +350,36 @@ export default class Webaverse extends EventTarget {
         
       this.render(timestamp, timeDiffCapped);
 
-      // // find maxUpdateCount
+      // find maxUpdateCount
+      if (window.isDebugUpdateCount) {
+        let maxUpdateCount = 0
+        let maxUpdateCountObject = null
+        window.rootScene.traverse(child => {
+          window.updateCountResults.push(child)
+          if (child._updateCount > maxUpdateCount) {
+            maxUpdateCount = child._updateCount
+            maxUpdateCountObject = child
+          }
+        })
+        console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
+        // window.updateCountResults.sort((a,b)=>b._updateCount-a._updateCount)
+      }
+
+      // // statistic 0 update rate
       // if (window.isDebugUpdateCount) {
-      //   let maxUpdateCount = 0
-      //   let maxUpdateCountObject = null
+      //   let zeroCount = 0
+      //   let totalCount = 0
       //   window.rootScene.traverse(child => {
-      //     if (child._updateCount > maxUpdateCount) {
-      //       maxUpdateCount = child._updateCount
-      //       maxUpdateCountObject = child
+      //     totalCount++
+      //     if (child._updateCount === 0) {
+      //       zeroCount++
       //     }
       //   })
-      //   console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
+      //   console.log(zeroCount, totalCount, zeroCount / totalCount)
       //   debugger
       // }
 
-      // statistic 0 update rate
-      if (window.isDebugUpdateCount) {
-        let zeroCount = 0
-        let totalCount = 0
-        window.rootScene.traverse(child => {
-          totalCount++
-          if (child._updateCount === 0) {
-            zeroCount++
-          }
-        })
-        console.log(zeroCount, totalCount, zeroCount / totalCount)
-        debugger
-      }
-
+      debugger
       // mark animate end
     }
     renderer.setAnimationLoop(animate);
