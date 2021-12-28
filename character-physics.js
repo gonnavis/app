@@ -338,7 +338,7 @@ class CharacterPhysics {
       );
     camera.position.y -= crouchOffset;
     camera.updateMatrix();
-    camera.updateMatrixWorld();
+    camera.updateMatrixWorld(); // MARK: camera.updateMatrixWorld() 1
     this.player.updateMatrix();
   }
   updateVelocity(timeDiffS) {

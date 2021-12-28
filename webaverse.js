@@ -348,36 +348,36 @@ export default class Webaverse extends EventTarget {
       localMatrix3.copy(xrCamera.matrix)
         .premultiply(dolly.matrix)
         .decompose(localVector, localQuaternion, localVector2);
-      xrCamera.updateMatrixWorld(true);
+      xrCamera.updateMatrixWorld(true); // MARK: camera.updateMatrixWorld() 2
       this.render(timestamp, timeDiffCapped);
 
-      // // find maxUpdateCount
-      // if (window.isDebugUpdateCount) {
-      //   let maxUpdateCount = 0
-      //   let maxUpdateCountObject = null
-      //   window.rootScene.traverse(child => {
-      //     if (child._updateCount > maxUpdateCount) {
-      //       maxUpdateCount = child._updateCount
-      //       maxUpdateCountObject = child
-      //     }
-      //   })
-      //   console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
-      //   debugger
-      // }
-
-      // statistic 0 update rate
+      // find maxUpdateCount
       if (window.isDebugUpdateCount) {
-        let zeroCount = 0
-        let totalCount = 0
+        let maxUpdateCount = 0
+        let maxUpdateCountObject = null
         window.rootScene.traverse(child => {
-          totalCount++
-          if (child._updateCount === 0) {
-            zeroCount++
+          if (child._updateCount > maxUpdateCount) {
+            maxUpdateCount = child._updateCount
+            maxUpdateCountObject = child
           }
         })
-        console.log(zeroCount, totalCount, zeroCount / totalCount)
+        console.log(maxUpdateCountObject._updateCount, maxUpdateCount, 'maxUpdateCountObject', maxUpdateCountObject,)
         debugger
       }
+
+      // // statistic 0 update rate
+      // if (window.isDebugUpdateCount) {
+      //   let zeroCount = 0
+      //   let totalCount = 0
+      //   window.rootScene.traverse(child => {
+      //     totalCount++
+      //     if (child._updateCount === 0) {
+      //       zeroCount++
+      //     }
+      //   })
+      //   console.log(zeroCount, totalCount, zeroCount / totalCount)
+      //   debugger
+      // }
 
       if (window.isDebug) debugger
 

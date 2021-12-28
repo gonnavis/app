@@ -30,13 +30,13 @@ THREE.Object3D.DefaultMatrixAutoUpdate = false;
 window.initUpdateCount = () => {
   window.isDebugUpdateCount = true
 
-  THREE.Object3D.prototype.updateMatrix = (function () {
-    var cachedFunction = THREE.Object3D.prototype.updateMatrix
+  THREE.Object3D.prototype.updateMatrixWorld = (function () {
+    var cachedFunction = THREE.Object3D.prototype.updateMatrixWorld
 
     return function () {
       // your code
       this._updateCount++
-
+      if (this === camera) debugger
       // if (this._updateCount >= 2) debugger
 
       var result = cachedFunction.apply(this, arguments) // use .apply() to call it
