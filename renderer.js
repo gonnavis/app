@@ -59,7 +59,7 @@ function bindCanvas(c) {
   renderer.autoClear = false;
   renderer.sortObjects = false;
   renderer.physicallyCorrectLights = true;
-  // renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.outputEncoding = THREE.sRGBEncoding; // Need set in package: mirror's WebGLRenderTarget too.
   // renderer.gammaFactor = 2.2;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
