@@ -281,7 +281,8 @@ export default class Webaverse extends EventTarget {
     // equipmentRender.previewScene.add(world.lights);
     // equipmentRender.render();
 
-    getComposer().render();
+    // getComposer().render();
+    renderer.render(scene, camera)
     // if(ioManager.debugMode) {
       rendererStats.update(renderer);
     // }
