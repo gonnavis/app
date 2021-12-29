@@ -379,7 +379,7 @@ export default class Webaverse extends EventTarget {
       //   debugger
       // }
 
-      debugger
+      // debugger
       // mark animate end
     }
     renderer.setAnimationLoop(animate);
