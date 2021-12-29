@@ -829,7 +829,7 @@ metaversefile.setApi({
   },
   createApp({name = '',start_url = '', type = '', /*components = [], */in_front = false} = {}) {
     const app = new App();
-    // app.name = name;
+    app.name = name;
     app.type = type;
     app.contentId = start_url;
     // app.components = components;
@@ -841,6 +841,13 @@ metaversefile.setApi({
       let childsCount = 0
       app.traverse(child => childsCount++)
       console.log('- sakura childsCount', childsCount)
+    } else if (name.indexOf('model49') >= 0) {
+      // debugger
+      window.model49 = app
+
+      let childsCount = 0
+      app.traverse(child => childsCount++)
+      console.log('- model49 childsCount', childsCount)
     }
 
     if (in_front) {
