@@ -1516,7 +1516,7 @@ const gameManager = {
   },
   toggleFly() {
     const localPlayer = metaversefileApi.useLocalPlayer();
-    const flyAction = localPlayer.getAction('fly');
+    const flyAction = localPlayer.getAction('fly'); // {type: 'fly', time: 0}
     if (flyAction) {
       localPlayer.removeAction('fly');
     } else {
