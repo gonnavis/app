@@ -11,6 +11,21 @@ import {minFov} from './constants.js';
 // XXX enable this when the code is stable; then, we will have many more places to add missing matrix updates
 // THREE.Object3D.DefaultMatrixAutoUpdate = false;
 
+THREE.Object3D.prototype.updateMatrix = (function () {
+  var cachedFunction = THREE.Object3D.prototype.updateMatrix
+
+  return function () {
+    // your code
+    if (this.name.indexOf('model49') >= 0) console.log('model49')
+
+    var result = cachedFunction.apply(this, arguments) // use .apply() to call it
+
+    // more of your code
+
+    return result
+  }
+})()
+
 window.initUpdateCount = () => {
   window.isDebugUpdateCount = true
 
