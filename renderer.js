@@ -12,11 +12,18 @@ async function test() {
   // initialize
   await math.init();
 
-  const vec3 = math.Vector3.create();
-  window.vec3 = vec3
-  // const vec3 = await math.Vector3.create();
-  console.log('gl-matrix-wasm', vec3);
-  console.log('gl-matrix-wasm', vec3.elements);
+  // const vec3 = math.Vector3.create();
+  // window.vec3 = vec3
+  // // const vec3 = await math.Vector3.create();
+  // console.log('gl-matrix-wasm', vec3);
+  // console.log('gl-matrix-wasm', vec3.elements);
+
+  // // don't want to free
+  // v1.free();
+
+  const v1 = math.Vector4.fromValues(1, 0, 0, 0);
+  console.log(v1);
+  console.log(v1.elements);
 
   // don't want to free
   // v1.free();
