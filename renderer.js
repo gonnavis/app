@@ -18,6 +18,7 @@ init().then((ready) => {
   // vec3.add(a, a, b);
   // console.log(vec3.view(a)); // Float32Array(3) [1, 2, 3]
   
+  THREE.AudioListener.prototype.updateMatrixWorld = function() {};
 
   THREE.Matrix4.prototype.multiplyMatrices = (function () {
     // var cachedFunction = THREE.Matrix4.prototype.multiplyMatrices
@@ -37,6 +38,13 @@ init().then((ready) => {
       // var result = cachedFunction.apply(this, arguments) // use .apply() to call it
 
       // more of your code
+
+      if (!this._substitutedElements) {
+        this.mat4Elements = mat4.create();
+        this.elements = mat4.view(this.mat4Elements);
+        this._substitutedElements = true;
+      }
+
       ae = arguments[0].elements;
       be = arguments[1].elements;
 
@@ -74,7 +82,7 @@ init().then((ready) => {
       mat4bView[14] = be[14]
       mat4bView[15] = be[15]
 
-      mat4.multiply(mat4a, mat4a, mat4b)
+      mat4.multiply(this.mat4Elements, mat4a, mat4b)
       // // c = mat4.multiply(mat4a, mat4a, mat4b)
 
       // // console.log('result', result.elements)
@@ -85,22 +93,23 @@ init().then((ready) => {
       // // console.log('c', c) // same as `a`
       // debugger
 
-      this.elements[0] = mat4aView[0]
-      this.elements[1] = mat4aView[1]
-      this.elements[2] = mat4aView[2]
-      this.elements[3] = mat4aView[3]
-      this.elements[4] = mat4aView[4]
-      this.elements[5] = mat4aView[5]
-      this.elements[6] = mat4aView[6]
-      this.elements[7] = mat4aView[7]
-      this.elements[8] = mat4aView[8]
-      this.elements[9] = mat4aView[9]
-      this.elements[10] = mat4aView[10]
-      this.elements[11] = mat4aView[11]
-      this.elements[12] = mat4aView[12]
-      this.elements[13] = mat4aView[13]
-      this.elements[14] = mat4aView[14]
-      this.elements[15] = mat4aView[15]
+      // debugger
+      // this.elements[0] = mat4aView[0]
+      // this.elements[1] = mat4aView[1]
+      // this.elements[2] = mat4aView[2]
+      // this.elements[3] = mat4aView[3]
+      // this.elements[4] = mat4aView[4]
+      // this.elements[5] = mat4aView[5]
+      // this.elements[6] = mat4aView[6]
+      // this.elements[7] = mat4aView[7]
+      // this.elements[8] = mat4aView[8]
+      // this.elements[9] = mat4aView[9]
+      // this.elements[10] = mat4aView[10]
+      // this.elements[11] = mat4aView[11]
+      // this.elements[12] = mat4aView[12]
+      // this.elements[13] = mat4aView[13]
+      // this.elements[14] = mat4aView[14]
+      // this.elements[15] = mat4aView[15]
 
       return this
     }
