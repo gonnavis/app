@@ -6,6 +6,23 @@ the purpose of this file is to hold these objects and to make sure they are corr
 import * as THREE from 'three';
 import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import {minFov} from './constants.js';
+import * as math from 'gl-matrix-wasm';
+
+async function test() {
+  // initialize
+  await math.init();
+
+  const vec3 = math.Vector3.create();
+  window.vec3 = vec3
+  // const vec3 = await math.Vector3.create();
+  console.log('gl-matrix-wasm', vec3);
+  console.log('gl-matrix-wasm', vec3.elements);
+
+  // don't want to free
+  // v1.free();
+}
+
+test();
 
 // XXX enable this when the code is stable; then, we will have many more places to add missing matrix updates
 // THREE.Object3D.DefaultMatrixAutoUpdate = false;
