@@ -10,7 +10,8 @@
     "build": "vite build",
     "serve": "vite preview",
     "setup:test": "cd test && npm i",
-    "test": "cd test && npm run test"
+    "test": "cd test && npm run test",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@3id/connect": "^0.2.5",
@@ -67,6 +68,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "patch-package": "^6.4.7",
     "spectorjs": "^0.9.27",
     "vite": "^2.5.1"
   }
