@@ -1,0 +1,13 @@
+diff --git a/node_modules/three/build/three.module.js b/node_modules/three/build/three.module.js
+index 3f64d02..5ba8454 100644
+--- a/node_modules/three/build/three.module.js
++++ b/node_modules/three/build/three.module.js
+@@ -5707,6 +5707,8 @@ class Matrix4 {
+ 	}
+ 
+ 	multiplyMatrices( a, b ) {
++		// modified node_modules
++		debugger
+ 
+ 		const ae = a.elements;
+ 		const be = b.elements;
