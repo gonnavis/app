@@ -42,7 +42,7 @@ window.THREE = THREE;
 init().then((ready) => {
   // glmw is now ready and can be used anywhere
 
-  // THREE.AudioListener.prototype.updateMatrixWorld = function(){}
+  THREE.AudioListener.prototype.updateMatrixWorld = function(){}
 
   // const a = vec3.create();
   // const b = vec3.fromValues(1.0, 2.0, 3.0);
@@ -61,10 +61,8 @@ init().then((ready) => {
     // https://github.com/emscripten-core/emscripten/issues/6747#issuecomment-400081465
     const mat4a = mat4.create();
     const mat4b = mat4.create();
-    const mat4c = mat4.create();
     const mat4aView = mat4.view(mat4a);
     const mat4bView = mat4.view(mat4b);
-    const mat4cView = mat4.view(mat4c);
 
     let ae;
     let be;
@@ -78,9 +76,13 @@ init().then((ready) => {
       // your code
       // if (!(this.elements instanceof Float32Array)) {
       if (Array.isArray(this.elements)) {
-        this.elements = new Float32Array(this.elements)
+        this._elementsPointer = mat4.create();
+        this.elements = mat4.view(this._elementsPointer);
+        // this.elements = new Float32Array(this.elements)
       } else if (this.elements instanceof Proxy) {
-        this.elements = new Float32Array(Object.values(this.elements))
+        this._elementsPointer = mat4.create();
+        this.elements = mat4.view(this._elementsPointer);
+        // this.elements = new Float32Array(Object.values(this.elements))
       }
 
       // // TypeError: Cannot perform %TypedArray%.prototype.set on a detached
@@ -101,10 +103,25 @@ init().then((ready) => {
       // ae = arguments[0].elements;
       // be = arguments[1].elements;
       // if (!Array.isArray(arguments[0].elements)) debugger
-      // try {
-        mat4aView.set(arguments[0].elements)
-        mat4bView.set(arguments[1].elements)
-      // } catch (e) {}
+
+      // mat4aView.set(arguments[0].elements)
+      // mat4bView.set(arguments[1].elements)
+
+      // mat4.view(mat4a).set(arguments[0].elements)
+      // mat4.view(mat4b).set(arguments[1].elements)
+
+      try {
+        mat4.view(mat4a).set(arguments[0].elements)
+      } catch (e) {
+        arguments[0].elements = mat4.view(arguments[0]._elementsPointer)
+        mat4.view(mat4a).set(arguments[0].elements)
+      }
+      try {
+        mat4.view(mat4b).set(arguments[1].elements)
+      } catch (e) {
+        arguments[1].elements = mat4.view(arguments[1]._elementsPointer)
+        mat4.view(mat4b).set(arguments[1].elements)
+      }
 
       // poor performance
       // mat4aView[0] = ae[0]
@@ -141,7 +158,7 @@ init().then((ready) => {
       // mat4bView[14] = be[14]
       // mat4bView[15] = be[15]
 
-      mat4.multiply(mat4c, mat4a, mat4b)
+      mat4.multiply(this._elementsPointer, mat4a, mat4b)
       // // c = mat4.multiply(mat4a, mat4a, mat4b)
 
       // // console.log('result', result.elements)
@@ -170,7 +187,7 @@ init().then((ready) => {
       // this.elements[15] = mat4cView[15]
 
       // try {
-        this.elements.set(mat4cView)
+        // this.elements.set(mat4cView)
       // } catch (e) {}
       // TypeError: this is not a typed array.
       // After loaded, elements become a Proxy, because of used React?
