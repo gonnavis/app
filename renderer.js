@@ -9,6 +9,9 @@ import {minFov} from './constants.js';
 import {init, vec3, vec4, mat4} from 'glmw';
 // import * as glmw from 'glmw';
 
+// THREE.AudioListener.prototype.updateMatrixWorld = function(){}
+// THREE.PositionalAudio.prototype.updateMatrixWorld = function(){}
+
 window.THREE = THREE;
 // window.vec3 = vec3
 // window.glmw = glmw
@@ -51,8 +54,6 @@ init().then((ready) => {
   
   window.glmwInited = true
   window.matrix4s = null
-
-  // THREE.AudioListener.prototype.updateMatrixWorld = function(){}
 
   // const a = vec3.create();
   // const b = vec3.fromValues(1.0, 2.0, 3.0);
