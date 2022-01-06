@@ -10,6 +10,11 @@ import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry.js'
 import {makePromise} from './util.js';
 import {minFov} from './constants.js';
 
+/* console_test
+  addBox()
+  setTimeout(()=>doCut(),1000)
+*/
+
 window.addBox = function() {
   const geometry = new THREE.BoxGeometry()
   const material = new THREE.MeshStandardMaterial({
