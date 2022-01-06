@@ -13,7 +13,8 @@ import {minFov} from './constants.js';
 window.addBox = function() {
   const geometry = new THREE.BoxGeometry()
   const material = new THREE.MeshStandardMaterial({
-    color:'red'
+    // color: 'red',
+    map: new THREE.TextureLoader().load('/textures/test.jpg')
   })
   const mesh = new THREE.Mesh(geometry, material)
   window.rootScene.add(mesh)
@@ -21,8 +22,21 @@ window.addBox = function() {
   mesh.position.z = -6
   mesh.updateMatrixWorld()
   window.box = mesh
+}
 
+window.doCut = function() {
   window.cutByPlane(window.box, new THREE.Plane(), window.output)
+  if (window.output.object1) {
+    window.rootScene.add(window.output.object1)
+    window.output.object1.position.x += -1
+    window.output.object1.updateMatrixWorld()
+  }
+  if (window.output.object2) {
+    window.rootScene.add(window.output.object2)
+    window.output.object2.position.x += 1
+    window.output.object2.updateMatrixWorld()
+  }
+  window.box.visible = false
 }
 
 window.output = { object1: null, object2: null };
