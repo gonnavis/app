@@ -1561,7 +1561,7 @@ _addPreviewLights(sideScene);
 const _ensureSideSceneCompiled = () => {
   if (!sideSceneCompiled) {
     const renderer = getRenderer();
-    renderer.compileAsync(sideScene);
+    renderer.compile(sideScene);
     sideSceneCompiled = true;
   }
 }; */
@@ -1647,10 +1647,10 @@ const createPlayerDiorama = (player, {
     triggerLoad() {
       Promise.all([
         (async () => {
-          await renderer.compileAsync(player.avatar.model, outlineRenderScene);
+          await renderer.compile(player.avatar.model, outlineRenderScene);
         })(),
         (async () => {
-          await renderer.compileAsync(player.avatar.model, sideScene);
+          await renderer.compile(player.avatar.model, sideScene);
         })(),
       ]).then(() => {
         this.loaded = true;
@@ -1917,11 +1917,11 @@ const createAppDiorama = (app, {
       Promise.all([
         (async () => {
           outlineRenderScene.add(app);
-          await renderer.compileAsync(outlineRenderScene);
+          await renderer.compile(outlineRenderScene);
         })(),
         (async () => {
           sideScene.add(app);
-          await renderer.compileAsync(sideScene);
+          await renderer.compile(sideScene);
         })(),
       ]).then(() => {
         this.loaded = true;
