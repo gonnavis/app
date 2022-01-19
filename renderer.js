@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import {makePromise} from './util.js';
 import {minFov} from './constants.js';
+import {Text} from 'troika-three-text';
 
 // XXX enable this when the code is stable; then, we will have many more places to add missing matrix updates
 // THREE.Object3D.DefaultMatrixAutoUpdate = false;
@@ -101,6 +102,53 @@ postScenePerspective.name = 'postPerspective';
 rootScene.add(sceneHighPriority);
 rootScene.add(scene);
 rootScene.add(sceneLowPriority);
+
+window.addText = async function() {
+  const nameMesh = await makeTextMesh(
+    'Scillia',
+    new THREE.MeshBasicMaterial({
+      color: 'red',
+    }),
+    '/fonts/WinchesterCaps.ttf',
+    1.25,
+    0.05,
+    'center',
+    'middle',
+    0xff0000,
+  );
+  nameMesh.position.set(0, 1, -5);
+  nameMesh.updateMatrixWorld();
+  rootScene.add(nameMesh);
+};
+window.addText();
+
+async function makeTextMesh(
+  text = '',
+  material = null,
+  font = '/fonts/Bangers-Regular.ttf',
+  fontSize = 1,
+  letterSpacing = 0,
+  anchorX = 'left',
+  anchorY = 'middle',
+  color = 0x000000,
+) {
+  const textMesh = new Text();
+  textMesh.text = text;
+  if (material !== null) {
+    textMesh.material = material;
+  }
+  textMesh.font = font;
+  textMesh.fontSize = fontSize;
+  textMesh.letterSpacing = letterSpacing;
+  textMesh.color = color;
+  textMesh.anchorX = anchorX;
+  textMesh.anchorY = anchorY;
+  textMesh.frustumCulled = false;
+  await new Promise(resolve => {
+    textMesh.sync(resolve);
+  });
+  return textMesh;
+}
 
 // const orthographicScene = new THREE.Scene();
 // const avatarScene = new THREE.Scene();
