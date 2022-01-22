@@ -41,7 +41,7 @@
         0,
         0
       ],
-      "start_url": "https://webaverse.github.io/floor/"
+      "start_url": "http://localhost/lib/webaverse_resource/floor/"
     },
     {
       "position": [
@@ -49,7 +49,7 @@
         0,
         0
       ],
-      "start_url": "https://webaverse.github.io/grass-anime/"
+      "start_url": "http://localhost/lib/webaverse_resource/grass-anime/"
     }
   ]
 }
