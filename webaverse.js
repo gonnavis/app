@@ -42,18 +42,23 @@ import metaversefileApi from 'metaversefile';
 
 window.isStart = false;
 window.isRising = false;
-// const width = 71;
-// const height = 71;
-const width = 35;
-const height = 35;
+const width = 71;
+const height = 71;
+// const width = 35;
+// const height = 35;
+
+const tmpVec2 = new THREE.Vector2()
+
 // const start = new THREE.Vector2(-7, -5)
 // const dest = new THREE.Vector2(4, 6)
 // const start = new THREE.Vector2(-12, -14)
 // const dest = new THREE.Vector2(-6, -27)
+const start = new THREE.Vector2(24, -5)
+const dest = new THREE.Vector2(24, 24)
 // const start = new THREE.Vector2(0, 0)
 // const dest = new THREE.Vector2(0, 15)
-const start = new THREE.Vector2(0, 15)
-const dest = new THREE.Vector2(0, 0)
+swapStartDest();
+
 window.frontiers = []
 window.blocks = new THREE.Group();
 window.rootScene.add(window.blocks);
@@ -71,6 +76,7 @@ vs.xy_to_serial = function (width, xy) { // :index
   return xy.y * width + xy.x
 }
 
+window.getblock = getBlock;
 function getBlock(x, y) {
   // if (x === -10) debugger
   x += (width - 1) / 2
@@ -79,7 +85,11 @@ function getBlock(x, y) {
   return window.blocks.children[vs.xy_to_serial(width, {x, y})]
 }
 
-const tmpVec2 = new THREE.Vector2()
+function swapStartDest() {
+  tmpVec2.copy(start);
+  start.copy(dest);
+  dest.copy(tmpVec2);
+}
 
 function stepBlock(block, prevBlock) {
   function recur(block) {
@@ -170,16 +180,16 @@ function generateVoxelMap() {
       const currentBlock = getBlock(x, z);
 
       const leftBlock = getBlock(x - 1, z);
-      if (leftBlock && leftBlock.position.y - currentBlock.position.y < 1) currentBlock._canLeft = true;
+      if (leftBlock && leftBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canLeft = true;
 
       const rightBlock = getBlock(x + 1, z);
-      if (rightBlock && rightBlock.position.y - currentBlock.position.y < 1) currentBlock._canRight = true;
+      if (rightBlock && rightBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canRight = true;
 
       const btmBlock = getBlock(x, z - 1);
-      if (btmBlock && btmBlock.position.y - currentBlock.position.y < 1) currentBlock._canBtm = true;
+      if (btmBlock && btmBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canBtm = true;
 
       const topBlock = getBlock(x, z + 1);
-      if (topBlock && topBlock.position.y - currentBlock.position.y < 1) currentBlock._canTop = true;
+      if (topBlock && topBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canTop = true;
     }
   }
 
