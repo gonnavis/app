@@ -41,14 +41,17 @@ import metaversefileApi from 'metaversefile';
 // const rightHandOffset = new THREE.Vector3(-0.2, -0.2, -0.4);
 
 window.isStart = false;
+window.isRising = false;
 // const width = 71;
 // const height = 71;
-const width = 15;
-const height = 15;
+const width = 35;
+const height = 35;
 // const start = new THREE.Vector2(-7, -5)
-const start = new THREE.Vector2(-3, -4)
 // const dest = new THREE.Vector2(4, 6)
-const dest = new THREE.Vector2(5, 6)
+// const start = new THREE.Vector2(-12, -14)
+// const dest = new THREE.Vector2(-6, -27)
+const start = new THREE.Vector2(0, 0)
+const dest = new THREE.Vector2(0, 15)
 window.frontiers = []
 window.blocks = new THREE.Group();
 window.rootScene.add(window.blocks);
@@ -150,8 +153,9 @@ function untilFound() {
 }
 window.generateVoxelMap = generateVoxelMap
 function generateVoxelMap() {
+  window.isRising = false;
   window.blocks.children.forEach((block, i) => {
-    if (block.position.y > 2) {
+    if (block.position.y > 3) {
       block._isObstacle = true
       block.material = materialObstacle
     }
@@ -438,7 +442,7 @@ export default class Webaverse extends EventTarget {
       // window.totalTime = 0
       // window.count = 0
 
-      if (window.isStart && window.blocks) { // mark: generate voxel map
+      if (window.isRising && window.blocks) { // mark: generate voxel map
         window.blocks.children.forEach((block, i) => {
           // if (i === 0) debugger;
           if (block._isCollide) {
