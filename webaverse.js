@@ -42,10 +42,10 @@ import metaversefileApi from 'metaversefile';
 
 window.isStart = false;
 window.isRising = false;
-const width = 71;
-const height = 71;
-// const width = 35;
-// const height = 35;
+// const width = 71;
+// const height = 71;
+const width = 35;
+const height = 35;
 
 const tmpVec2 = new THREE.Vector2()
 
@@ -53,10 +53,10 @@ const tmpVec2 = new THREE.Vector2()
 // const dest = new THREE.Vector2(4, 6)
 // const start = new THREE.Vector2(-12, -14)
 // const dest = new THREE.Vector2(-6, -27)
-const start = new THREE.Vector2(24, -5)
-const dest = new THREE.Vector2(24, 24)
-// const start = new THREE.Vector2(0, 0)
-// const dest = new THREE.Vector2(0, 15)
+// const start = new THREE.Vector2(24, -5)
+// const dest = new THREE.Vector2(24, 24)
+const start = new THREE.Vector2(0, 0)
+const dest = new THREE.Vector2(0, 15)
 swapStartDest();
 
 window.frontiers = []
