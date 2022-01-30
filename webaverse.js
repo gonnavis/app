@@ -47,7 +47,7 @@ window.isRising = false;
 const width = 35;
 const height = 35;
 
-const tmpVec2 = new THREE.Vector2()
+const tmpVec2 = new THREE.Vector2();
 
 // const start = new THREE.Vector2(-7, -5)
 // const dest = new THREE.Vector2(4, 6)
@@ -55,34 +55,34 @@ const tmpVec2 = new THREE.Vector2()
 // const dest = new THREE.Vector2(-6, -27)
 // const start = new THREE.Vector2(24, -5)
 // const dest = new THREE.Vector2(24, 24)
-const start = new THREE.Vector2(0, 0)
-const dest = new THREE.Vector2(0, 15)
+const start = new THREE.Vector2(0, 0);
+const dest = new THREE.Vector2(0, 15);
 swapStartDest();
 
-window.frontiers = []
+window.frontiers = [];
 window.blocks = new THREE.Group();
 window.rootScene.add(window.blocks);
 
-const materialIdle = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(221,213,213)') });
-const materialAct = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(204,191,179)') });
-const materialFrontier = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(92,133,214)') });
-const materialStart = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(191,64,64)') });
-const materialDest = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(191,64,170)') });
-const materialPath = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(149,64,191)') });
-const materialObstacle = new THREE.MeshStandardMaterial({ color: new THREE.Color('rgb(134,134,121)') });
+const materialIdle = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(221,213,213)')});
+const materialAct = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(204,191,179)')});
+const materialFrontier = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(92,133,214)')});
+const materialStart = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(191,64,64)')});
+const materialDest = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(191,64,170)')});
+const materialPath = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(149,64,191)')});
+const materialObstacle = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(134,134,121)')});
 
-const vs = {}
-vs.xy_to_serial = function (width, xy) { // :index
-  return xy.y * width + xy.x
-}
+const vs = {};
+vs.xy_to_serial = function(width, xy) { // :index
+  return xy.y * width + xy.x;
+};
 
 window.getblock = getBlock;
 function getBlock(x, y) {
   // if (x === -10) debugger
-  x += (width - 1) / 2
-  y += (height - 1) / 2
-  if (x < 0 || y < 0 || x >= width || y >= height) return null
-  return window.blocks.children[vs.xy_to_serial(width, {x, y})]
+  x += (width - 1) / 2;
+  y += (height - 1) / 2;
+  if (x < 0 || y < 0 || x >= width || y >= height) return null;
+  return window.blocks.children[vs.xy_to_serial(width, {x, y})];
 }
 
 function swapStartDest() {
@@ -94,84 +94,84 @@ function swapStartDest() {
 function stepBlock(block, prevBlock) {
   function recur(block) {
     if (block) {
-      if (!block._isStart && !block._isDest) block.material = materialPath
-      recur(block._prev)
+      if (!block._isStart && !block._isDest) block.material = materialPath;
+      recur(block._prev);
     }
   }
-  if (!block) return
-  if (block._isObstacle) return
+  if (!block) return;
+  if (block._isObstacle) return;
   // if (block._x === 9) debugger
-  const newCost = prevBlock._costSoFar + 1
+  const newCost = prevBlock._costSoFar + 1;
   // if (block._isAct === false || newCost < block._costSoFar) {
   if (block._isAct === false) { // Seems no need `|| newCost < block._costSoFar` ? Need? http://disq.us/p/2mgpazs
-    block._isAct = true
-    block._costSoFar = newCost
+    block._isAct = true;
+    block._costSoFar = newCost;
 
     // todo: use Vector2 instead of _x _z.
     // block._priority = tmpVec2.set(block._x, block._z).manhattanDistanceTo(dest)
     // block._priority = tmpVec2.set(block._x, block._z).distanceToSquared(dest)
-    block._priority = tmpVec2.set(block._x, block._z).distanceTo(dest)
-    block._priority += newCost
-    window.frontiers.push(block)
+    block._priority = tmpVec2.set(block._x, block._z).distanceTo(dest);
+    block._priority += newCost;
+    window.frontiers.push(block);
     // window.frontiers.unshift(block)
-    window.frontiers.sort((a, b) => a._priority - b._priority)
+    window.frontiers.sort((a, b) => a._priority - b._priority);
 
-    if (!block._isStart && !block._isDest) block.material = materialFrontier
-    block._prev = prevBlock
+    if (!block._isStart && !block._isDest) block.material = materialFrontier;
+    block._prev = prevBlock;
   }
   if (block._isDest) {
-    console.log('found')
-    window.isFound = true
-    recur(block)
+    console.log('found');
+    window.isFound = true;
+    recur(block);
   }
 }
 
 window.step = step;
 function step() {
-  console.log('step')
+  console.log('step');
   // debugger
   if (window.frontiers.length <= 0) {
-    console.log('finish')
-    return
+    console.log('finish');
+    return;
   }
-  if (window.isFound) return
+  if (window.isFound) return;
 
   const currentBlock = window.frontiers.shift();
-  if (!currentBlock._isStart) currentBlock.material = materialAct
+  if (!currentBlock._isStart) currentBlock.material = materialAct;
 
   if (currentBlock._canLeft) {
-    const leftBlock = getBlock(currentBlock._x - 1, currentBlock._z)
+    const leftBlock = getBlock(currentBlock._x - 1, currentBlock._z);
     stepBlock(leftBlock, currentBlock);
-    if (window.isFound) return
+    if (window.isFound) return;
   }
 
   if (currentBlock._canRight) {
-    const rightBlock = getBlock(currentBlock._x + 1, currentBlock._z)
+    const rightBlock = getBlock(currentBlock._x + 1, currentBlock._z);
     stepBlock(rightBlock, currentBlock);
-    if (window.isFound) return
+    if (window.isFound) return;
   }
 
   if (currentBlock._canBtm) {
-    const btmBlock = getBlock(currentBlock._x, currentBlock._z - 1)
+    const btmBlock = getBlock(currentBlock._x, currentBlock._z - 1);
     stepBlock(btmBlock, currentBlock);
-    if (window.isFound) return
+    if (window.isFound) return;
   }
 
   if (currentBlock._canTop) {
-    const topBlock = getBlock(currentBlock._x, currentBlock._z + 1)
+    const topBlock = getBlock(currentBlock._x, currentBlock._z + 1);
     stepBlock(topBlock, currentBlock);
     // if (window.isFound) return
   }
 }
 window.tenStep = tenStep;
 function tenStep() {
-  for (let i = 0; i < 10; i++) step()
+  for (let i = 0; i < 10; i++) step();
 }
 window.untilFound = untilFound;
 function untilFound() {
-  while (!window.isFound) step()
+  while (!window.isFound) step();
 }
-window.generateVoxelMap = generateVoxelMap
+window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
   window.isRising = false;
 
@@ -203,7 +203,7 @@ function generateVoxelMap() {
   console.log('generated voxel map');
 }
 
-window.domBtns.addEventListener('click', e => e.stopPropagation())
+window.domBtns.addEventListener('click', e => e.stopPropagation());
 
 const localVector = new THREE.Vector3();
 const localVector2 = new THREE.Vector3();
@@ -622,29 +622,29 @@ const _startHacks = () => {
         block.updateMatrixWorld();
         block._isCollide = true;
         // block._haveNotCollided = true; // for _haveNotCollided
-        block.position.x = x
-        block.position.z = z
-        block._x = x
-        block._z = z
-        block._isAct = false
+        block.position.x = x;
+        block.position.z = z;
+        block._x = x;
+        block._z = z;
+        block._isAct = false;
       }
     }
 
     // dest
-    const destBlock = getBlock(dest.x, dest.y)
+    const destBlock = getBlock(dest.x, dest.y);
     // const destBlock = getBlock(0, 0)
-    destBlock._isDest = true
-    destBlock.material = materialDest
+    destBlock._isDest = true;
+    destBlock.material = materialDest;
 
     // start
-    const startBlock = getBlock(start.x, start.y)
-    startBlock._isStart = true
-    startBlock._isAct = true
+    const startBlock = getBlock(start.x, start.y);
+    startBlock._isStart = true;
+    startBlock._isAct = true;
     // startBlock._priority = start.manhattanDistanceTo(dest)
-    startBlock._priority = start.distanceTo(dest)
-    startBlock._costSoFar = 0
-    window.frontiers.push(startBlock)
-    startBlock.material = materialStart
+    startBlock._priority = start.distanceTo(dest);
+    startBlock._costSoFar = 0;
+    window.frontiers.push(startBlock);
+    startBlock.material = materialStart;
   }
 
   if (0) {
