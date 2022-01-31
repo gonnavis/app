@@ -295,7 +295,7 @@ export default class Webaverse extends EventTarget {
     rendererStats.domElement.style.position = 'absolute';
     rendererStats.domElement.style.left = '0px';
     rendererStats.domElement.style.bottom = '0px';
-    // rendererStats.domElement.style.display = 'none';
+    rendererStats.domElement.style.display = 'none';
     document.body.appendChild(rendererStats.domElement);
 
     {
@@ -312,7 +312,7 @@ export default class Webaverse extends EventTarget {
     })();
     this.contentLoaded = false;
   }
-
+  
   waitForLoad() {
     return this.loadPromise;
   }
@@ -320,46 +320,37 @@ export default class Webaverse extends EventTarget {
   getRenderer() {
     return getRenderer();
   }
-
   getScene() {
     return scene;
   }
-
   getSceneHighPriority() {
     return sceneHighPriority;
   }
-
   getSceneLowPriority() {
     return sceneLowPriority;
   }
-
   getCamera() {
     return camera;
   }
-
+  
   setContentLoaded() {
     this.contentLoaded = true;
   }
-
   bindInput() {
     ioManager.bindInput();
   }
-
   bindInterface() {
     ioManager.bindInterface();
     blockchain.bindInterface();
   }
-
   bindCanvas(c) {
     bindCanvas(c);
-
+    
     postProcessing.bindCanvas();
   }
-
   bindPreviewCanvas(canvas) {
     game.bindPreviewCanvas(canvas);
   }
-
   async isXrSupported() {
     if (navigator.xr) {
       let ok = false;
@@ -373,7 +364,6 @@ export default class Webaverse extends EventTarget {
       return false;
     }
   }
-
   /* toggleMic() {
     return world.toggleMic();
   } */
@@ -384,10 +374,10 @@ export default class Webaverse extends EventTarget {
       let session = null;
       try {
         session = await navigator.xr.requestSession(sessionMode, sessionOpts);
-      } catch (err) {
+      } catch(err) {
         try {
           session = await navigator.xr.requestSession(sessionMode);
-        } catch (err) {
+        } catch(err) {
           console.warn(err);
         }
       }
@@ -404,7 +394,7 @@ export default class Webaverse extends EventTarget {
       await session.end();
     }
   }
-
+  
   /* injectRigInput() {
     let leftGamepadPosition, leftGamepadQuaternion, leftGamepadPointer, leftGamepadGrip, leftGamepadEnabled;
     let rightGamepadPosition, rightGamepadQuaternion, rightGamepadPointer, rightGamepadGrip, rightGamepadEnabled;
@@ -498,68 +488,57 @@ export default class Webaverse extends EventTarget {
       [rightGamepadPosition, rightGamepadQuaternion, rightGamepadPointer, rightGamepadGrip, rightGamepadEnabled],
     ]);
   } */
-
+  
   render(timestamp, timeDiff) {
     const renderer = getRenderer();
     frameEvent.data.now = timestamp;
     frameEvent.data.timeDiff = timeDiff;
     this.dispatchEvent(frameEvent);
     // frameEvent.data.lastTimestamp = timestamp;
-
+    
     // equipment panel render
     // equipmentRender.previewScene.add(world.lights);
     // equipmentRender.render();
 
     getComposer().render();
-    // if(ioManager.debugMode) {
-    rendererStats.update(renderer);
-    // }
+    if(ioManager.debugMode) {
+      rendererStats.update(renderer);
+    }
   }
-
+  
   startLoop() {
     const renderer = getRenderer();
     if (!renderer) {
       throw new Error('must bind canvas first');
     }
-
+    
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => {
-      // console.log('animate');
-      // window.totalTime = 0
-      // window.count = 0
-
       if (window.isRising && window.blocks) { // mark: generate voxel map
         window.blocks.children.forEach((block, i) => {
-          // if (i === 0) debugger;
           if (block._isCollide) {
-            // if (block._haveNotCollided || block._isCollide) { // for _haveNotCollided
-            // console.log(i);
-            // physicsManager.collide(radius, halfHeight, p, q, maxIter)
             block.position.y += 0.1;
             block.updateMatrixWorld();
             block._isCollide = physicsManager.collide(0.5, 1, block.position, localQuaternion.set(0, 0, 0, 1), 1);
-            // if (block._isCollide) block._haveNotCollided = false; // for _haveNotCollided
           }
         });
       }
 
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
-      const timeDiffS = timeDiff / 1000;
-      const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100);
-      const timeDiffSCapped = timeDiffCapped / 1000;
-      // const timeDiffCapped = timeDiff;
+      const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100); 
+      //const timeDiffCapped = timeDiff;
 
       ioManager.update(timeDiffCapped);
       // this.injectRigInput();
-
+      
       cameraManager.update(timeDiffCapped);
-
+      
       const localPlayer = metaversefileApi.useLocalPlayer();
       if (this.contentLoaded) {
-        // if(performance.now() - lastTimestamp < 1000/60) return; // There might be a better solution, we need to limit the simulate time otherwise there will be jitter at different FPS
-        physicsManager.simulatePhysics(timeDiffCapped);
+        //if(performance.now() - lastTimestamp < 1000/60) return; // There might be a better solution, we need to limit the simulate time otherwise there will be jitter at different FPS
+        physicsManager.simulatePhysics(timeDiffCapped); 
         localPlayer.updatePhysics(timestamp, timeDiffCapped);
       }
 
@@ -567,16 +546,16 @@ export default class Webaverse extends EventTarget {
 
       transformControls.update();
       game.update(timestamp, timeDiffCapped);
-
+      
       localPlayer.updateAvatar(timestamp, timeDiffCapped);
       playersManager.update(timestamp, timeDiffCapped);
-
+      
       world.appManager.tick(timestamp, timeDiffCapped, frame);
 
       hpManager.update(timestamp, timeDiffCapped);
 
       ioManager.updatePost();
-
+      
       game.pushAppUpdates();
       game.pushPlayerUpdates();
 
@@ -585,16 +564,14 @@ export default class Webaverse extends EventTarget {
 
       const session = renderer.xr.getSession();
       const xrCamera = session ? renderer.xr.getCamera(camera) : camera;
-      localMatrix.multiplyMatrices(xrCamera.projectionMatrix, /* localMatrix2.multiplyMatrices( */xrCamera.matrixWorldInverse/*, physx.worldContainer.matrixWorld) */);
+      localMatrix.multiplyMatrices(xrCamera.projectionMatrix, /*localMatrix2.multiplyMatrices(*/xrCamera.matrixWorldInverse/*, physx.worldContainer.matrixWorld)*/);
       localMatrix3.copy(xrCamera.matrix)
         .premultiply(dolly.matrix)
         .decompose(localVector, localQuaternion, localVector2);
-
+        
       this.render(timestamp, timeDiffCapped);
 
-      // window.domAverageTime.innerText = `${window.count} | ${window.totalTime / window.count}`
-    };
-
+    }
     renderer.setAnimationLoop(animate);
 
     _startHacks();
@@ -607,25 +584,14 @@ const _startHacks = () => {
   window.meshPhysxs = [];
   const geometry = new THREE.BoxGeometry();
   geometry.scale(0.9, 0.9, 0.9);
-  // geometry.translate(0, -0.7, 0);
   geometry.translate(0, -1.2, 0);
-  // const geometry = new THREE.PlaneGeometry(0.7, 0.7);
-  // geometry.rotateX(-Math.PI / 2);
-  // geometry.translate(0, -0.5, 0);
-  const material = new THREE.MeshStandardMaterial({
-    color: 'red',
-    // transparent: true,
-    // opacity: 0.7,
-  });
   for (let z = -(height - 1) / 2; z < height / 2; z++) {
     for (let x = -(width - 1) / 2; x < width / 2; x++) {
       const block = new THREE.Mesh(geometry, materialIdle);
       window.blocks.add(block);
       block.position.set(x, -0.1, z);
-      // block.position.set(x, 1.5, z); // for _haveNotCollided
       block.updateMatrixWorld();
       block._isCollide = true;
-      // block._haveNotCollided = true; // for _haveNotCollided
       block.position.x = x;
       block.position.z = z;
       block._x = x;
@@ -653,7 +619,7 @@ const _startHacks = () => {
       const key1 = lastEmoteKey.key;
       const key2 = key;
       emoteIndex = (key1 * 10) + key2;
-
+      
       lastEmoteKey.key = -1;
       lastEmoteKey.timestamp = 0;
     } else {
@@ -825,7 +791,7 @@ const _startHacks = () => {
 
           audios[0].play();
           audios[1].play();
-
+          
           audios[0].addEventListener('ended', e => {
             localPlayer.avatar.setMicrophoneMediaStream(null);
           });
@@ -884,7 +850,7 @@ const _startHacks = () => {
       poseAnimationIndex++;
       poseAnimationIndex = Math.min(Math.max(poseAnimationIndex, -1), vpdAnimations.length - 1);
       _updatePoseAnimation();
-
+    
       // _ensureMikuModel();
       // _updateMikuModel();
     } else if (e.which === 109) { // -
