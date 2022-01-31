@@ -42,21 +42,22 @@ import metaversefileApi from 'metaversefile';
 
 window.isStart = false;
 window.isRising = false;
-// const width = 71;
-// const height = 71;
-const width = 35;
-const height = 35;
+window.isGeneratedVoxelMap = false;
+const width = 71;
+const height = 71;
+// const width = 35;
+// const height = 35;
 
 const tmpVec2 = new THREE.Vector2();
 
-// const start = new THREE.Vector2(-7, -5)
-// const dest = new THREE.Vector2(4, 6)
-// const start = new THREE.Vector2(-12, -14)
-// const dest = new THREE.Vector2(-6, -27)
-// const start = new THREE.Vector2(24, -5)
-// const dest = new THREE.Vector2(24, 24)
-const start = new THREE.Vector2(0, 0);
-const dest = new THREE.Vector2(0, 15);
+// window.start = new THREE.Vector2(-7, -5)
+// window.dest = new THREE.Vector2(4, 6)
+// window.start = new THREE.Vector2(-12, -14)
+// window.dest = new THREE.Vector2(-6, -27)
+// window.start = new THREE.Vector2(24, -5)
+// window.dest = new THREE.Vector2(24, 24)
+window.start = new THREE.Vector2(0, 0);
+window.dest = new THREE.Vector2(0, 15);
 swapStartDest();
 
 window.frontiers = [];
@@ -76,6 +77,42 @@ vs.xy_to_serial = function(width, xy) { // :index
   return xy.y * width + xy.x;
 };
 
+window.resetStartDest = resetStartDest;
+function resetStartDest(startX, startZ, destX, destZ) {
+  window.isFound = false;
+  window.frontiers.length = 0;
+
+  window.blocks.children.forEach(block => {
+    block._isStart = false;
+    block._isDest = false;
+    block._isAct = false;
+    block._priority = 0;
+    block._costSoFar = 0;
+    block._prev = null;
+    if (block.material !== materialObstacle) block.material = materialIdle;
+  });
+
+  window.start.set(startX, startZ);
+  window.dest.set(destX, destZ);
+
+  const startBlock = getBlock(startX, startZ);
+  startBlock._isStart = true;
+  startBlock._isAct = true;
+  // startBlock._priority = start.manhattanDistanceTo(dest)
+  startBlock._priority = window.start.distanceTo(window.dest);
+  startBlock._costSoFar = 0;
+  window.frontiers.push(startBlock);
+  startBlock.material = materialStart;
+
+  const destBlock = getBlock(destX, destZ);
+  destBlock._isDest = true;
+  destBlock.material = materialDest;
+}
+
+window.setStart = setStart;
+function setStart(x, z) {
+}
+
 window.getblock = getBlock;
 function getBlock(x, y) {
   // if (x === -10) debugger
@@ -86,9 +123,9 @@ function getBlock(x, y) {
 }
 
 function swapStartDest() {
-  tmpVec2.copy(start);
-  start.copy(dest);
-  dest.copy(tmpVec2);
+  tmpVec2.copy(window.start);
+  window.start.copy(window.dest);
+  window.dest.copy(tmpVec2);
 }
 
 function stepBlock(block, prevBlock) {
@@ -130,6 +167,10 @@ window.step = step;
 function step() {
   console.log('step');
   // debugger
+  if (!window.isGeneratedVoxelMap) {
+    console.log('voxel map not generated.');
+    return;
+  }
   if (window.frontiers.length <= 0) {
     console.log('finish');
     return;
@@ -169,7 +210,7 @@ function tenStep() {
 }
 window.untilFound = untilFound;
 function untilFound() {
-  while (!window.isFound) step();
+  while (window.isGeneratedVoxelMap && window.frontiers.length > 0 && !window.isFound) step();
 }
 window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
@@ -200,6 +241,7 @@ function generateVoxelMap() {
   //   }
   // })
 
+  window.isGeneratedVoxelMap = true;
   console.log('generated voxel map');
 }
 
@@ -630,21 +672,7 @@ const _startHacks = () => {
       }
     }
 
-    // dest
-    const destBlock = getBlock(dest.x, dest.y);
-    // const destBlock = getBlock(0, 0)
-    destBlock._isDest = true;
-    destBlock.material = materialDest;
-
-    // start
-    const startBlock = getBlock(start.x, start.y);
-    startBlock._isStart = true;
-    startBlock._isAct = true;
-    // startBlock._priority = start.manhattanDistanceTo(dest)
-    startBlock._priority = start.distanceTo(dest);
-    startBlock._costSoFar = 0;
-    window.frontiers.push(startBlock);
-    startBlock.material = materialStart;
+    resetStartDest(window.start.x, window.start.y, window.dest.x, window.dest.y);
   }
 
   if (0) {
