@@ -168,7 +168,7 @@ function step() {
   console.log('step');
   // debugger
   if (!window.isGeneratedVoxelMap) {
-    console.log('voxel map not generated.');
+    console.warn('voxel map not generated.');
     return;
   }
   if (window.frontiers.length <= 0) {
@@ -206,11 +206,19 @@ function step() {
 }
 window.tenStep = tenStep;
 function tenStep() {
+  if (!window.isGeneratedVoxelMap) {
+    console.warn('voxel map not generated.');
+    return;
+  }
   for (let i = 0; i < 10; i++) step();
 }
 window.untilFound = untilFound;
 function untilFound() {
-  while (window.isGeneratedVoxelMap && window.frontiers.length > 0 && !window.isFound) step();
+  if (!window.isGeneratedVoxelMap) {
+    console.warn('voxel map not generated.');
+    return;
+  }
+  while (window.frontiers.length > 0 && !window.isFound) step();
 }
 window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
