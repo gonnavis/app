@@ -88,24 +88,25 @@ function resetStartDest(startX, startZ, destX, destZ) {
     block._priority = 0;
     block._costSoFar = 0;
     block._prev = null;
+    block._next = null;
     if (block.material !== materialObstacle) block.material = materialIdle;
   });
 
   window.start.set(startX, startZ);
   window.dest.set(destX, destZ);
 
-  const startBlock = getBlock(startX, startZ);
-  startBlock._isStart = true;
-  startBlock._isAct = true;
-  // startBlock._priority = start.manhattanDistanceTo(dest)
-  startBlock._priority = window.start.distanceTo(window.dest);
-  startBlock._costSoFar = 0;
-  window.frontiers.push(startBlock);
-  startBlock.material = materialStart;
+  window.startBlock = getBlock(startX, startZ);
+  window.startBlock._isStart = true;
+  window.startBlock._isAct = true;
+  // window.startBlock._priority = start.manhattanDistanceTo(dest)
+  window.startBlock._priority = window.start.distanceTo(window.dest);
+  window.startBlock._costSoFar = 0;
+  window.frontiers.push(window.startBlock);
+  window.startBlock.material = materialStart;
 
-  const destBlock = getBlock(destX, destZ);
-  destBlock._isDest = true;
-  destBlock.material = materialDest;
+  window.destBlock = getBlock(destX, destZ);
+  window.destBlock._isDest = true;
+  window.destBlock.material = materialDest;
 }
 
 window.setStart = setStart;
@@ -151,6 +152,7 @@ function stepBlock(block, prevBlock) {
 
     if (!block._isStart && !block._isDest) block.material = materialFrontier;
     block._prev = prevBlock;
+    prevBlock._next = block;
   }
   if (block._isDest) {
     console.log('found');
