@@ -131,6 +131,7 @@ function stepBlock(block, prevBlock) {
   function recur(block) {
     if (block) {
       if (!block._isStart && !block._isDest) block.material = materialPath;
+      if (block._prev) block._prev._next = block;
       recur(block._prev);
     }
   }
@@ -152,7 +153,6 @@ function stepBlock(block, prevBlock) {
 
     if (!block._isStart && !block._isDest) block.material = materialFrontier;
     block._prev = prevBlock;
-    prevBlock._next = block;
   }
   if (block._isDest) {
     console.log('found');
@@ -525,6 +525,12 @@ export default class Webaverse extends EventTarget {
             block._isCollide = physicsManager.collide(0.5, 1, block.position, localQuaternion.set(0, 0, 0, 1), 1);
           }
         });
+      }
+      if (window.petDestBlock) {
+        if (Math.abs(window.fox.position.x - window.petDestBlock.position.x) < 1 && Math.abs(window.fox.position.z - window.petDestBlock.position.z) < 1) {
+          // debugger
+          if (window.petDestBlock._next) window.petDestBlock = window.petDestBlock._next;
+        }
       }
 
       timestamp = timestamp ?? performance.now();
