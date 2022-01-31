@@ -24,12 +24,11 @@ import {
   scene,
   sceneHighPriority,
   sceneLowPriority,
-  // rootScene,
+  rootScene,
   camera,
   dolly,
   bindCanvas,
   getComposer,
-  rootScene,
 } from './renderer.js';
 import transformControls from './transform-controls.js';
 import * as metaverseModules from './metaverse-modules.js';
@@ -62,7 +61,7 @@ swapStartDest();
 
 window.frontiers = [];
 window.blocks = new THREE.Group();
-window.rootScene.add(window.blocks);
+rootScene.add(window.blocks);
 
 const materialIdle = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(221,213,213)')});
 const materialAct = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(204,191,179)')});
@@ -115,7 +114,6 @@ function setStart(x, z) {
 
 window.getblock = getBlock;
 function getBlock(x, y) {
-  // if (x === -10) debugger
   x += (width - 1) / 2;
   y += (height - 1) / 2;
   if (x < 0 || y < 0 || x >= width || y >= height) return null;
@@ -137,7 +135,6 @@ function stepBlock(block, prevBlock) {
   }
   if (!block) return;
   if (block._isObstacle) return;
-  // if (block._x === 9) debugger
   const newCost = prevBlock._costSoFar + 1;
   // if (block._isAct === false || newCost < block._costSoFar) {
   if (block._isAct === false) { // Seems no need `|| newCost < block._costSoFar` ? Need? http://disq.us/p/2mgpazs
@@ -147,10 +144,9 @@ function stepBlock(block, prevBlock) {
     // todo: use Vector2 instead of _x _z.
     // block._priority = tmpVec2.set(block._x, block._z).manhattanDistanceTo(dest)
     // block._priority = tmpVec2.set(block._x, block._z).distanceToSquared(dest)
-    block._priority = tmpVec2.set(block._x, block._z).distanceTo(dest);
+    block._priority = tmpVec2.set(block._x, block._z).distanceTo(window.dest);
     block._priority += newCost;
     window.frontiers.push(block);
-    // window.frontiers.unshift(block)
     window.frontiers.sort((a, b) => a._priority - b._priority);
 
     if (!block._isStart && !block._isDest) block.material = materialFrontier;
@@ -548,14 +544,6 @@ export default class Webaverse extends EventTarget {
         });
       }
 
-      if (false && window.bodyPhysxs) {
-        window.bodyPhysxs.forEach((body, i) => {
-          physicsManager.getGlobalPosition(body, window.meshPhysxs[i].position);
-          physicsManager.getGlobalQuaternion(body, window.meshPhysxs[i].quaternion);
-          window.meshPhysxs[i].updateMatrixWorld();
-        });
-      }
-
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
       const timeDiffS = timeDiff / 1000;
@@ -602,40 +590,6 @@ export default class Webaverse extends EventTarget {
         .premultiply(dolly.matrix)
         .decompose(localVector, localQuaternion, localVector2);
 
-      if (false && window.isStart && window.body) { // physicsCube follow role
-        localVector.subVectors(window.localPlayer.position, window.body.position);
-        localVector.y = 0;
-        // localVector.normalize();
-        localVector.multiplyScalar(0.01);
-        window.body.position.add(localVector);
-        physicsManager.setTransform(window.body);
-      }
-
-      if (false && window.isInitTestPhysxMesh) {
-        const speed = 3 * timeDiffSCapped; // todo: Why moveCharacterController's timeDiffSCapped/elapsedTime no effect? Need multiply here?
-        const followDistance = 3;
-        localVector.subVectors(window.localPlayer.position, window.meshPhysx.position);
-        if (localVector.length() <= followDistance) {
-          localVector.set(0, 0, 0);
-        } else {
-          localVector.normalize().multiplyScalar(speed);
-        }
-        localVector.y += -0.98;
-        // localVector.normalize();
-        // localVector.multiplyScalar(0.01);
-        const minDist = 0;
-        const flags = physicsManager.moveCharacterController(
-          window.characterController,
-          localVector,
-          minDist,
-          timeDiffSCapped,
-          window.meshPhysx.position,
-        );
-        window.meshPhysx.updateMatrixWorld();
-        // const collided = flags !== 0;
-        const grounded = !!(flags & 0x1);
-      }
-
       this.render(timestamp, timeDiffCapped);
 
       // window.domAverageTime.innerText = `${window.count} | ${window.totalTime / window.count}`
@@ -649,82 +603,38 @@ export default class Webaverse extends EventTarget {
 
 // import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader.js';
 const _startHacks = () => {
-  if (1) { // mark: generate voxel map
-    window.meshPhysxs = [];
-    const geometry = new THREE.BoxGeometry();
-    geometry.scale(0.9, 0.9, 0.9);
-    // geometry.translate(0, -0.7, 0);
-    geometry.translate(0, -1.2, 0);
-    // const geometry = new THREE.PlaneGeometry(0.7, 0.7);
-    // geometry.rotateX(-Math.PI / 2);
-    // geometry.translate(0, -0.5, 0);
-    const material = new THREE.MeshStandardMaterial({
-      color: 'red',
-      // transparent: true,
-      // opacity: 0.7,
-    });
-    for (let z = -(height - 1) / 2; z < height / 2; z++) {
-      for (let x = -(width - 1) / 2; x < width / 2; x++) {
-        const block = new THREE.Mesh(geometry, materialIdle);
-        window.blocks.add(block);
-        block.position.set(x, -0.1, z);
-        // block.position.set(x, 1.5, z); // for _haveNotCollided
-        block.updateMatrixWorld();
-        block._isCollide = true;
-        // block._haveNotCollided = true; // for _haveNotCollided
-        block.position.x = x;
-        block.position.z = z;
-        block._x = x;
-        block._z = z;
-        block._isAct = false;
-      }
-    }
-
-    resetStartDest(window.start.x, window.start.y, window.dest.x, window.dest.y);
-  }
-
-  if (0) {
-    window.meshPhysxs = [];
-    window.bodyPhysxs = [];
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshStandardMaterial({color: 'red'});
-    for (let z = -10; z <= 10; z++) {
-      for (let x = -10; x <= 10; x++) {
-        const bodyPhysx = physicsManager.addBoxGeometry(new THREE.Vector3(x, 10, z), new THREE.Quaternion(), new THREE.Vector3(0.5, 0.5, 0.5), true);
-        window.bodyPhysxs.push(bodyPhysx);
-
-        const meshPhysx = new THREE.Mesh(geometry, material);
-        window.meshPhysxs.push(meshPhysx);
-        window.rootScene.add(meshPhysx);
-      }
+  // mark: generate voxel map
+  window.meshPhysxs = [];
+  const geometry = new THREE.BoxGeometry();
+  geometry.scale(0.9, 0.9, 0.9);
+  // geometry.translate(0, -0.7, 0);
+  geometry.translate(0, -1.2, 0);
+  // const geometry = new THREE.PlaneGeometry(0.7, 0.7);
+  // geometry.rotateX(-Math.PI / 2);
+  // geometry.translate(0, -0.5, 0);
+  const material = new THREE.MeshStandardMaterial({
+    color: 'red',
+    // transparent: true,
+    // opacity: 0.7,
+  });
+  for (let z = -(height - 1) / 2; z < height / 2; z++) {
+    for (let x = -(width - 1) / 2; x < width / 2; x++) {
+      const block = new THREE.Mesh(geometry, materialIdle);
+      window.blocks.add(block);
+      block.position.set(x, -0.1, z);
+      // block.position.set(x, 1.5, z); // for _haveNotCollided
+      block.updateMatrixWorld();
+      block._isCollide = true;
+      // block._haveNotCollided = true; // for _haveNotCollided
+      block.position.x = x;
+      block.position.z = z;
+      block._x = x;
+      block._z = z;
+      block._isAct = false;
     }
   }
-  setTimeout(() => {
-    if (false && !window.isInitTestPhysxMesh) {
-      window.isInitTestPhysxMesh = true;
-      const geometry = new THREE.SphereGeometry(0.5);
-      const material = new THREE.MeshStandardMaterial({
-        color: 'green',
-      });
-      window.meshPhysx = new THREE.Mesh(geometry, material);
-      rootScene.add(window.meshPhysx);
-      // console.log(Math.random());
-      // debugger
 
-      window.meshPhysx.position.set(2, 2, 2);
-      window.meshPhysx.updateMatrixWorld();
-
-      const physicsMaterial = new THREE.Vector3(0, 0, 0);
-      window.characterController = physicsManager.createCharacterController(
-        0.5,
-        0.01,
-        0.1,
-        0.5,
-        window.meshPhysx.position,
-        physicsMaterial,
-      );
-    }
-  }, 3000);
+  resetStartDest(window.start.x, window.start.y, window.dest.x, window.dest.y);
 
   const localPlayer = metaversefileApi.useLocalPlayer();
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
