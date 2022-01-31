@@ -76,8 +76,17 @@ vs.xy_to_serial = function(width, xy) { // :index
   return xy.y * width + xy.x;
 };
 
+/* console_test:
+  petDestBlock = startBlock
+  resetStartDest(fox.position.x, fox.position.z, localPlayer.position.x, localPlayer.position.z)
+*/
 window.resetStartDest = resetStartDest;
 function resetStartDest(startX, startZ, destX, destZ) {
+  startX = Math.round(startX);
+  startZ = Math.round(startZ);
+  destX = Math.round(destX);
+  destZ = Math.round(destZ);
+
   window.isFound = false;
   window.frontiers.length = 0;
 
