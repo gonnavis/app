@@ -534,10 +534,16 @@ export default class Webaverse extends EventTarget {
     const animate = (timestamp, frame) => {
       if (window.isRising && window.blocks) { // mark: generate voxel map
         window.blocks.children.forEach((block, i) => {
-          if (block._isCollide) {
+          // if (block._x === 24 && block._z === 7) debugger;
+          if (block._risingState === 'initial' || block._risingState === 'colliding') {
             block.position.y += 0.1;
             block.updateMatrixWorld();
-            block._isCollide = physicsManager.collide(0.5, 1, block.position, localQuaternion.set(0, 0, 0, 1), 1);
+            const isCollide = physicsManager.collide(0.5, 1, block.position, localQuaternion.set(0, 0, 0, 1), 1);
+            if (isCollide) {
+              block._risingState = 'colliding';
+            } else if (block._risingState === 'colliding') {
+              block._risingState = 'stopped';
+            }
           }
         });
       }
@@ -616,8 +622,9 @@ const _startHacks = () => {
       const block = new THREE.Mesh(geometry, materialIdle);
       window.blocks.add(block);
       block.position.set(x, -0.1, z);
+      // block.position.set(x, 1.5, z);
       block.updateMatrixWorld();
-      block._isCollide = true;
+      block._risingState = 'initial'; // 'initial', 'colliding', 'stopped'
       block.position.x = x;
       block.position.z = z;
       block._x = x;
