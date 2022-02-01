@@ -41,6 +41,7 @@ import metaversefileApi from 'metaversefile';
 
 window.isStart = false;
 window.isRising = false;
+window.isRising2 = false;
 window.isGeneratedVoxelMap = false;
 const width = 71;
 const height = 71;
@@ -62,6 +63,8 @@ swapStartDest();
 window.frontiers = [];
 window.blocks = new THREE.Group();
 rootScene.add(window.blocks);
+window.blocks2 = new THREE.Group();
+rootScene.add(window.blocks2);
 
 const materialIdle = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(221,213,213)')});
 const materialAct = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(204,191,179)')});
@@ -101,6 +104,17 @@ function resetStartDest(startX, startZ, destX, destZ) {
     if (block.material !== materialObstacle) block.material = materialIdle;
   });
 
+  window.blocks2.children.forEach(block => {
+    block._isStart = false;
+    block._isDest = false;
+    block._isAct = false;
+    block._priority = 0;
+    block._costSoFar = 0;
+    block._prev = null;
+    block._next = null;
+    if (block.material !== materialObstacle) block.material = materialIdle;
+  });
+
   window.start.set(startX, startZ);
   window.dest.set(destX, destZ);
 
@@ -130,6 +144,17 @@ function riseAgain() {
   });
 }
 
+window.rise2 = rise2;
+function rise2() {
+  window.isRising = false;
+
+  window.blocks2.children.forEach((block, i) => {
+    block.position.y = window.blocks.children[i].position.y;
+  });
+
+  window.isRising2 = true;
+}
+
 window.setStart = setStart;
 function setStart(x, z) {
 }
@@ -140,6 +165,14 @@ function getBlock(x, y) {
   y += (height - 1) / 2;
   if (x < 0 || y < 0 || x >= width || y >= height) return null;
   return window.blocks.children[vs.xy_to_serial(width, {x, y})];
+}
+
+window.getblock2 = getBlock2;
+function getBlock2(x, y) {
+  x += (width - 1) / 2;
+  y += (height - 1) / 2;
+  if (x < 0 || y < 0 || x >= width || y >= height) return null;
+  return window.blocks2.children[vs.xy_to_serial(width, {x, y})];
 }
 
 function swapStartDest() {
@@ -244,6 +277,7 @@ function foxFollowAvatar() { // run after: rise(), generateVoxelMap(), and "E" a
 window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
   window.isRising = false;
+  window.isRising2 = false;
 
   for (let z = -(height - 1) / 2; z < height / 2; z++) {
     for (let x = -(width - 1) / 2; x < width / 2; x++) {
@@ -555,6 +589,21 @@ export default class Webaverse extends EventTarget {
           }
         });
       }
+      if (window.isRising2 && window.blocks2) {
+        window.blocks2.children.forEach((block, i) => {
+          // if (block._x === 24 && block._z === 7) debugger;
+          if (block._risingState === 'initial' || block._risingState === 'colliding') {
+            block.position.y += 0.1;
+            block.updateMatrixWorld();
+            const isCollide = physicsManager.collide(0.5, 1, block.position, localQuaternion.set(0, 0, 0, 1), 1);
+            if (isCollide) {
+              block._risingState = 'colliding';
+            } else if (block._risingState === 'colliding') {
+              block._risingState = 'stopped';
+            }
+          }
+        });
+      }
       if (window.petDestBlock) {
         if (Math.abs(window.fox.position.x - window.petDestBlock.position.x) < 1 && Math.abs(window.fox.position.z - window.petDestBlock.position.z) < 1) {
           // debugger
@@ -629,6 +678,21 @@ const _startHacks = () => {
     for (let x = -(width - 1) / 2; x < width / 2; x++) {
       const block = new THREE.Mesh(geometry, materialIdle);
       window.blocks.add(block);
+      block.position.set(x, -0.1, z);
+      // block.position.set(x, 1.5, z);
+      block.updateMatrixWorld();
+      block._risingState = 'initial'; // 'initial', 'colliding', 'stopped'
+      block.position.x = x;
+      block.position.z = z;
+      block._x = x;
+      block._z = z;
+      block._isAct = false;
+    }
+  }
+  for (let z = -(height - 1) / 2; z < height / 2; z++) {
+    for (let x = -(width - 1) / 2; x < width / 2; x++) {
+      const block = new THREE.Mesh(geometry, materialIdle);
+      window.blocks2.add(block);
       block.position.set(x, -0.1, z);
       // block.position.set(x, 1.5, z);
       block.updateMatrixWorld();
