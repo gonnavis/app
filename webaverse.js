@@ -118,6 +118,11 @@ function resetStartDest(startX, startZ, destX, destZ) {
   window.destBlock.material = materialDest;
 }
 
+window.rise = rise;
+function rise() {
+  window.isRising = true;
+}
+
 window.riseAgain = riseAgain;
 function riseAgain() {
   window.blocks.children.forEach(block => {
