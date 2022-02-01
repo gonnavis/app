@@ -56,9 +56,9 @@ const tmpVec2 = new THREE.Vector2();
 // window.dest = new THREE.Vector2(-6, -27)
 // window.start = new THREE.Vector2(24, -5)
 // window.dest = new THREE.Vector2(24, 24)
-window.start = new THREE.Vector2(0, 0);
-window.dest = new THREE.Vector2(0, 15);
-swapStartDest();
+window.start = new THREE.Vector2(0, 3);
+window.dest = new THREE.Vector2(13, 3);
+// swapStartDest();
 
 window.frontiers = [];
 window.blocks = new THREE.Group();
@@ -118,7 +118,7 @@ function resetStartDest(startX, startZ, destX, destZ) {
   window.start.set(startX, startZ);
   window.dest.set(destX, destZ);
 
-  window.startBlock = getBlock(startX, startZ);
+  window.startBlock = getBlock(startX, startZ); // todo: Not hard-code layer.
   window.startBlock._isStart = true;
   window.startBlock._isAct = true;
   // window.startBlock._priority = start.manhattanDistanceTo(dest)
@@ -127,7 +127,8 @@ function resetStartDest(startX, startZ, destX, destZ) {
   window.frontiers.push(window.startBlock);
   window.startBlock.material = materialStart;
 
-  window.destBlock = getBlock(destX, destZ);
+  // window.destBlock = getBlock(destX, destZ);
+  window.destBlock = getBlock2(destX, destZ); // todo: Not hard-code layer.
   window.destBlock._isDest = true;
   window.destBlock.material = materialDest;
 }
@@ -283,17 +284,70 @@ function generateVoxelMap() {
     for (let x = -(width - 1) / 2; x < width / 2; x++) {
       const currentBlock = getBlock(x, z);
 
-      const leftBlock = getBlock(x - 1, z);
-      if (leftBlock && leftBlock.position.y - currentBlock.position.y < 0.6) currentBlock._leftBlock = leftBlock;
+      const leftBlock2 = getBlock2(x - 1, z);
+      if (leftBlock2 && leftBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._leftBlock = leftBlock2;
+      } else {
+        const leftBlock = getBlock(x - 1, z);
+        if (leftBlock && leftBlock.position.y - currentBlock.position.y < 0.6) {
+          currentBlock._leftBlock = leftBlock;
+        }
+      }
 
-      const rightBlock = getBlock(x + 1, z);
-      if (rightBlock && rightBlock.position.y - currentBlock.position.y < 0.6) currentBlock._rightBlock = rightBlock;
+      const rightBlock2 = getBlock2(x + 1, z);
+      if (rightBlock2 && rightBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._rightBlock = rightBlock2;
+      } else {
+        const rightBlock = getBlock(x + 1, z);
+        if (rightBlock && rightBlock.position.y - currentBlock.position.y < 0.6) {
+          currentBlock._rightBlock = rightBlock;
+        }
+      }
 
-      const btmBlock = getBlock(x, z - 1);
-      if (btmBlock && btmBlock.position.y - currentBlock.position.y < 0.6) currentBlock._btmBlock = btmBlock;
+      const btmBlock2 = getBlock2(x, z - 1);
+      if (btmBlock2 && btmBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._btmBlock = btmBlock2;
+      } else {
+        const btmBlock = getBlock(x, z - 1);
+        if (btmBlock && btmBlock.position.y - currentBlock.position.y < 0.6) {
+          currentBlock._btmBlock = btmBlock;
+        }
+      }
 
-      const topBlock = getBlock(x, z + 1);
-      if (topBlock && topBlock.position.y - currentBlock.position.y < 0.6) currentBlock._topBlock = topBlock;
+      const topBlock2 = getBlock2(x, z + 1);
+      if (topBlock2 && topBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._topBlock = topBlock2;
+      } else {
+        const topBlock = getBlock(x, z + 1);
+        if (topBlock && topBlock.position.y - currentBlock.position.y < 0.6) {
+          currentBlock._topBlock = topBlock;
+        }
+      }
+    }
+  }
+  for (let z = -(height - 1) / 2; z < height / 2; z++) {
+    for (let x = -(width - 1) / 2; x < width / 2; x++) {
+      const currentBlock = getBlock2(x, z);
+
+      const leftBlock2 = getBlock2(x - 1, z);
+      if (leftBlock2 && leftBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._leftBlock = leftBlock2;
+      }
+
+      const rightBlock2 = getBlock2(x + 1, z);
+      if (rightBlock2 && rightBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._rightBlock = rightBlock2;
+      }
+
+      const btmBlock2 = getBlock2(x, z - 1);
+      if (btmBlock2 && btmBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._btmBlock = btmBlock2;
+      }
+
+      const topBlock2 = getBlock2(x, z + 1);
+      if (topBlock2 && topBlock2.position.y - currentBlock.position.y < 0.6) {
+        currentBlock._topBlock = topBlock2;
+      }
     }
   }
 
