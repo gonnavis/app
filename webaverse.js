@@ -547,6 +547,10 @@ export default class Webaverse extends EventTarget {
           if (window.petDestBlock._next) window.petDestBlock = window.petDestBlock._next;
         }
       }
+      // fox auto follow avatar
+      if (window.localPlayer && (Math.abs(window.localPlayer.position.x - window.destBlock.position.x) > 3 || Math.abs(window.localPlayer.position.z - window.destBlock.position.z) > 3)) {
+        foxFollowAvatar();
+      }
 
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
