@@ -84,11 +84,7 @@ vs.xy_to_serial = function(width, xy) { // :index
   resetStartDest(fox.position.x, fox.position.z, localPlayer.position.x, localPlayer.position.z)
 */
 window.resetStartDest = resetStartDest;
-function resetStartDest(startX, startZ, destX, destZ) {
-  startX = Math.round(startX);
-  startZ = Math.round(startZ);
-  destX = Math.round(destX);
-  destZ = Math.round(destZ);
+function resetStartDest(startLayer, startX, startZ, destLayer, destX, destZ) {
 
   window.isFound = false;
   window.frontiers.length = 0;
@@ -118,7 +114,11 @@ function resetStartDest(startX, startZ, destX, destZ) {
   window.start.set(startX, startZ);
   window.dest.set(destX, destZ);
 
-  window.startBlock = getBlock(startX, startZ); // todo: Not hard-code layer.
+  if (startLayer === 1) {
+    window.startBlock = getBlock(startX, startZ);
+  } else if (startLayer === 2) {
+    window.startBlock = getBlock2(startX, startZ);
+  }
   window.startBlock._isStart = true;
   window.startBlock._isAct = true;
   // window.startBlock._priority = start.manhattanDistanceTo(dest)
@@ -127,8 +127,11 @@ function resetStartDest(startX, startZ, destX, destZ) {
   window.frontiers.push(window.startBlock);
   window.startBlock.material = materialStart;
 
-  // window.destBlock = getBlock(destX, destZ);
-  window.destBlock = getBlock2(destX, destZ); // todo: Not hard-code layer.
+  if (destLayer === 1) {
+    window.destBlock = getBlock(destX, destZ);
+  } else if (destLayer === 2) {
+    window.destBlock = getBlock2(destX, destZ);
+  }
   window.destBlock._isDest = true;
   window.destBlock.material = materialDest;
 }
@@ -271,7 +274,35 @@ function untilFound() {
 }
 window.foxFollowAvatar = foxFollowAvatar;
 function foxFollowAvatar() { // run after: rise(), generateVoxelMap(), and "E" activated the fox.
-  resetStartDest(window.fox.position.x, window.fox.position.z, window.localPlayer.position.x, window.localPlayer.position.z);
+  const foxX = Math.round(window.fox.position.x);
+  const foxZ = Math.round(window.fox.position.z);
+  const localPlayerX = Math.round(window.localPlayer.position.x);
+  const localPlayerZ = Math.round(window.localPlayer.position.z);
+
+  let startLayer, destLayer;
+  const startBlock = getBlock(foxX, foxZ);
+  const startBlock2 = getBlock2(foxX, foxZ);
+  const destBlock = getBlock(localPlayerX, localPlayerZ);
+  const destBlock2 = getBlock2(localPlayerX, localPlayerZ);
+  if (Math.abs(startBlock.position.y - window.fox.position.y) < Math.abs(startBlock2.position.y - window.fox.position.y)) {
+    startLayer = 1;
+  } else {
+    startLayer = 2;
+  }
+  if (Math.abs(destBlock.position.y - window.localPlayer.position.y) < Math.abs(destBlock2.position.y - window.localPlayer.position.y)) {
+    destLayer = 1;
+  } else {
+    destLayer = 2;
+  }
+
+  resetStartDest(
+    startLayer,
+    foxX,
+    foxZ,
+    destLayer,
+    localPlayerX,
+    localPlayerZ
+  );
   untilFound();
   window.petDestBlock = window.startBlock;
 }
@@ -759,7 +790,7 @@ const _startHacks = () => {
     }
   }
 
-  resetStartDest(window.start.x, window.start.y, window.dest.x, window.dest.y);
+  resetStartDest(1, window.start.x, window.start.y, 2, window.dest.x, window.dest.y);
 
   const localPlayer = metaversefileApi.useLocalPlayer();
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
