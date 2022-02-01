@@ -227,6 +227,12 @@ function untilFound() {
   }
   while (window.frontiers.length > 0 && !window.isFound) step();
 }
+window.foxFollowAvatar = foxFollowAvatar;
+function foxFollowAvatar() { // run after: rise(), generateVoxelMap(), and "E" activated the fox.
+  resetStartDest(window.fox.position.x, window.fox.position.z, window.localPlayer.position.x, window.localPlayer.position.z);
+  untilFound();
+  window.petDestBlock = window.startBlock;
+}
 window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
   window.isRising = false;
