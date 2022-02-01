@@ -194,27 +194,23 @@ function step() {
   const currentBlock = window.frontiers.shift();
   if (!currentBlock._isStart) currentBlock.material = materialAct;
 
-  if (currentBlock._canLeft) {
-    const leftBlock = getBlock(currentBlock._x - 1, currentBlock._z);
-    stepBlock(leftBlock, currentBlock);
+  if (currentBlock._leftBlock) {
+    stepBlock(currentBlock._leftBlock, currentBlock);
     if (window.isFound) return;
   }
 
-  if (currentBlock._canRight) {
-    const rightBlock = getBlock(currentBlock._x + 1, currentBlock._z);
-    stepBlock(rightBlock, currentBlock);
+  if (currentBlock._rightBlock) {
+    stepBlock(currentBlock._rightBlock, currentBlock);
     if (window.isFound) return;
   }
 
-  if (currentBlock._canBtm) {
-    const btmBlock = getBlock(currentBlock._x, currentBlock._z - 1);
-    stepBlock(btmBlock, currentBlock);
+  if (currentBlock._btmBlock) {
+    stepBlock(currentBlock._btmBlock, currentBlock);
     if (window.isFound) return;
   }
 
-  if (currentBlock._canTop) {
-    const topBlock = getBlock(currentBlock._x, currentBlock._z + 1);
-    stepBlock(topBlock, currentBlock);
+  if (currentBlock._topBlock) {
+    stepBlock(currentBlock._topBlock, currentBlock);
     // if (window.isFound) return
   }
 }
@@ -249,16 +245,16 @@ function generateVoxelMap() {
       const currentBlock = getBlock(x, z);
 
       const leftBlock = getBlock(x - 1, z);
-      if (leftBlock && leftBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canLeft = true;
+      if (leftBlock && leftBlock.position.y - currentBlock.position.y < 0.6) currentBlock._leftBlock = leftBlock;
 
       const rightBlock = getBlock(x + 1, z);
-      if (rightBlock && rightBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canRight = true;
+      if (rightBlock && rightBlock.position.y - currentBlock.position.y < 0.6) currentBlock._rightBlock = rightBlock;
 
       const btmBlock = getBlock(x, z - 1);
-      if (btmBlock && btmBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canBtm = true;
+      if (btmBlock && btmBlock.position.y - currentBlock.position.y < 0.6) currentBlock._btmBlock = btmBlock;
 
       const topBlock = getBlock(x, z + 1);
-      if (topBlock && topBlock.position.y - currentBlock.position.y < 0.6) currentBlock._canTop = true;
+      if (topBlock && topBlock.position.y - currentBlock.position.y < 0.6) currentBlock._topBlock = topBlock;
     }
   }
 
