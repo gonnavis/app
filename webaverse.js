@@ -309,6 +309,7 @@ function foxFollowAvatar() { // run after: rise(), generateVoxelMap(), and "E" a
 }
 
 const heightTolerance = 0.6;
+const heightCanGoThrough = 1.5;
 window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
   window.isRising = false;
@@ -319,42 +320,54 @@ function generateVoxelMap() {
       const currentBlock = getBlock(x, z);
 
       const leftBlock2 = getBlock2(x - 1, z);
-      if (leftBlock2 && leftBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._leftBlock = leftBlock2;
-      } else {
-        const leftBlock = getBlock(x - 1, z);
-        if (leftBlock && leftBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._leftBlock = leftBlock;
+      if (leftBlock2) {
+        const biasToLayer2 = leftBlock2.position.y - currentBlock.position.y;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._leftBlock = leftBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const leftBlock = getBlock(x - 1, z);
+          if (leftBlock && leftBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._leftBlock = leftBlock;
+          }
         }
       }
 
       const rightBlock2 = getBlock2(x + 1, z);
-      if (rightBlock2 && rightBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._rightBlock = rightBlock2;
-      } else {
-        const rightBlock = getBlock(x + 1, z);
-        if (rightBlock && rightBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._rightBlock = rightBlock;
+      if (rightBlock2) {
+        const biasToLayer2 = rightBlock2.position.y - currentBlock.position.y;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._rightBlock = rightBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const rightBlock = getBlock(x + 1, z);
+          if (rightBlock && rightBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._rightBlock = rightBlock;
+          }
         }
       }
 
       const btmBlock2 = getBlock2(x, z - 1);
-      if (btmBlock2 && btmBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._btmBlock = btmBlock2;
-      } else {
-        const btmBlock = getBlock(x, z - 1);
-        if (btmBlock && btmBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._btmBlock = btmBlock;
+      if (btmBlock2) {
+        const biasToLayer2 = btmBlock2.position.y - currentBlock.position.y;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._btmBlock = btmBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const btmBlock = getBlock(x, z - 1);
+          if (btmBlock && btmBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._btmBlock = btmBlock;
+          }
         }
       }
 
       const topBlock2 = getBlock2(x, z + 1);
-      if (topBlock2 && topBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._topBlock = topBlock2;
-      } else {
-        const topBlock = getBlock(x, z + 1);
-        if (topBlock && topBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._topBlock = topBlock;
+      if (topBlock2) {
+        const biasToLayer2 = topBlock2.position.y - currentBlock.position.y;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._topBlock = topBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const topBlock = getBlock(x, z + 1);
+          if (topBlock && topBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._topBlock = topBlock;
+          }
         }
       }
     }
@@ -364,42 +377,54 @@ function generateVoxelMap() {
       const currentBlock = getBlock2(x, z);
 
       const leftBlock2 = getBlock2(x - 1, z);
-      if (leftBlock2 && leftBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._leftBlock = leftBlock2;
-      } else {
-        const leftBlock = getBlock(x - 1, z);
-        if (leftBlock && leftBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._leftBlock = leftBlock;
+      if (leftBlock2) {
+        const biasToLayer2 = leftBlock2.position.y - currentBlock.position.y < heightTolerance;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._leftBlock = leftBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const leftBlock = getBlock(x - 1, z);
+          if (leftBlock && leftBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._leftBlock = leftBlock;
+          }
         }
       }
 
       const rightBlock2 = getBlock2(x + 1, z);
-      if (rightBlock2 && rightBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._rightBlock = rightBlock2;
-      } else {
-        const rightBlock = getBlock(x + 1, z);
-        if (rightBlock && rightBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._rightBlock = rightBlock;
+      if (rightBlock2) {
+        const biasToLayer2 = rightBlock2.position.y - currentBlock.position.y < heightTolerance;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._rightBlock = rightBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const rightBlock = getBlock(x + 1, z);
+          if (rightBlock && rightBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._rightBlock = rightBlock;
+          }
         }
       }
 
       const btmBlock2 = getBlock2(x, z - 1);
-      if (btmBlock2 && btmBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._btmBlock = btmBlock2;
-      } else {
-        const btmBlock = getBlock(x, z - 1);
-        if (btmBlock && btmBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._btmBlock = btmBlock;
+      if (btmBlock2) {
+        const biasToLayer2 = btmBlock2.position.y - currentBlock.position.y < heightTolerance;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._btmBlock = btmBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const btmBlock = getBlock(x, z - 1);
+          if (btmBlock && btmBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._btmBlock = btmBlock;
+          }
         }
       }
 
       const topBlock2 = getBlock2(x, z + 1);
-      if (topBlock2 && topBlock2.position.y - currentBlock.position.y < heightTolerance) {
-        currentBlock._topBlock = topBlock2;
-      } else {
-        const topBlock = getBlock(x, z + 1);
-        if (topBlock && topBlock.position.y - currentBlock.position.y < heightTolerance) {
-          currentBlock._topBlock = topBlock;
+      if (topBlock2) {
+        const biasToLayer2 = topBlock2.position.y - currentBlock.position.y < heightTolerance;
+        if (biasToLayer2 < heightTolerance) {
+          currentBlock._topBlock = topBlock2;
+        } else if (biasToLayer2 > heightCanGoThrough) {
+          const topBlock = getBlock(x, z + 1);
+          if (topBlock && topBlock.position.y - currentBlock.position.y < heightTolerance) {
+            currentBlock._topBlock = topBlock;
+          }
         }
       }
     }
@@ -719,7 +744,7 @@ export default class Webaverse extends EventTarget {
         }
       }
       // fox auto follow avatar
-      if (window.isGeneratedVoxelMap && window.localPlayer && (Math.abs(window.localPlayer.position.x - window.destBlock.position.x) > 3 || Math.abs(window.localPlayer.position.z - window.destBlock.position.z) > 3)) {
+      if (window.isGeneratedVoxelMap && window.localPlayer && (Math.abs(window.localPlayer.position.x - window.destBlock.position.x) > 1 || Math.abs(window.localPlayer.position.z - window.destBlock.position.z) > 1)) {
         foxFollowAvatar();
       }
 
