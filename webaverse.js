@@ -85,7 +85,6 @@ vs.xy_to_serial = function(width, xy) { // :index
 */
 window.resetStartDest = resetStartDest;
 function resetStartDest(startLayer, startX, startZ, destLayer, destX, destZ) {
-
   window.isFound = false;
   window.frontiers.length = 0;
 
@@ -301,7 +300,7 @@ function foxFollowAvatar() { // run after: rise(), generateVoxelMap(), and "E" a
     foxZ,
     destLayer,
     localPlayerX,
-    localPlayerZ
+    localPlayerZ,
   );
   untilFound();
   window.petDestBlock = window.startBlock;
