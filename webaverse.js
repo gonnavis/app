@@ -62,9 +62,11 @@ window.dest = new THREE.Vector2(13, 3);
 
 window.frontiers = [];
 window.blocks = new THREE.Group();
+window.blocks.name = 'blocks';
 rootScene.add(window.blocks);
 window.blocks2 = new THREE.Group();
 rootScene.add(window.blocks2);
+window.blocks2.name = 'blocks2';
 
 const materialIdle = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(221,213,213)')});
 const materialAct = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(204,191,179)')});
