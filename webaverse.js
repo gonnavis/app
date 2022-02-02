@@ -309,7 +309,8 @@ function foxFollowAvatar() { // run after: rise(), generateVoxelMap(), and "E" a
 }
 
 const heightTolerance = 0.6;
-const heightCanGoThrough = 1.5;
+// const heightCanGoThrough = 1.5;
+const heightCanGoThrough = 30;
 window.generateVoxelMap = generateVoxelMap;
 function generateVoxelMap() {
   window.isRising = false;
