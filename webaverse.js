@@ -378,7 +378,7 @@ function generateVoxelMap() {
 
       const leftBlock2 = getBlock2(x - 1, z);
       if (leftBlock2) {
-        const biasToLayer2 = leftBlock2.position.y - currentBlock.position.y < heightTolerance;
+        const biasToLayer2 = leftBlock2.position.y - currentBlock.position.y;
         if (biasToLayer2 < heightTolerance) {
           currentBlock._leftBlock = leftBlock2;
         } else if (biasToLayer2 > heightCanGoThrough) {
@@ -391,7 +391,7 @@ function generateVoxelMap() {
 
       const rightBlock2 = getBlock2(x + 1, z);
       if (rightBlock2) {
-        const biasToLayer2 = rightBlock2.position.y - currentBlock.position.y < heightTolerance;
+        const biasToLayer2 = rightBlock2.position.y - currentBlock.position.y;
         if (biasToLayer2 < heightTolerance) {
           currentBlock._rightBlock = rightBlock2;
         } else if (biasToLayer2 > heightCanGoThrough) {
@@ -404,7 +404,7 @@ function generateVoxelMap() {
 
       const btmBlock2 = getBlock2(x, z - 1);
       if (btmBlock2) {
-        const biasToLayer2 = btmBlock2.position.y - currentBlock.position.y < heightTolerance;
+        const biasToLayer2 = btmBlock2.position.y - currentBlock.position.y;
         if (biasToLayer2 < heightTolerance) {
           currentBlock._btmBlock = btmBlock2;
         } else if (biasToLayer2 > heightCanGoThrough) {
@@ -417,7 +417,7 @@ function generateVoxelMap() {
 
       const topBlock2 = getBlock2(x, z + 1);
       if (topBlock2) {
-        const biasToLayer2 = topBlock2.position.y - currentBlock.position.y < heightTolerance;
+        const biasToLayer2 = topBlock2.position.y - currentBlock.position.y;
         if (biasToLayer2 < heightTolerance) {
           currentBlock._topBlock = topBlock2;
         } else if (biasToLayer2 > heightCanGoThrough) {
