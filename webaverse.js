@@ -362,21 +362,41 @@ function generateVoxelMap() {
       const leftBlock2 = getBlock2(x - 1, z);
       if (leftBlock2 && leftBlock2.position.y - currentBlock.position.y < 0.6) {
         currentBlock._leftBlock = leftBlock2;
+      } else {
+        const leftBlock = getBlock(x - 1, z);
+        if (leftBlock && leftBlock.position.y - currentBlock.position.y < heightTolerance) {
+          currentBlock._leftBlock = leftBlock;
+        }
       }
 
       const rightBlock2 = getBlock2(x + 1, z);
       if (rightBlock2 && rightBlock2.position.y - currentBlock.position.y < 0.6) {
         currentBlock._rightBlock = rightBlock2;
+      } else {
+        const rightBlock = getBlock(x + 1, z);
+        if (rightBlock && rightBlock.position.y - currentBlock.position.y < heightTolerance) {
+          currentBlock._rightBlock = rightBlock;
+        }
       }
 
       const btmBlock2 = getBlock2(x, z - 1);
       if (btmBlock2 && btmBlock2.position.y - currentBlock.position.y < 0.6) {
         currentBlock._btmBlock = btmBlock2;
+      } else {
+        const btmBlock = getBlock(x, z - 1);
+        if (btmBlock && btmBlock.position.y - currentBlock.position.y < heightTolerance) {
+          currentBlock._btmBlock = btmBlock;
+        }
       }
 
       const topBlock2 = getBlock2(x, z + 1);
       if (topBlock2 && topBlock2.position.y - currentBlock.position.y < 0.6) {
         currentBlock._topBlock = topBlock2;
+      } else {
+        const topBlock = getBlock(x, z + 1);
+        if (topBlock && topBlock.position.y - currentBlock.position.y < heightTolerance) {
+          currentBlock._topBlock = topBlock;
+        }
       }
     }
   }
