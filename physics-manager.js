@@ -213,6 +213,12 @@ physicsManager.collideBox = (hx, hy, hz, p, q, maxIter) => {
 physicsManager.collideCapsule = (radius, halfHeight, p, q, maxIter) => {
   return physx.physxWorker.collideCapsulePhysics(physx.physics, radius, halfHeight, p, q, maxIter);
 };
+physicsManager.getBoxCollisionObject = (hx, hy, hz, p, q) => {
+  return physx.physxWorker.getBoxCollisionObjectPhysics(physx.physics, hx, hy, hz, p, q);
+};
+physicsManager.getCapsuleCollisionObject = (radius, halfHeight, p, q, maxIter) => {
+  return physx.physxWorker.getCapsuleCollisionObjectPhysics(physx.physics, radius, halfHeight, p, q, maxIter);
+};
 physicsManager.createCharacterController = (radius, height, contactOffset, stepOffset, position, mat) => {
   const characterController = physx.physxWorker.createCharacterControllerPhysics(physx.physics, radius, height, contactOffset, stepOffset, position, mat);
   return characterController;
