@@ -8,7 +8,8 @@ import physicsManager from './physics-manager.js';
 const identityQuaternion = new THREE.Quaternion();
 
 const heightTolerance = 0.6;
-const tmpVec2 = new THREE.Vector2();
+const localVector2D = new THREE.Vector2();
+const localVector = new THREE.Vector3();
 
 const materialIdle = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(221,213,213)')});
 const materialReached = new THREE.MeshStandardMaterial({color: new THREE.Color('rgb(171,163,163)')});
@@ -43,6 +44,7 @@ class PathFinder {
     this.voxelsY2 = this.lowestY;
     this.isAutoInit = false;
     this.debugRender = debugRender;
+    this.voxelo = {};
 
     this.frontiers = [];
     this.voxels = new THREE.Group();
@@ -57,10 +59,12 @@ class PathFinder {
     this.geometry = new THREE.BoxGeometry();
   }
 
-  getPath() {
+  getPath(startPosition, destPosition) {
     this.reset();
 
     this.start.copy(window.npcPlayer.position); // test
+    this.start.x = Math.round(this.start.x);
+    this.start.z = Math.round(this.start.z);
     // this.start.x += 1; // test // todo: Do not collide with npcPlayer
     this.start.y -= this.npcPlayerPivotHeight; // todo: Not hard-code npcPlayer's height.
     this.start.y -= 0.05; // Prevent -X axis not collide, +X axis collide problem, when half height = 0.5 and position.y = 0.5 too.
@@ -70,7 +74,7 @@ class PathFinder {
 
     const voxel = new THREE.Mesh(this.geometry, materialStart);
     voxel.position.copy(this.start);
-    this.upDetect(voxel);
+    this.detect(voxel, 0.1);
     this.voxels.add(voxel);
     voxel.updateMatrixWorld(); // test
     console.log('found');
@@ -80,12 +84,11 @@ class PathFinder {
     // todo
   }
 
-  upDetect(voxel) {
-    console.log('upDetect', voxel.position.y);
-    const isCollide = physicsManager.overlapBox(0.5, this.voxelHeightHalf, 0.5, voxel.position, identityQuaternion); // todo: Do not collide with npcPlayer
+  detect(voxel, stepY) {
+    const isCollide = this.overlapVoxel(voxel); // todo: Do not collide with npcPlayer
     if (isCollide) {
-      voxel.position.y += 0.1;
-      this.upDetect(voxel);
+      voxel.position.y += stepY;
+      this.detect(voxel, stepY);
     }
   }
 
@@ -273,27 +276,7 @@ class PathFinder {
     this.isFound = false;
     this.frontiers.length = 0;
 
-    this.voxels.children.forEach(voxel => {
-      voxel._isStart = false;
-      voxel._isDest = false;
-      voxel._isReached = false;
-      voxel._priority = 0;
-      voxel._costSoFar = 0;
-      voxel._prev = null;
-      voxel._next = null;
-      if (voxel.material !== materialObstacle) voxel.material = materialIdle;
-    });
-
-    this.voxels2.children.forEach(voxel => {
-      voxel._isStart = false;
-      voxel._isDest = false;
-      voxel._isReached = false;
-      voxel._priority = 0;
-      voxel._costSoFar = 0;
-      voxel._prev = null;
-      voxel._next = null;
-      if (voxel.material !== materialObstacle) voxel.material = materialIdle2;
-    });
+    this.voxels.children.length = 0;
 
     this.start.set(startX, startZ);
     this.dest.set(destX, destZ);
@@ -340,24 +323,31 @@ class PathFinder {
     this.isRising2 = true;
   }
 
-  getVoxel(x, y) {
-    x += (this.width - 1) / 2;
-    y += (this.height - 1) / 2;
-    if (x < 0 || y < 0 || x >= this.width || y >= this.height) return null;
-    return this.voxels.children[this.xyToSerial(this.width, {x, y})];
+  getVoxel(x, z) {
+    return this.voxelo[x + '_' + z];
   }
 
-  getVoxel2(x, y) {
-    x += (this.width - 1) / 2;
-    y += (this.height - 1) / 2;
-    if (x < 0 || y < 0 || x >= this.width || y >= this.height) return null;
-    return this.voxels2.children[this.xyToSerial(this.width, {x, y})];
+  createVoxel(x, y, z) {
+    const voxel = new THREE.Mesh(this.geometry, materialIdle);
+    voxel.position.set(x, y, z);
+    this.voxelo[x + '_' + z] = voxel;
+    this.voxels.add(voxel);
+    if (this.overlapVoxel(voxel)) {
+      this.detect(voxel, 0.1);
+    } else {
+      this.detect(voxel, -0.1);
+    }
+  }
+
+  overlapVoxel(voxel) {
+    const isCollide = physicsManager.overlapBox(0.5, this.voxelHeightHalf, 0.5, voxel.position, identityQuaternion);
+    return isCollide;
   }
 
   swapStartDest() {
-    tmpVec2.copy(this.start);
+    localVector2D.copy(this.start);
     this.start.copy(this.dest);
-    this.dest.copy(tmpVec2);
+    this.dest.copy(localVector2D);
   }
 
   tenStep() {
@@ -405,9 +395,9 @@ class PathFinder {
       voxel._costSoFar = newCost;
 
       // todo: use Vector2 instead of _x _z.
-      // voxel._priority = tmpVec2.set(voxel._x, voxel._z).manhattanDistanceTo(dest)
-      // voxel._priority = tmpVec2.set(voxel._x, voxel._z).distanceToSquared(dest)
-      voxel._priority = tmpVec2.set(voxel._x, voxel._z).distanceTo(this.dest);
+      // voxel._priority = localVector2D.set(voxel._x, voxel._z).manhattanDistanceTo(dest)
+      // voxel._priority = localVector2D.set(voxel._x, voxel._z).distanceToSquared(dest)
+      voxel._priority = localVector2D.set(voxel._x, voxel._z).distanceTo(this.dest);
       voxel._priority += newCost;
       this.frontiers.push(voxel);
       this.frontiers.sort((a, b) => a._priority - b._priority);
@@ -431,10 +421,6 @@ class PathFinder {
   step() {
     // if (this.debugRender) console.log('step');
     // debugger
-    if (!this.isGeneratedVoxelMap) {
-      console.warn('voxel map not generated.');
-      return;
-    }
     if (this.frontiers.length <= 0) {
       if (this.debugRender) console.log('finish');
       return;
@@ -450,6 +436,7 @@ class PathFinder {
       }
     }
 
+    const leftVoxel = this.createVoxel(currentVoxel.position.x - 1, currentVoxel.z);
     if (currentVoxel._leftVoxel) {
       this.stepVoxel(currentVoxel._leftVoxel, currentVoxel);
       if (this.isFound) return;
