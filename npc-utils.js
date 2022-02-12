@@ -241,7 +241,7 @@ class PathFinder {
     }
     this.iterDetect++;
 
-    const collide = physicsManager.overlapBox(0.5, this.voxelHeightHalf, 0.5, voxel.position, identityQuaternion, [window.npcPlayer.physicsObject.physicsId]);
+    const collide = physicsManager.overlapBox(0.5, this.voxelHeightHalf, 0.5, voxel.position, identityQuaternion, window.npcPlayer.physicsObject.physicsId);
 
     if (voxel._detectState === 'initial') {
       if (collide) {

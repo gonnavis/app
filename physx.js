@@ -807,13 +807,17 @@ const physxWorker = (() => {
       z
     );
   };
-  w.overlapBoxPhysics = (physics, hx, hy, hz, p, q, filters) => {
+  w.overlapBoxPhysics = (physics, hx, hy, hz, p, q, filter) => {
     p.toArray(scratchStack.f32, 0);
     localQuaternion.copy(q)
       .toArray(scratchStack.f32, 3);
     // physx.currentChunkMesh.matrixWorld.decompose(localVector, localQuaternion, localVector2);
     localVector.set(0, 0, 0).toArray(scratchStack.f32, 7);
     localQuaternion.set(0, 0, 0, 1).toArray(scratchStack.f32, 10);
+
+    scratchStack.u32[0] = filter;
+
+    const filterOffset = scratchStack.u32.byteOffset;
 
     const positionOffset = scratchStack.f32.byteOffset;
     const quaternionOffset = scratchStack.f32.byteOffset + 3 * Float32Array.BYTES_PER_ELEMENT;
@@ -822,11 +826,6 @@ const physxWorker = (() => {
 
     const hitOffset = scratchStack.f32.byteOffset + 14 * Float32Array.BYTES_PER_ELEMENT;
     const idOffset = scratchStack.f32.byteOffset + 15 * Float32Array.BYTES_PER_ELEMENT;
-
-    // const allocator = new Allocator();
-    // const filtersTypedArray = allocator.alloc(Float32Array, filters.length);
-    // filtersTypedArray.set(filters);
-    const filtersOffset = scratchStack.f32.byteOffset + 16 * Float32Array.BYTES_PER_ELEMENT;
 
     moduleInstance._overlapBoxPhysics(
       physics,
@@ -839,10 +838,8 @@ const physxWorker = (() => {
       meshQuaternionOffset,
       hitOffset,
       idOffset,
-      filtersOffset,
-      filters.length,
+      filterOffset,
     );
-    // allocator.freeAll();
 
     return scratchStack.u32[14] ? {
       objectId: scratchStack.u32[15],
