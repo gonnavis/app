@@ -207,8 +207,8 @@ physicsManager.setAngularVelocity = (physicsObject, velocity, autoWake) => {
 physicsManager.setTransform = (physicsObject, autoWake) => {
   physx.physxWorker.setTransformPhysics(physx.physics, physicsObject.physicsId, physicsObject.position, physicsObject.quaternion, physicsObject.scale, autoWake);
 };
-physicsManager.overlapBox = (hx, hy, hz, p, q) => {
-  return physx.physxWorker.overlapBoxPhysics(physx.physics, hx, hy, hz, p, q);
+physicsManager.overlapBox = (hx, hy, hz, p, q, filters) => {
+  return physx.physxWorker.overlapBoxPhysics(physx.physics, hx, hy, hz, p, q, filters);
 };
 physicsManager.overlapCapsule = (radius, halfHeight, p, q) => {
   return physx.physxWorker.overlapCapsulePhysics(physx.physics, radius, halfHeight, p, q);

@@ -807,7 +807,7 @@ const physxWorker = (() => {
       z
     );
   };
-  w.overlapBoxPhysics = (physics, hx, hy, hz, p, q) => {
+  w.overlapBoxPhysics = (physics, hx, hy, hz, p, q, filters) => {
     p.toArray(scratchStack.f32, 0);
     localQuaternion.copy(q)
       .toArray(scratchStack.f32, 3);
@@ -823,6 +823,11 @@ const physxWorker = (() => {
     const hitOffset = scratchStack.f32.byteOffset + 14 * Float32Array.BYTES_PER_ELEMENT;
     const idOffset = scratchStack.f32.byteOffset + 15 * Float32Array.BYTES_PER_ELEMENT;
 
+    // const allocator = new Allocator();
+    // const filtersTypedArray = allocator.alloc(Float32Array, filters.length);
+    // filtersTypedArray.set(filters);
+    const filtersOffset = scratchStack.f32.byteOffset + 16 * Float32Array.BYTES_PER_ELEMENT;
+
     moduleInstance._overlapBoxPhysics(
       physics,
       hx,
@@ -834,7 +839,10 @@ const physxWorker = (() => {
       meshQuaternionOffset,
       hitOffset,
       idOffset,
+      filtersOffset,
+      filters.length,
     );
+    // allocator.freeAll();
 
     return scratchStack.u32[14] ? {
       objectId: scratchStack.u32[15],
