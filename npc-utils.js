@@ -85,6 +85,7 @@ class PathFinder {
     this.startVoxel.material = materialStart;
 
     this.destVoxel = this.createVoxel(this.dest);
+    if (this.startVoxel === this.destVoxel) return;
     this.destVoxel._isDest = true;
     this.destVoxel.material = materialDest;
 
