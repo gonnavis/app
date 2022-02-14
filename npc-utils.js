@@ -75,7 +75,7 @@ class PathFinder {
 
     this.allowNearest = allowNearest;
 
-    this.startVoxel = this.createVoxel(this.start);
+    this.startVoxel = this.createVoxel(this.start, true);
     this.startVoxel._isStart = true;
     this.startVoxel._isReached = true;
     // this.startVoxel._priority = start.manhattanDistanceTo(dest)
@@ -84,7 +84,7 @@ class PathFinder {
     this.frontiers.push(this.startVoxel);
     this.startVoxel.material = materialStart;
 
-    this.destVoxel = this.createVoxel(this.dest);
+    this.destVoxel = this.createVoxel(this.dest, true);
     this.destVoxel._isDest = true;
     this.destVoxel.material = materialDest;
 
@@ -243,12 +243,12 @@ class PathFinder {
     this.voxelo[`${voxel.position.x}_${voxel.position.y}_${voxel.position.z}`] = voxel;
   }
 
-  createVoxel(position) {
+  createVoxel(position, canOnlyGoDown = false) {
     this.resetVoxelDetect(localVoxel);
     localVoxel.position.copy(position);
     localVoxel.position.y = Math.round(localVoxel.position.y * 10) / 10; // Round position.y to 0.1 because detectStep is 0.1; // Need round both input and output of `detect()`, because of float calc precision problem.
     this.iterDetect = 0;
-    this.detect(localVoxel);
+    this.detect(localVoxel, canOnlyGoDown);
     localVoxel.position.y = Math.round(localVoxel.position.y * 10) / 10; // Round position.y to 0.1 because detectStep is 0.1; // Need round both input and output of `detect()`, because of float calc precision problem.
 
     let voxel = this.getVoxel(localVoxel.position);
@@ -265,7 +265,7 @@ class PathFinder {
     return voxel;
   }
 
-  detect(voxel) {
+  detect(voxel, canOnlyGoDown = false) {
     if (this.iterDetect >= this.maxIterDetect) {
       console.warn('maxIterDetect reached! High probability created wrong redundant voxel with wrong position.y! Especially when localPlayer is flying.');
       // TODO: Use raycast first?
@@ -282,6 +282,8 @@ class PathFinder {
     } else {
       collide = false;
     }
+
+    if (collide && canOnlyGoDown) return; // Though good for correct start position, but high probably generate wong voxel position.
 
     if (voxel._detectState === 'initial') {
       if (collide) {
