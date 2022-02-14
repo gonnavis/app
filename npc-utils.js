@@ -21,7 +21,7 @@ const colorPath = new THREE.Color('rgb(149,64,191)');
 const colorPathSimplified = new THREE.Color('rgb(69,0,98)');
 
 class PathFinder {
-  constructor({voxelHeight = 1.5, heightTolerance = 0.6, detectStep = 0.1, maxIterdetect = 1000, maxIterStep = 1000, maxVoxelCacheLen = 10000, debugRender = true}) {
+  constructor({voxelHeight = 1.5, heightTolerance = 0.6, detectStep = 0.1, maxIterdetect = 1000, maxIterStep = 1000, maxVoxelCacheLen = 10000, debugRender = false}) {
     /* args:
       voxelHeight: Voxel height ( Y axis ) for collide detection, usually equal to npc's physical capsule height. X/Z axes sizes are hard-coded 1 now.
       heightTolerance: Used to check whether currentVoxel can go above to neighbor voxels.
@@ -38,7 +38,6 @@ class PathFinder {
     this.start = new THREE.Vector3();
     this.dest = new THREE.Vector3();
     this.debugRender = debugRender;
-    this.onlyShowPath = false; // test
     this.detectStep = detectStep;
     this.iterDetect = 0;
     this.maxIterDetect = maxIterdetect;
@@ -95,7 +94,6 @@ class PathFinder {
     if (this.startVoxel === this.destVoxel) return;
     this.destVoxel._isDest = true;
 
-    // // this.step();
     this.untilFound();
     if (this.isFound) {
       this.simplifyWaypointResultXZ(this.waypointResult[0]);
@@ -144,7 +142,7 @@ class PathFinder {
     if (result?._next?._next) {
       if (
         result.position.x === result._next._next.position.x && // check whether in one line
-        Math.sign(result.position.z - result._next.position.z) === Math.sign(result._next.position.z - result._next._next.position.z) // check wheter in one layer // TODO: simplifyWaypointResultXZ() should need check wheter in one layer too.
+        Math.sign(result.position.z - result._next.position.z) === Math.sign(result._next.position.z - result._next._next.position.z) // check wheter in same direction ( will have different directions even in one line when on different layers). // TODO: simplifyWaypointResultXZ() should need check wheter in one layer too.
       ) {
         this.waypointResult.splice(this.waypointResult.indexOf(result._next), 1);
         result._next = result._next._next;
@@ -248,10 +246,9 @@ class PathFinder {
     // simple cache
     this.voxels.children.forEach((voxel, i) => {
       this.resetVoxelAStar(voxel);
-      this.debugMesh.setColorAt(i, colorIdle);
+      if (this.debugRender) this.debugMesh.setColorAt(i, colorIdle);
     });
-
-    this.debugMesh.instanceColor.needsUpdate = true;
+    if (this.debugRender) this.debugMesh.instanceColor.needsUpdate = true;
   }
 
   // disposeOld(maxVoxelsLen) {
@@ -305,7 +302,7 @@ class PathFinder {
   detect(voxel) {
     if (this.iterDetect >= this.maxIterDetect) {
       console.warn('maxIterDetect reached! High probability created wrong redundant voxel with wrong position.y! Especially when localPlayer is flying.');
-      // TODO: Use raycast first?
+      // Use raycast first? No, raycast can only handle line not voxel.
       return;
     }
     this.iterDetect++;
@@ -453,7 +450,6 @@ class PathFinder {
       voxel._isReached = true;
       voxel._costSoFar = newCost;
 
-      // todo: use Vector2 instead of _x _z.
       // voxel._priority = tmpVec2.set(voxel._x, voxel._z).manhattanDistanceTo(dest)
       // voxel._priority = tmpVec2.set(voxel._x, voxel._z).distanceToSquared(dest)
       voxel._priority = voxel.position.distanceTo(this.dest);
@@ -474,9 +470,6 @@ class PathFinder {
   found(voxel) {
     // if (this.debugRender) console.log('found');
     this.isFound = true;
-    if (this.onlyShowPath) {
-      this.voxels.children.forEach(voxel => { voxel.visible = false; });
-    }
     this.recurSetPrev(voxel);
 
     this.waypointResult.length = 0;
