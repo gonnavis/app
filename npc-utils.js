@@ -66,7 +66,7 @@ class PathFinder {
   }
 
   getPath(start, dest, allowNearest = false) {
-    this.detectCount = 0;
+    // this.detectCount = 0;
 
     this.reset();
     if (this.voxels.children.length > this.maxVoxelCacheLen) this.disposeVoxelCache();
@@ -137,7 +137,7 @@ class PathFinder {
       this.debugMesh.instanceColor.needsUpdate = true;
     }
 
-    console.log(this.detectCount);
+    // console.log(this.detectCount);
     return this.isFound;
   }
 
@@ -303,7 +303,7 @@ class PathFinder {
   }
 
   detect(voxel) {
-    this.detectCount++;
+    // this.detectCount++;
     if (this.iterDetect >= this.maxIterDetect) {
       console.warn('maxIterDetect reached! High probability created wrong redundant voxel with wrong position.y! Especially when localPlayer is flying.');
       // Use raycast first? No, raycast can only handle line not voxel.
