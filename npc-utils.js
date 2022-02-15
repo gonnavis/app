@@ -21,7 +21,7 @@ const colorPath = new THREE.Color('rgb(149,64,191)');
 const colorPathSimplified = new THREE.Color('rgb(69,0,98)');
 
 class PathFinder {
-  constructor({voxelHeight = 1.5, heightTolerance = 0.6, detectStep = 0.1, maxIterdetect = 1000, maxIterStep = 1000, maxVoxelCacheLen = 10000, debugRender = false}) {
+  constructor({voxelHeight = 1.5, heightTolerance = 0.6, detectStep = 0.1, maxIterdetect = 1000, maxIterStep = 1000, maxVoxelCacheLen = 10000, ignorePhysicsIds = [], debugRender = false}) {
     /* args:
       voxelHeight: Voxel height ( Y axis ) for collide detection, usually equal to npc's physical capsule height. X/Z axes sizes are hard-coded 1 now.
       heightTolerance: Used to check whether currentVoxel can go above to neighbor voxels.
@@ -45,6 +45,7 @@ class PathFinder {
     this.maxIterStep = maxIterStep;
     this.allowNearest = false;
     this.maxVoxelCacheLen = maxVoxelCacheLen;
+    this.ignorePhysicsIds = ignorePhysicsIds;
 
     this.frontiers = [];
     this.voxels = new THREE.Group();
@@ -313,7 +314,7 @@ class PathFinder {
 
     const overlapResult = physicsManager.overlapBox(0.5, this.voxelHeightHalf, 0.5, voxel.position, identityQuaternion);
     let collide;
-    if (overlapResult.objectIds.length === 1 && overlapResult.objectIds[0] === window.npcPlayer.physicsObject.physicsId) {
+    if (overlapResult.objectIds.length === 1 && this.ignorePhysicsIds.includes(overlapResult.objectIds[0])) {
       collide = false;
     } else if (overlapResult.objectIds.length > 0) {
       collide = true;
@@ -533,6 +534,10 @@ class PathFinder {
       this.stepVoxel(currentVoxel._topVoxel, currentVoxel);
       // if (this.isFound) return
     }
+  }
+
+  setIgnorePhysicsIds(ignorePhysicsIds) {
+    this.ignorePhysicsIds = ignorePhysicsIds;
   }
 
   // showAll() {
