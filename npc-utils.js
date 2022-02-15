@@ -94,18 +94,21 @@ class PathFinder {
     this.frontiers.push(this.startVoxel);
 
     this.destVoxel = this.createVoxel(this.dest);
-    if (this.startVoxel === this.destVoxel) return;
     this.destVoxel._isDest = true;
 
-    this.untilFound();
-    if (this.isFound) {
-      this.simplifyWaypointResultXZ(this.waypointResult[0]);
-      this.simplifyWaypointResultXZ2(this.waypointResult[0]);
-      this.simplifyWaypointResultX(this.waypointResult[0]);
-      this.simplifyWaypointResultZ(this.waypointResult[0]);
-      this.waypointResult.shift();
+    if (this.startVoxel === this.destVoxel) {
+      this.found(this.destVoxel);
+    } else {
+      this.untilFound();
+      if (this.isFound) {
+        this.simplifyWaypointResultXZ(this.waypointResult[0]);
+        this.simplifyWaypointResultXZ2(this.waypointResult[0]);
+        this.simplifyWaypointResultX(this.waypointResult[0]);
+        this.simplifyWaypointResultZ(this.waypointResult[0]);
+        this.waypointResult.shift();
+      }
+      // console.log('waypointResult', this.waypointResult.length);
     }
-    // console.log('waypointResult', this.waypointResult.length);
 
     if (this.debugRender) {
       // const len = this.waypointResult.length - 1;
@@ -139,7 +142,8 @@ class PathFinder {
     }
 
     // console.log(this.detectCount);
-    return this.isFound;
+
+    return this.isFound ? this.waypointResult : null;
   }
 
   simplifyWaypointResultX(result) {
@@ -242,6 +246,7 @@ class PathFinder {
     this.isFound = false;
     this.frontiers.length = 0;
     this.allowNearest = false;
+    this.waypointResult = [];
 
     // // pure realtime, no any cache
     // this.voxels.children.length = 0;
@@ -483,7 +488,6 @@ class PathFinder {
     this.isFound = true;
     this.setNextOfPathVoxel(voxel);
 
-    this.waypointResult.length = 0;
     let wayPoint = this.startVoxel; // wayPoint: voxel
     let result = new THREE.Object3D();
     result.position.copy(wayPoint.position);
