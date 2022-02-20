@@ -31,6 +31,7 @@ import {
   dolly,
   bindCanvas,
   getComposer,
+  rootScene,
 } from './renderer.js';
 import transformControls from './transform-controls.js';
 import * as metaverseModules from './metaverse-modules.js';
@@ -362,6 +363,11 @@ export default class Webaverse extends EventTarget {
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => {
+      // console.log(window.localPlayer.rotation)
+      window.dashEffectWrap.position.copy(window.localPlayer.position)
+      window.dashEffectWrap.rotation.copy(window.localPlayer.rotation)
+      window.dashEffectWrap.updateMatrixWorld()
+
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
       const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100); 
@@ -415,6 +421,19 @@ export default class Webaverse extends EventTarget {
 const _startHacks = () => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
+  
+  { // test
+    window.localPlayer = localPlayer;
+
+    window.dashEffectWrap = new THREE.Group()
+    rootScene.add(window.dashEffectWrap)
+
+    const geometry = new THREE.PlaneGeometry()
+    const material = new THREE.MeshLambertMaterial({color: 'blue', side: THREE.DoubleSide})
+    window.dashEffect = new THREE.Mesh(geometry, material)
+    window.dashEffect.position.z = -1
+    window.dashEffectWrap.add(window.dashEffect)
+  }
 
   let playerDiorama = null;
   let appDiorama = null;
