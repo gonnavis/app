@@ -415,6 +415,7 @@ export default class Webaverse extends EventTarget {
 // import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader.js';
 const _startHacks = () => {
   const localPlayer = metaversefileApi.useLocalPlayer();
+  window.localPlayer = localPlayer; // test
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
 
   let playerDiorama = null;
