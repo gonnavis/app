@@ -31,18 +31,14 @@
       "start_url": "http://localhost/lib/webaverse_resource/npc/"
     },
     {
-      "position": [
-        27,
-        0,
-        16
-      ],
-      "quaternion": [
-        0,
-        0,
-        0,
-        1
-      ],
+      "position": [ 27, 0, 16 ],
+      "quaternion": [ 0, 0, 0, 1 ],
       "start_url": "http://localhost/lib/webaverse_resource/hovercraft/"
+    },
+    {
+      "position": [ -27, 0, 16 ],
+      "quaternion": [ 0, 0, 0, 1 ],
+      "start_url": "http://localhost/lib/webaverse_resource/heli-hack/"
     }
   ]
 }
