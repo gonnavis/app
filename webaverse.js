@@ -360,6 +360,11 @@ export default class Webaverse extends EventTarget {
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => {
+      // if (window.localPlayer?.avatar?.object?.scene?.children[0]?.children[0]) console.log(
+      //   (window.localPlayer.avatar.object.scene.children[0].children[0].rotation.x).toFixed(1) + '_' +
+      //   (window.localPlayer.avatar.object.scene.children[0].children[0].rotation.y).toFixed(1) + '_' +
+      //   (window.localPlayer.avatar.object.scene.children[0].children[0].rotation.z).toFixed(1)
+      // )
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
       const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100); 

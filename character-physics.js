@@ -197,16 +197,16 @@ class CharacterPhysics {
       }
       // localOffset2.set(0, 0.05, 0); // Feet offset: Or feet will be in ground, only cosmetical, works for all avatars
       // localVector.add(localOffset2);
-      localMatrix.compose(localVector, localQuaternion, localVector2);
+      // localMatrix.compose(localVector, localQuaternion, localVector2);
 
       // apply to player
       if (updateRig) {
-        this.player.matrix.copy(localMatrix);
+        // this.player.matrix.copy(localMatrix);
       } else {
-        this.player.matrix.identity();
+        // this.player.matrix.identity();
       }
-      this.player.matrix
-        .decompose(this.player.position, this.player.quaternion, this.player.scale);
+      // this.player.matrix
+        // .decompose(this.player.position, this.player.quaternion, this.player.scale);
       this.player.matrixWorld.copy(this.player.matrix);
 
       // this.player.updateMatrixWorld();
