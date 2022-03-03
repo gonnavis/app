@@ -2987,10 +2987,19 @@ class Avatar {
       }
     }
     // if (!this.getBottomEnabled()) {
+      // console.log(
+      //   (this.inputs.hmd.quaternion.x).toFixed(1) + '_' +
+      //   (this.inputs.hmd.quaternion.y).toFixed(1) + '_' +
+      //   (this.inputs.hmd.quaternion.z).toFixed(1) + '_' +
+      //   (this.inputs.hmd.quaternion.w).toFixed(1)
+      // )
       localEuler.setFromQuaternion(this.inputs.hmd.quaternion, 'YXZ');
       localEuler.x = 0;
       localEuler.z = 0;
       localEuler.y += Math.PI;
+      // const aaa = new THREE.Vector3(0,0,-1);
+      // aaa.applyEuler(localEuler);
+      // console.log(aaa.x, aaa.y, aaa.z);
       this.modelBoneOutputs.Root.quaternion.setFromEuler(localEuler);
       
       this.modelBoneOutputs.Root.position.copy(this.inputs.hmd.position)
