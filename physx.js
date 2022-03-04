@@ -845,7 +845,7 @@ const physxWorker = (() => {
       position.z = moduleInstance.HEAPF32[head + i * 3 + 3];
       waypointResultPositions.push(position);
     }
-    // console.log(waypointResultPositions);
+    console.log(waypointResultPositions);
 
     moduleInstance._doFree(outputBufferOffset);
 
