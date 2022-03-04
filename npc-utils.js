@@ -27,7 +27,7 @@ class PathFinder {
     this.maxVoxelCacheLen = maxVoxelCacheLen;
     this.ignorePhysicsIds = ignorePhysicsIds;
     this.waypointResult = [];
-    this.debugRender = debugRender;
+    this.debugRender = true;
     this.colorPathSimplified = new THREE.Color('rgb(69,0,98)');
 
     if (this.debugRender) {
