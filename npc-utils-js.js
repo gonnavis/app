@@ -369,7 +369,7 @@ class PathFinder {
     }
     const voxel = this.createVoxel(localVector);
     currentVoxel[`_${direction}Voxel`] = voxel;
-    if (voxel.position.y - currentVoxel.position.y < this.heightTolerance) {
+    if (voxel.position.y - currentVoxel.position.y <= this.heightTolerance) {
       currentVoxel[`_can${this.capitalize(direction)}`] = true;
     }
   }
