@@ -11,7 +11,7 @@ const localVector = new THREE.Vector3();
 const localVector2 = new THREE.Vector3();
 const localVoxel = new THREE.Object3D();
 
-const colorIdle = new THREE.Color('rgb(221,213,213)');
+const colorIdle = new THREE.Color('rgb(200,255,200)');
 const colorReached = new THREE.Color('rgb(171,163,163)');
 const colorFrontier = new THREE.Color('rgb(92,133,214)');
 const colorStart = new THREE.Color('rgb(0,255,255)');
