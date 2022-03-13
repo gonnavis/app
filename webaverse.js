@@ -125,11 +125,9 @@ export default class Webaverse extends EventTarget {
   }
   bindCanvas(c) {
     bindCanvas(c);
+    game.bindDioramaCanvas();
     
     postProcessing.bindCanvas();
-  }
-  bindDioramaCanvas(canvas) {
-    game.bindDioramaCanvas(canvas);
   }
   async isXrSupported() {
     if (navigator.xr) {
@@ -279,6 +277,13 @@ export default class Webaverse extends EventTarget {
       rendererStats.update(renderer);
     }
 
+    this.dispatchEvent(new MessageEvent('frameend', {
+      data: {
+        canvas: renderer.domElement,
+        context: renderer.getContext(),
+      }
+    }));
+
     // console.log('frame 2');
   }
   
@@ -338,17 +343,17 @@ export default class Webaverse extends EventTarget {
     }
     renderer.setAnimationLoop(animate);
 
-    _startHacks();
+    _startHacks(this);
   }
 }
 
 // import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader.js';
-const _startHacks = () => {
+const _startHacks = webaverse => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   window.localPlayer = localPlayer;
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
 
-  let playerDiorama = null;
+  // let playerDiorama = null;
   const lastEmoteKey = {
     key: -1,
     timestamp: 0,
@@ -370,11 +375,15 @@ const _startHacks = () => {
     }
   };
   const _updateEmote = () => {
-    localPlayer.removeAction('emote');
+    const oldEmoteActionIndex = localPlayer.findActionIndex(action => action.type === 'emote' && /^emotion-/.test(action.emotion));
+    if (oldEmoteActionIndex !== -1) {
+      localPlayer.removeActionIndex(oldEmoteActionIndex);
+    }
     if (emoteIndex !== -1) {
       const emoteAction = {
         type: 'emote',
-        index: emoteIndex,
+        emotion: `emotion-${emoteIndex}`,
+        value: 1,
       };
       localPlayer.addAction(emoteAction);
     }
@@ -505,6 +514,7 @@ const _startHacks = () => {
       mikuModel.updateMatrixWorld();
     }
   }; */
+  webaverse.titleCardHack = false;
   window.addEventListener('keydown', e => {
     if (e.which === 46) { // .
       emoteIndex = -1;
@@ -523,6 +533,13 @@ const _startHacks = () => {
 
       // _ensureMikuModel();
       // _updateMikuModel();
+    } else if (e.which === 106) { // *
+      webaverse.titleCardHack = !webaverse.titleCardHack;
+      webaverse.dispatchEvent(new MessageEvent('titlecardhackchange', {
+        data: {
+          titleCardHack: webaverse.titleCardHack,
+        }
+      }));
     } else {
       const match = e.code.match(/^Numpad([0-9])$/);
       if (match) {
