@@ -802,6 +802,7 @@ const _makeRagdollMesh = () => {
       });
 
       // bone length
+      // vismark
       const modelBoneStart = new THREE.Vector3().setFromMatrixPosition(modelBone.matrixWorld);
       let modelBoneEnd;
       const boneLength = (() => {
