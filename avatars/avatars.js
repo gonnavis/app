@@ -51,6 +51,7 @@ import {
   // animationBoneToModelBone,
 } from './util.mjs';
 import metaversefile from 'metaversefile';
+import { BoxGeometry } from 'three';
 
 let first = true;
 
@@ -567,7 +568,8 @@ const _findBoneDeep = (bones, boneName) => {
   dst.calculateInverses();
 }; */
 
-const boneRadius = 0.02;
+// const boneRadius = 0.02;
+const boneRadius = 0.04;
 const minHeight = 0.02;
 // const baseScale = 0.02;
 // const fingerScale = 0.2;
@@ -580,7 +582,8 @@ const _makeCapsuleGeometry = (length = 1) => {
   const geometry = BufferGeometryUtils.mergeBufferGeometries([
     // vismark
     (() => {
-      const geometry = new CapsuleGeometry(radius, radius, height)
+      // const geometry = new CapsuleGeometry(radius, radius, height)
+      const geometry = new BoxGeometry(height, radius * 2, radius * 2)
         /* .applyMatrix4(
           new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 1, 0), Math.PI*0.5)
         ); */
@@ -633,7 +636,7 @@ const _makeRagdollMesh = () => {
 
       Hips: _makeCubeMesh('Hips', false),
 
-      // Spine: _makeCubeMesh('Spine', true),
+      Spine: _makeCubeMesh('Spine', true),
       // Chest: _makeCubeMesh('Chest', true),
       // UpperChest: _makeCubeMesh('UpperChest', true),
 
@@ -696,7 +699,7 @@ const _makeRagdollMesh = () => {
 
     // hips
     // mesh.Root.add2(mesh.Hips);
-    // mesh.Hips.add2(mesh.Spine);
+    mesh.Hips.add2(mesh.Spine);
     // mesh.Spine.add2(mesh.Chest);
     // mesh.Chest.add2(mesh.UpperChest);
 
