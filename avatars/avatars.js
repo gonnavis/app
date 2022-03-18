@@ -633,7 +633,7 @@ const _makeRagdollMesh = () => {
 
       Hips: _makeCubeMesh('Hips', false),
 
-      Spine: _makeCubeMesh('Spine', true),
+      // Spine: _makeCubeMesh('Spine', true),
       // Chest: _makeCubeMesh('Chest', true),
       // UpperChest: _makeCubeMesh('UpperChest', true),
 
@@ -696,7 +696,7 @@ const _makeRagdollMesh = () => {
 
     // hips
     // mesh.Root.add2(mesh.Hips);
-    mesh.Hips.add2(mesh.Spine);
+    // mesh.Hips.add2(mesh.Spine);
     // mesh.Spine.add2(mesh.Chest);
     // mesh.Chest.add2(mesh.UpperChest);
 
