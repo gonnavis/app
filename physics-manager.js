@@ -282,6 +282,9 @@ physicsManager.setJointMotion = (joint, axis, motion) => {
 physicsManager.setJointTwistLimit = (joint, lowerLimit, upperLimit, contactDist) => {
   physx.physxWorker.setJointTwistLimitPhysics(physx.physics, joint, lowerLimit, upperLimit, contactDist);
 }
+physicsManager.wakeUpAll = () => {
+  physx.physxWorker.wakeUpAllPhysics(physx.physics);
+}
 physicsManager.simulatePhysics = timeDiff => {
   // timeDiff *= 0.0000000001;
   /* {
