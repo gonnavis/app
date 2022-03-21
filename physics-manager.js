@@ -322,7 +322,7 @@ physicsManager.simulatePhysics = timeDiff => {
       else physicsObject = metaversefileApi.getPhysicsObjectByPhysicsId(id);
 
       // debugger
-      if (physicsObject) {
+      if (true && physicsObject) {
         // console.log('got position', position.toArray().join(','));
         physicsObject.position.copy(position);
         physicsObject.quaternion.copy(quaternion);
