@@ -383,7 +383,7 @@ export default class Webaverse extends EventTarget {
     const animate = (timestamp, frame) => {
 
       // bodyRDHips bone follow localPlayer.
-      if (true && window.localPlayer && window.bodyRDHips) {
+      if (false && window.localPlayer && window.bodyRDHips) {
         window.bodyRDHips.position.copy(window.localPlayer.position);
         window.bodyRDHips.position.y += 2;
         window.bodyRDHips.quaternion.copy(window.localPlayer.quaternion);
@@ -589,7 +589,7 @@ const _startHacks = () => {
 
   // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), window.bodyRDHips.quaternion, window.bodyRDChest.quaternion, true);
 
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 15, 0, 0)), true);
   // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(1, 0, -1), new THREE.Vector3(0, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(-1, 0, -1), new THREE.Vector3(0, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
@@ -598,9 +598,9 @@ const _startHacks = () => {
   // const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(1.5, 0, 0.5), new THREE.Vector3(-0.5, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(-1.5, 0, 0.5), new THREE.Vector3(0.5, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
 
-  physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eFREE);
-  physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING1, PxD6Motion.eFREE);
-  physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING2, PxD6Motion.eFREE);
+  // physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eFREE);
+  // physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING1, PxD6Motion.eFREE);
+  // physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING2, PxD6Motion.eFREE);
 
   // physicsManager.setJointMotion(jointChestHead, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
   // physicsManager.setJointMotion(jointHipsLeftLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
