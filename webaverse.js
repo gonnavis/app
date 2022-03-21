@@ -381,6 +381,15 @@ export default class Webaverse extends EventTarget {
     let lastTimestamp = performance.now();
 
     const animate = (timestamp, frame) => {
+
+      // bodyRDHips bone follow localPlayer.
+      if (true && window.localPlayer && window.bodyRDHips) {
+        window.bodyRDHips.position.copy(window.localPlayer.position);
+        window.bodyRDHips.position.y += 2;
+        window.bodyRDHips.quaternion.copy(window.localPlayer.quaternion);
+        physicsManager.setTransform(window.bodyRDHips, true);
+      }
+
       timestamp = timestamp ?? performance.now();
       const timeDiff = timestamp - lastTimestamp;
       const timeDiffCapped = Math.min(Math.max(timeDiff, 0), 100); 
@@ -439,7 +448,7 @@ const _startHacks = () => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
 
-  const material = new THREE.MeshStandardMaterial({
+  const material = new THREE.MeshNormalMaterial({
     color: 'red',
   });
   {
@@ -462,6 +471,13 @@ const _startHacks = () => {
     window.meshRDChest = mesh;
     rootScene.add(mesh);
     mesh.position.set(2.5, 5, -12);
+    // mesh.rotation.z = Math.PI / 4;
+    // mesh.position.x = Math.random() * 10;
+    // mesh.position.y += -5;
+    // mesh.position.z = Math.random() * 10;
+    // mesh.position.set(2.219571113586426, 4.303393840789795, -12);
+    // mesh.quaternion.set(0, 0, -0.3746848404407501, 0.9271523356437683);
+    // geometry.rotateY(1);
     mesh.updateMatrixWorld();
     // geometry.translate(1 * 0.9, 0, 0);
 
@@ -569,9 +585,11 @@ const _startHacks = () => {
   };
 
   // not work, because of at center of child bone.
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(3, 0, 0), new THREE.Vector3(0, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(3, 0, 0), new THREE.Vector3(0, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
 
-  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), window.bodyRDHips.quaternion, window.bodyRDChest.quaternion, true);
+
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
   // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(1, 0, -1), new THREE.Vector3(0, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(-1, 0, -1), new THREE.Vector3(0, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
@@ -580,7 +598,10 @@ const _startHacks = () => {
   // const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(1.5, 0, 0.5), new THREE.Vector3(-0.5, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(-1.5, 0, 0.5), new THREE.Vector3(0.5, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
 
+  physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eFREE);
+  physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING1, PxD6Motion.eFREE);
   physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING2, PxD6Motion.eFREE);
+
   // physicsManager.setJointMotion(jointChestHead, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
   // physicsManager.setJointMotion(jointHipsLeftLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
   // physicsManager.setJointMotion(jointHipsRightLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
