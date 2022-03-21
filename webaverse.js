@@ -450,7 +450,7 @@ const _startHacks = () => {
     rootScene.add(mesh);
     mesh.position.set(0, 5, -12);
     mesh.updateMatrixWorld();
-    // geometry.translate(0, 0, 1.5 * 0.9);
+    // geometry.translate(1.5 * 0.9, 0, 0);
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDHips = body;
@@ -463,7 +463,7 @@ const _startHacks = () => {
     rootScene.add(mesh);
     mesh.position.set(2.5, 5, -12);
     mesh.updateMatrixWorld();
-    // geometry.translate(0, 0, 1 * 0.9);
+    // geometry.translate(1 * 0.9, 0, 0);
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDChest = body;
@@ -568,7 +568,10 @@ const _startHacks = () => {
     eFREE: 2, // !< The DOF is free and has its full range of motion.
   };
 
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  // not work, because of at center of child bone.
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(3, 0, 0), new THREE.Vector3(0, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+
+  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
   // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(1, 0, -1), new THREE.Vector3(0, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
   // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(-1, 0, -1), new THREE.Vector3(0, 0, 1), new THREE.Quaternion(), new THREE.Quaternion());
