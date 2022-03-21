@@ -452,6 +452,7 @@ const _startHacks = () => {
     window.meshRDHips = mesh;
     rootScene.add(mesh);
     mesh.position.set(x, y, z);
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -464,6 +465,11 @@ const _startHacks = () => {
     window.meshRDChest = mesh;
     rootScene.add(mesh);
     mesh.position.set(x, y + 2, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -476,6 +482,11 @@ const _startHacks = () => {
     window.meshRDHead = mesh;
     rootScene.add(mesh);
     mesh.position.set(x, y + 4, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -488,6 +499,11 @@ const _startHacks = () => {
     window.meshRDLeftLeg = mesh;
     rootScene.add(mesh);
     mesh.position.set(x - 1, y - 2, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -500,6 +516,11 @@ const _startHacks = () => {
     window.meshRDRightLeg = mesh;
     rootScene.add(mesh);
     mesh.position.set(x + 1, y - 2, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -512,6 +533,11 @@ const _startHacks = () => {
     window.meshRDLeftCalf = mesh;
     rootScene.add(mesh);
     mesh.position.set(x - 1, y - 4.5, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -524,6 +550,11 @@ const _startHacks = () => {
     window.meshRDRightCalf = mesh;
     rootScene.add(mesh);
     mesh.position.set(x + 1, y - 4.5, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -536,6 +567,11 @@ const _startHacks = () => {
     window.meshRDLeftArm = mesh;
     rootScene.add(mesh);
     mesh.position.set(x - 2, y + 1.5, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
@@ -548,6 +584,11 @@ const _startHacks = () => {
     window.meshRDRightArm = mesh;
     rootScene.add(mesh);
     mesh.position.set(x + 2, y + 1.5, z);
+
+    mesh.position.x += (Math.random() - 0.5) * 10;
+    mesh.position.y += (Math.random() - 0.5) * 10;
+    mesh.position.z += (Math.random() - 0.5) * 10;
+
     mesh.updateMatrixWorld();
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
