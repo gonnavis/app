@@ -569,32 +569,41 @@ const _startHacks = () => {
     eFREE: 2, // !< The DOF is free and has its full range of motion.
   };
 
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion(), false);
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
   const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion());
   const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
+  const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
+  const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
   const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0), new THREE.Vector3(0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
   const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0), new THREE.Vector3(-0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
 
-  physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointChestHead, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointHipsLeftLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointHipsRightLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointLeftLegLeftCalf, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointRightLegRightCalf, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointChestLeftArm, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-  physicsManager.setJointMotion(jointChestRightArm, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0), new THREE.Vector3(0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0), new THREE.Vector3(-0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
 
-  physicsManager.setJointTwistLimit(jointHipsChest, -Math.PI / 6, Math.PI / 6);
-  physicsManager.setJointTwistLimit(jointChestHead, -Math.PI / 4, Math.PI / 6);
-  physicsManager.setJointTwistLimit(jointHipsLeftLeg, 0, Math.PI / 2);
-  physicsManager.setJointTwistLimit(jointHipsRightLeg, 0, Math.PI / 2);
-  physicsManager.setJointTwistLimit(jointLeftLegLeftCalf, -Math.PI / 2, 0);
-  physicsManager.setJointTwistLimit(jointRightLegRightCalf, -Math.PI / 2, 0);
-  physicsManager.setJointTwistLimit(jointChestLeftArm, -Math.PI / 6, Math.PI / 2);
-  physicsManager.setJointTwistLimit(jointChestRightArm, -Math.PI / 6, Math.PI / 2);
+  // physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointChestHead, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointHipsLeftLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointHipsRightLeg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointLeftLegLeftCalf, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointRightLegRightCalf, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointChestLeftArm, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+  // physicsManager.setJointMotion(jointChestRightArm, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
+
+  // physicsManager.setJointTwistLimit(jointHipsChest, -Math.PI / 6, Math.PI / 6);
+  // physicsManager.setJointTwistLimit(jointChestHead, -Math.PI / 4, Math.PI / 6);
+  // physicsManager.setJointTwistLimit(jointHipsLeftLeg, 0, Math.PI / 2);
+  // physicsManager.setJointTwistLimit(jointHipsRightLeg, 0, Math.PI / 2);
+  // physicsManager.setJointTwistLimit(jointLeftLegLeftCalf, -Math.PI / 2, 0);
+  // physicsManager.setJointTwistLimit(jointRightLegRightCalf, -Math.PI / 2, 0);
+  // physicsManager.setJointTwistLimit(jointChestLeftArm, -Math.PI / 6, Math.PI / 2);
+  // physicsManager.setJointTwistLimit(jointChestRightArm, -Math.PI / 6, Math.PI / 2);
 
   // physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eSWING1, PxD6Motion.eFREE);
   // physicsManager.setJointMotion(jointChestHead, PxD6Axis.eSWING1, PxD6Motion.eFREE);
