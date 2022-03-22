@@ -442,9 +442,9 @@ const _startHacks = () => {
   const material = new THREE.MeshStandardMaterial({
     color: 'red',
   });
-  const s = 0.1;
+  const s = 0.022; // minimum, 0.0021 will break.
   const x = 0;
-  const y = 2;
+  const y = 1.5;
   const z = -5;
   {
     const size = new THREE.Vector3(3, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
