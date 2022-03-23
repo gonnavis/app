@@ -683,6 +683,22 @@ const _startHacks = () => {
   // physicsManager.setJointMotion(jointChestLeftArm, PxD6Axis.eSWING2, PxD6Motion.eFREE);
   // physicsManager.setJointMotion(jointChestRightArm, PxD6Axis.eSWING2, PxD6Motion.eFREE);
 
+  window.rotateSkeleten = function(/* quat */) {
+    window.bodys.forEach(body => {
+      const center = window.bodyRDHips.position.clone();
+      const quat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2, 0));
+      body.position.sub(center).applyQuaternion(quat);
+      // body.lookAt(new THREE.Vector3().addVectors(body.position, new THREE.Vector3(1, 0, 0)));
+      body.quaternion.multiply(quat);
+      body.position.add(center);
+      physicsManager.setTransform(body, true);
+      setTimeout(() => {
+        physicsManager.setVelocity(body, new THREE.Vector3(0, 0, 0));
+        physicsManager.setAngularVelocity(body, new THREE.Vector3(0, 0, 0));
+      }, 10);
+    });
+  };
+
   let playerDiorama = null;
   let appDiorama = null;
   const lastEmoteKey = {
