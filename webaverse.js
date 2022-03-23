@@ -442,10 +442,17 @@ const _startHacks = () => {
   const material = new THREE.MeshStandardMaterial({
     color: 'red',
   });
-  const s = 0.022; // minimum, 0.0021 will break.
+
+  // const s = 0.022; // minimum, 0.0021 will break.
+  // const x = 0;
+  // const y = 1.5;
+  // const z = -5;
+  const s = 1;
   const x = 0;
-  const y = 1.5;
-  const z = -5;
+  const y = 7;
+  const z = -20;
+
+  window.bodys = []
   {
     const size = new THREE.Vector3(3, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
     const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
@@ -458,6 +465,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDHips = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(3, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -475,6 +483,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDChest = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -492,6 +501,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDHead = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -509,6 +519,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDLeftLeg = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -526,6 +537,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDRightLeg = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -543,6 +555,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDLeftCalf = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -560,6 +573,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDRightCalf = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -577,6 +591,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDLeftArm = body;
+    window.bodys.push(body);
   }
   {
     const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
@@ -594,6 +609,7 @@ const _startHacks = () => {
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDRightArm = body;
+    window.bodys.push(body);
   }
 
   const PxD6Axis = {
