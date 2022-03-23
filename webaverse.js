@@ -628,24 +628,24 @@ const _startHacks = () => {
   };
 
   // bend knee
-  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
-  // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
-  // const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
-  // const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
-  // const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0), new THREE.Vector3(0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  // const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0), new THREE.Vector3(-0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
+  const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
+  const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
+  const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0), new THREE.Vector3(0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0), new THREE.Vector3(-0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
 
   // // stand
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion(), true);
-  const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1.5, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1.5, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0).multiplyScalar(s), new THREE.Vector3(0.5, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0).multiplyScalar(s), new THREE.Vector3(-0.5, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1.5, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Vector3(0, 1.5, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0).multiplyScalar(s), new THREE.Vector3(0.5, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0).multiplyScalar(s), new THREE.Vector3(-0.5, 1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion());
 
   // physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
   // physicsManager.setJointMotion(jointChestHead, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
