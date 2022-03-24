@@ -786,6 +786,7 @@ const _makeRagdollMesh = () => {
         continue;
       }
 
+      // debugger
       const children = modelBone.children.map(child => {
         let result = null;
         child.traverse(o => {
@@ -1802,6 +1803,7 @@ class Avatar {
 	    Right_ankle: this.legsManager.leftLeg.foot,
       Right_toe: this.legsManager.leftLeg.toe,
 	  };
+    window.modelBoneOutputs = this.modelBoneOutputs
 
     this.ragdollMesh = _makeRagdollMesh();
     window.ragdollMesh = this.ragdollMesh;
