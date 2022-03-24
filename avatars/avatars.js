@@ -2437,6 +2437,7 @@ class Avatar {
         modelBone.forwardQuaternion
       );
       if (k !== 'Hips') {
+        // put bone at center of neighbor joints
         localVector.add(
           localVector3.set(0, 0, -meshBone.boneLength * 0.5)
             .applyQuaternion(localQuaternion)
@@ -2448,27 +2449,31 @@ class Avatar {
       // localVector.z += 1;
       meshBone.matrix.copy(meshBone.matrixWorld);
       meshBone.matrix.decompose(meshBone.position, meshBone.quaternion, meshBone.scale);
+
+      meshBone.rotation.y = Math.PI
+      meshBone.updateMatrixWorld()
     }
     // object.updateMatrixWorld();
 
     // end setFromAvatar()
 
-    for (const k in flatMeshes) {
-      const meshBone = flatMeshes[k];
-      // const center = window.bodyRDHips.position.clone();
-      const center = modelBoneOutputs.Hips.getWorldPosition(new THREE.Vector3());
-      // const quat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2, 0));
-      const quat = window.localPlayer.quaternion;
-      meshBone.position.sub(center).applyQuaternion(quat);
-      // meshBone.lookAt(new THREE.Vector3().addVectors(meshBone.position, new THREE.Vector3(1, 0, 0)));
-      meshBone.quaternion.multiply(quat);
-      meshBone.position.add(center);
-      // physicsManager.setTransform(meshBone, true);
-      // setTimeout(() => {
-      //   physicsManager.setVelocity(meshBone, new THREE.Vector3(0, 0, 0));
-      //   physicsManager.setAngularVelocity(meshBone, new THREE.Vector3(0, 0, 0));
-      // }, 10);
-    }
+    // // change whole rig direction
+    // for (const k in flatMeshes) {
+    //   const meshBone = flatMeshes[k];
+    //   // const center = window.bodyRDHips.position.clone();
+    //   const center = modelBoneOutputs.Hips.getWorldPosition(new THREE.Vector3());
+    //   // const quat = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI / 2, 0));
+    //   const quat = window.localPlayer.quaternion;
+    //   meshBone.position.sub(center).applyQuaternion(quat);
+    //   // meshBone.lookAt(new THREE.Vector3().addVectors(meshBone.position, new THREE.Vector3(1, 0, 0)));
+    //   meshBone.quaternion.multiply(quat);
+    //   meshBone.position.add(center);
+    //   // physicsManager.setTransform(meshBone, true);
+    //   // setTimeout(() => {
+    //   //   physicsManager.setVelocity(meshBone, new THREE.Vector3(0, 0, 0));
+    //   //   physicsManager.setAngularVelocity(meshBone, new THREE.Vector3(0, 0, 0));
+    //   // }, 10);
+    // }
 
     for (const k in flatMeshes) {
       const meshBone = flatMeshes[k]
@@ -2502,15 +2507,15 @@ class Avatar {
 
     // hips
     const jointHipsSpine = physicsManager.addJoint(flatMeshes.Hips, flatMeshes.Spine, 
-      new THREE.Vector3(0, flatMeshes.Hips.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Spine.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0,0,0)), new THREE.Quaternion(), false);
+      new THREE.Vector3(0, flatMeshes.Hips.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Spine.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0,0,0)), new THREE.Quaternion(), false);
     physicsManager.setJointMotion(jointHipsSpine, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
     physicsManager.setJointTwistLimit(jointHipsSpine,             -Math.PI * 0.05,      Math.PI * 0.05);
     const jointSpineChest = physicsManager.addJoint(flatMeshes.Spine, flatMeshes.Chest, 
-      new THREE.Vector3(0, flatMeshes.Spine.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Chest.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0, flatMeshes.Spine.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Chest.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointSpineChest, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
     physicsManager.setJointTwistLimit(jointSpineChest,            -Math.PI * 0.05,      Math.PI * 0.05);
     const jointChestUpperChest = physicsManager.addJoint(flatMeshes.Chest, flatMeshes.UpperChest, 
-      new THREE.Vector3(0, flatMeshes.Chest.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.UpperChest.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0, flatMeshes.Chest.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.UpperChest.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointChestUpperChest, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
     physicsManager.setJointTwistLimit(jointChestUpperChest,       -Math.PI * 0.05,      Math.PI * 0.05);
 
@@ -2518,59 +2523,59 @@ class Avatar {
     const jointUpperChestNeck = physicsManager.addJoint(flatMeshes.UpperChest, flatMeshes.Neck, 
       new THREE.Vector3(0, flatMeshes.UpperChest.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Neck.boneLength / 2 * 1.1, 0), new THREE.Quaternion(), new THREE.Quaternion());
     physicsManager.setJointMotion(jointUpperChestNeck, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointUpperChestNeck,             -Math.PI * 0.2,      Math.PI * 0.05);
+    physicsManager.setJointTwistLimit(jointUpperChestNeck,             -Math.PI * 0.05,      Math.PI * 0.2);
     const jointNeckHead = physicsManager.addJoint(flatMeshes.Neck, flatMeshes.Head, 
-      new THREE.Vector3(0, flatMeshes.Neck.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Head.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0.5,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0, flatMeshes.Neck.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, -flatMeshes.Head.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0.5,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointNeckHead, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
     physicsManager.setJointTwistLimit(jointNeckHead,            -Math.PI * 0.05,      Math.PI * 0.05);
 
     // shoulders
     const jointUpperChestLeft_shoulder = physicsManager.addJoint(flatMeshes.UpperChest, flatMeshes.Left_shoulder, 
-      new THREE.Vector3(-0.03175940903947472, 0.010495573470259645, 0), new THREE.Vector3(0.03175940903947472, -0.010495573470259645, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-Math.PI*0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0.03175940903947472, 0.010495573470259645, 0), new THREE.Vector3(-0.03175940903947472, -0.010495573470259645, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0,-Math.PI*0,0)), new THREE.Quaternion());
     // physicsManager.setJointMotion(jointUpperChestLeft_shoulder, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
     // physicsManager.setJointTwistLimit(jointUpperChestLeft_shoulder,       -Math.PI * 0,      Math.PI * 0);
     const jointUpperChestRight_shoulder = physicsManager.addJoint(flatMeshes.UpperChest, flatMeshes.Right_shoulder, 
-      new THREE.Vector3(0.03175940903947472, 0.010495573470259645, 0), new THREE.Vector3(-0.03175940903947472, -0.010495573470259645, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0,Math.PI*0,0)), new THREE.Quaternion());
+      new THREE.Vector3(-0.03175940903947472, 0.010495573470259645, 0), new THREE.Vector3(0.03175940903947472, -0.010495573470259645, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(0,Math.PI*0,0)), new THREE.Quaternion());
     // physicsManager.setJointMotion(jointUpperChestRight_shoulder, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
     // physicsManager.setJointTwistLimit(jointUpperChestRight_shoulder,       -Math.PI * 0,      Math.PI * 0);
 
     // arms
     const jointLeft_shoulderLeft_arm = physicsManager.addJoint(flatMeshes.Left_shoulder, flatMeshes.Left_arm, 
-      new THREE.Vector3(-0.030482252820337598, -0.06009382920090578, 0), new THREE.Vector3(0.030482252820337598, 0.06009382920090578, 0), new THREE.Quaternion(), new THREE.Quaternion());
+      new THREE.Vector3(0.030482252820337598, -0.06009382920090578, 0), new THREE.Vector3(-0.030482252820337598, 0.06009382920090578, 0), new THREE.Quaternion(), new THREE.Quaternion());
     physicsManager.setJointMotion(jointLeft_shoulderLeft_arm, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointLeft_shoulderLeft_arm,       -Math.PI * 0.1,      Math.PI * 0.5);
+    physicsManager.setJointTwistLimit(jointLeft_shoulderLeft_arm,       -Math.PI * 0.5,      Math.PI * 0.1);
     const jointLeft_armLeft_elbow = physicsManager.addJoint(flatMeshes.Left_arm, flatMeshes.Left_elbow, 
       new THREE.Vector3(0, -0.10704085846249278, 0), new THREE.Vector3(0, 0.10704085846249278, 0), new THREE.Quaternion(), new THREE.Quaternion());
     physicsManager.setJointMotion(jointLeft_armLeft_elbow, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointLeft_armLeft_elbow,       -Math.PI * 0.1,      Math.PI * 0.5);
+    physicsManager.setJointTwistLimit(jointLeft_armLeft_elbow,       -Math.PI * 0.5,      Math.PI * 0.1);
 
     const jointRight_shoulderRight_arm = physicsManager.addJoint(flatMeshes.Right_shoulder, flatMeshes.Right_arm, 
-      new THREE.Vector3(0.030482252820337598, -0.06009382920090578, 0), new THREE.Vector3(-0.030482252820337598, 0.06009382920090578, 0), new THREE.Quaternion(), new THREE.Quaternion());
+      new THREE.Vector3(-0.030482252820337598, -0.06009382920090578, 0), new THREE.Vector3(0.030482252820337598, 0.06009382920090578, 0), new THREE.Quaternion(), new THREE.Quaternion());
     physicsManager.setJointMotion(jointRight_shoulderRight_arm, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointRight_shoulderRight_arm,       -Math.PI * 0,      Math.PI * 0.8);
+    physicsManager.setJointTwistLimit(jointRight_shoulderRight_arm,       -Math.PI * 0.8,      Math.PI * 0);
     const jointRight_armRight_elbow = physicsManager.addJoint(flatMeshes.Right_arm, flatMeshes.Right_elbow, 
       new THREE.Vector3(0, -0.10704085846249278, 0), new THREE.Vector3(0, 0.10704085846249278, 0), new THREE.Quaternion(), new THREE.Quaternion());
     physicsManager.setJointMotion(jointRight_armRight_elbow, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointRight_armRight_elbow,       -Math.PI * 0,      Math.PI * 0.8);
+    physicsManager.setJointTwistLimit(jointRight_armRight_elbow,       -Math.PI * 0.8,      Math.PI * 0);
 
     // legs
     const jointHipsLeft_leg = physicsManager.addJoint(flatMeshes.Hips, flatMeshes.Left_leg, 
-      new THREE.Vector3(-0.1, -flatMeshes.Hips.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Left_leg.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0.1, -flatMeshes.Hips.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Left_leg.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointHipsLeft_leg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointHipsLeft_leg,          -Math.PI * 0,      Math.PI * 0.3);
+    physicsManager.setJointTwistLimit(jointHipsLeft_leg,          -Math.PI * 0.3,      Math.PI * 0);
     const jointLeft_legLeft_knee = physicsManager.addJoint(flatMeshes.Left_leg, flatMeshes.Left_knee, 
-      new THREE.Vector3(0, -flatMeshes.Left_leg.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Left_knee.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0.05,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0, -flatMeshes.Left_leg.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Left_knee.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0.05,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointLeft_legLeft_knee, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointLeft_legLeft_knee,     -Math.PI * 0.6,      Math.PI * 0);
+    physicsManager.setJointTwistLimit(jointLeft_legLeft_knee,     -Math.PI * 0,      Math.PI * 0.6);
 
     const jointHipsRight_leg = physicsManager.addJoint(flatMeshes.Hips, flatMeshes.Right_leg, 
-      new THREE.Vector3(0.1, -flatMeshes.Hips.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Right_leg.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(-0.1, -flatMeshes.Hips.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Right_leg.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointHipsRight_leg, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointHipsRight_leg,         -Math.PI * 0,      Math.PI * 0.3);
+    physicsManager.setJointTwistLimit(jointHipsRight_leg,         -Math.PI * 0.3,      Math.PI * 0);
     const jointRight_legRight_knee = physicsManager.addJoint(flatMeshes.Right_leg, flatMeshes.Right_knee, 
-      new THREE.Vector3(0, -flatMeshes.Right_leg.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Right_knee.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI*0.05,0,0)), new THREE.Quaternion());
+      new THREE.Vector3(0, -flatMeshes.Right_leg.boneLength / 2 * 1.1, 0), new THREE.Vector3(0, flatMeshes.Right_knee.boneLength / 2 * 1.1, 0), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI*0.05,0,0)), new THREE.Quaternion());
     physicsManager.setJointMotion(jointRight_legRight_knee, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
-    physicsManager.setJointTwistLimit(jointRight_legRight_knee,   -Math.PI * 0.6,      Math.PI * 0);
+    physicsManager.setJointTwistLimit(jointRight_legRight_knee,   -Math.PI * 0,      Math.PI * 0.6);
 
     //
 
@@ -2620,6 +2625,9 @@ class Avatar {
       // localVector.z += 1;
       meshBone.matrix.copy(meshBone.matrixWorld);
       meshBone.matrix.decompose(meshBone.position, meshBone.quaternion, meshBone.scale);
+
+      meshBone.rotation.y = Math.PI
+      meshBone.updateMatrixWorld()
     }
     // object.updateMatrixWorld();
 
@@ -2675,8 +2683,50 @@ class Avatar {
     //   Left_kneeModelDirection,
     // ).invert()
 
-    const angle = flatMeshes.Left_leg.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Left_knee.getWorldDirection(new THREE.Vector3()));
-    this.modelBoneOutputs.Left_knee.rotation.x = angle;
+    {
+      this.modelBoneOutputs.Hips.position.copy(flatMeshes.Hips.position)
+    }
+    {
+      // this.modelBoneOutputs.Hips.parent.matrixWorld.copy(flatMeshes.Hips.matrixWorld)
+      // // this.modelBoneOutputs.Hips.matrixWorld.multiply(this.modelBoneOutputs.Hips.parent.matrixWorld.clone().invert())
+      // this.modelBoneOutputs.Hips.parent.matrix.copy(this.modelBoneOutputs.Hips.parent.matrixWorld)
+      // this.modelBoneOutputs.Hips.parent.matrix.decompose(this.modelBoneOutputs.Hips.parent.position, this.modelBoneOutputs.Hips.parent.quaternion, this.modelBoneOutputs.Hips.parent.scale)
+      this.modelBoneOutputs.Hips.quaternion.copy(flatMeshes.Hips.quaternion)
+      // this.modelBoneOutputs.Hips.quaternion.copy(flatMeshes.Hips.quaternion).invert()
+      // this.modelBoneOutputs.Hips.rotation.z += Math.PI
+      // this.modelBoneOutputs.Hips.rotation.y += Math.PI
+
+      // this.modelBoneOutputs.Hips.up.copy(new THREE.Vector3(0,1,0).applyQuaternion(flatMeshes.Hips.quaternion))
+      // this.modelBoneOutputs.Hips.lookAt(
+      //   flatMeshes.Hips.getWorldDirection(new THREE.Vector3()).negate().add(this.modelBoneOutputs.Hips.position)
+      // )
+    }
+    //
+    {
+      const angle = flatMeshes.Hips.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Left_leg.getWorldDirection(new THREE.Vector3()));
+      this.modelBoneOutputs.Left_leg.rotation.x = -angle;
+    }
+    {
+      const angle = flatMeshes.Hips.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Right_leg.getWorldDirection(new THREE.Vector3()));
+      this.modelBoneOutputs.Right_leg.rotation.x = -angle;
+    }
+    {
+      const angle = flatMeshes.Left_leg.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Left_knee.getWorldDirection(new THREE.Vector3()));
+      this.modelBoneOutputs.Left_knee.rotation.x = angle;
+    }
+    {
+      const angle = flatMeshes.Right_leg.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Right_knee.getWorldDirection(new THREE.Vector3()));
+      this.modelBoneOutputs.Right_knee.rotation.x = angle;
+    }
+    {
+      const angle = flatMeshes.Right_shoulder.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Right_arm.getWorldDirection(new THREE.Vector3()));
+      this.modelBoneOutputs.Right_arm.rotation.x = -angle;
+      this.modelBoneOutputs.Right_arm.rotation.z = Math.PI / 2;
+    }
+    {
+      const angle = flatMeshes.Right_arm.getWorldDirection(new THREE.Vector3()).angleTo(flatMeshes.Right_elbow.getWorldDirection(new THREE.Vector3()));
+      this.modelBoneOutputs.Right_elbow.rotation.y = angle;
+    }
 
     // for (const k in flatMeshes) {
     //   const modelBone = avatar.modelBoneOutputs[k];
