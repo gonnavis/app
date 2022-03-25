@@ -452,13 +452,14 @@ const _startHacks = () => {
     color: 'red',
   });
   const y = 3;
+  const z = -8;
   {
     const size = new THREE.Vector3(1, 1, 2).multiplyScalar(0.9);
     const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
     const mesh = new THREE.Mesh(geometry, material);
     window.meshRDHips = mesh;
     rootScene.add(mesh);
-    mesh.position.set(0, y, -5);
+    mesh.position.set(0, y, z);
     mesh.updateMatrixWorld();
     // geometry.translate(1.5 * 0.9, 0, 0);
 
@@ -471,7 +472,8 @@ const _startHacks = () => {
     const mesh = new THREE.Mesh(geometry, material);
     window.meshRDChest = mesh;
     rootScene.add(mesh);
-    mesh.position.set(0, y, -5 + 2);
+    mesh.position.set(0, y, z + 2);
+
     // mesh.rotation.z = Math.PI / 4;
     // mesh.position.x = Math.random() * 10;
     // mesh.position.y += -5;
@@ -479,8 +481,10 @@ const _startHacks = () => {
     // mesh.position.set(2.219571113586426, 4.303393840789795, -12);
     // mesh.quaternion.set(0, 0, -0.3746848404407501, 0.9271523356437683);
     // geometry.rotateY(1);
-    mesh.updateMatrixWorld();
     // geometry.translate(1 * 0.9, 0, 0);
+    mesh.rotation.x = -45 * THREE.Math.DEG2RAD;
+    mesh.updateMatrixWorld();
+
 
     const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
     window.bodyRDChest = body;
@@ -590,7 +594,7 @@ const _startHacks = () => {
 
   // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1.5, 0, 0), new THREE.Vector3(-1, 0, 0), window.bodyRDHips.quaternion, window.bodyRDChest.quaternion, true);
 
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1), new THREE.Quaternion().setFromEuler(new THREE.Euler(-45 * THREE.Math.DEG2RAD, 0, 0)), new THREE.Quaternion(), true);
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1), new THREE.Quaternion().setFromEuler(new THREE.Euler(-0 * THREE.Math.DEG2RAD, 0, 0)), new THREE.Quaternion(), true);
   physicsManager.setJointMotion(jointHipsChest, PxD6Axis.eTWIST, PxD6Motion.eLIMITED);
   physicsManager.setJointTwistLimit(jointHipsChest, -90 * THREE.Math.DEG2RAD, 90 * THREE.Math.DEG2RAD);
 
