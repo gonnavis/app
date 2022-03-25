@@ -483,6 +483,8 @@ const _startHacks = () => {
     // geometry.rotateY(1);
     // geometry.translate(1 * 0.9, 0, 0);
     mesh.rotation.x = -45 * THREE.Math.DEG2RAD;
+    mesh.position.x = 3;
+    mesh.position.y += 3;
     mesh.updateMatrixWorld();
 
 
