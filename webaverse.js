@@ -4,11 +4,13 @@ it uses the help of various managers and stores, and executes the render loop.
 */
 
 import * as THREE from 'three';
+window.THREE = THREE;
 import Avatar from './avatars/avatars.js';
 import * as sounds from './sounds.js';
 import physx from './physx.js';
 import ioManager from './io-manager.js';
 import physicsManager from './physics-manager.js';
+window.physicsManager = physicsManager;
 import {world} from './world.js';
 import * as blockchain from './blockchain.js';
 import cameraManager from './camera-manager.js';
@@ -29,6 +31,7 @@ import {
   bindCanvas,
   getComposer,
 } from './renderer.js';
+window.rootScene = rootScene;
 import * as audioManager from './audio-manager.js';
 import transformControls from './transform-controls.js';
 import * as metaverseModules from './metaverse-modules.js';
@@ -366,6 +369,7 @@ export default class Webaverse extends EventTarget {
 // import {MMDLoader} from 'three/examples/jsm/loaders/MMDLoader.js';
 const _startHacks = webaverse => {
   const localPlayer = metaversefileApi.useLocalPlayer();
+  window.localPlayer = localPlayer;
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
 
   // let playerDiorama = null;
