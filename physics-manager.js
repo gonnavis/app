@@ -313,6 +313,7 @@ physicsManager.simulatePhysics = timeDiff => {
   if (physicsEnabled) {
     const t = timeDiff/1000;
     const updatesOut = physx.physxWorker.simulatePhysics(physx.physics, physicsUpdates, t);
+    console.log(updatesOut.length);
     physicsUpdates.length = 0;
     for (const updateOut of updatesOut) {
       const {id, position, quaternion, collided, grounded} = updateOut;

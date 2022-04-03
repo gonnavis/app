@@ -12,6 +12,7 @@ import ioManager from './io-manager.js';
 import physicsManager from './physics-manager.js';
 window.physicsManager = physicsManager;
 import {world} from './world.js';
+window.world = world;
 import * as blockchain from './blockchain.js';
 import cameraManager from './camera-manager.js';
 import game from './game.js';
@@ -40,6 +41,7 @@ import * as voices from './voices.js';
 import performanceTracker from './performance-tracker.js';
 import renderSettingsManager from './rendersettings-manager.js';
 import metaversefileApi from 'metaversefile';
+window.metaversefileApi = metaversefileApi;
 import WebaWallet from './src/components/wallet.js';
 import {OffscreenEngine} from './offscreen-engine.js';
 
