@@ -1672,17 +1672,32 @@ class Avatar {
     this.fsms.start()
   }
   fadeToAction(name, duration = 0.1) {
-    // return;
+    return; // test
     let nextAction = this.actiono[name]
     if (duration > 0) {
       // fade
       nextAction.reset()
       nextAction.play()
-      this.currentAction.crossFadeTo(nextAction, duration)
+      this.currentAction.crossFadeTo(nextAction, duration) // will auto stop() currentAction.
       this.currentAction = nextAction
     } else {
       // not fade
       this.currentAction.stop()
+      nextAction.reset().play()
+      this.currentAction = nextAction
+    }
+  }
+  testFadeToAction(name, duration = 0) {
+    let nextAction = this.actiono[name]
+    if (duration > 0) {
+      // fade
+      nextAction.reset()
+      nextAction.play()
+      this.currentAction?.crossFadeTo(nextAction, duration)
+      this.currentAction = nextAction
+    } else {
+      // not fade
+      this.currentAction?.stop()
       nextAction.reset().play()
       this.currentAction = nextAction
     }
@@ -2602,6 +2617,11 @@ class Avatar {
         <div>jumpState: --- ${this.jumpState}</div>
         <div>narutoRunState: --- ${this.narutoRunState}</div>
         <div>sitState: --- ${this.sitState}</div>
+        <div>aimAnimation: --- ${this.aimAnimation}</div>
+        <div>danceAnimation: --- ${this.danceAnimation}</div>
+        <div>hurtAnimation: --- ${this.hurtAnimation}</div>
+        <div>poseAnimation: --- ${this.poseAnimation}</div>
+        <div>sitAnimation: --- ${this.sitAnimation}</div>
         <div>useAnimation: --- ${this.useAnimation}</div>
         <div>useAnimationCombo: --- ${this.useAnimationCombo}</div>
         <div>useAnimationEnvelope: --- ${this.useAnimationEnvelope}</div>
@@ -2645,39 +2665,39 @@ class Avatar {
           window.mixer = this.mixer;
 
           animations.forEach(animation => {
-            let name2 = animation.name2;
+            let name = animation.name;
             let action = this.mixer.clipAction(animation);
-            this.actiono[name2] = action;
+            this.actiono[name] = action;
           });
 
-          let comboClip, startTime, endTime;
+          // let comboClip, startTime, endTime;
 
-          comboClip = this.actiono.combo.getClip().clone();
-          startTime = 0;
-          endTime = 39 / 137 * this.actiono.combo.getClip().duration;
-          trimClip(comboClip, startTime, endTime);
-          this.actiono.combo1 = this.mixer.clipAction(comboClip);
+          // comboClip = this.actiono.combo.getClip().clone();
+          // startTime = 10 / 137 * this.actiono.combo.getClip().duration;
+          // endTime = 39 / 137 * this.actiono.combo.getClip().duration;
+          // trimClip(comboClip, startTime, endTime);
+          // this.actiono.combo1 = this.mixer.clipAction(comboClip);
 
-          comboClip = this.actiono.combo.getClip().clone();
-          startTime = 39 / 137 * this.actiono.combo.getClip().duration;
-          endTime = 69 / 137 * this.actiono.combo.getClip().duration;
-          trimClip(comboClip, startTime, endTime);
-          this.actiono.combo2 = this.mixer.clipAction(comboClip);
+          // comboClip = this.actiono.combo.getClip().clone();
+          // startTime = 39 / 137 * this.actiono.combo.getClip().duration;
+          // endTime = 69 / 137 * this.actiono.combo.getClip().duration;
+          // trimClip(comboClip, startTime, endTime);
+          // this.actiono.combo2 = this.mixer.clipAction(comboClip);
 
-          comboClip = this.actiono.combo.getClip().clone();
-          startTime = 69 / 137 * this.actiono.combo.getClip().duration;
-          endTime = Infinity;
-          trimClip(comboClip, startTime, endTime);
-          this.actiono.combo3 = this.mixer.clipAction(comboClip);
+          // comboClip = this.actiono.combo.getClip().clone();
+          // startTime = 69 / 137 * this.actiono.combo.getClip().duration;
+          // endTime = Infinity;
+          // trimClip(comboClip, startTime, endTime);
+          // this.actiono.combo3 = this.mixer.clipAction(comboClip);
 
-          this.actiono.jump = this.mixer.clipAction(
-            trimClip(this.actiono.jump.getClip().clone(), 0.7, Infinity)
-          ); // need clone(), because threejs cached old infos.
+          // this.actiono.jump = this.mixer.clipAction(
+          //   trimClip(this.actiono.jump.getClip().clone(), 0.7, Infinity)
+          // ); // need clone(), because threejs cached old infos.
 
-          ['combo', 'combo1', 'combo2', 'combo3', 'jump'].forEach(name2 => {
-            this.actiono[name2].loop = THREE.LoopOnce
-            this.actiono[name2].clampWhenFinished = true
-          })
+          // ['jump', 'combo', 'combo1', 'combo2', 'combo3', 'bowDraw', 'bowLoose'].forEach(name2 => {
+          //   this.actiono[name2].loop = THREE.LoopOnce
+          //   this.actiono[name2].clampWhenFinished = true
+          // })
           
           // debugger 
           this.currentAction = this.actiono.walk;

@@ -14,6 +14,7 @@ import {world} from './world.js';
 import * as blockchain from './blockchain.js';
 import cameraManager from './camera-manager.js';
 import game from './game.js';
+window.game = game;
 import hpManager from './hp-manager.js';
 import {playersManager} from './players-manager.js';
 import minimapManager from './minimap.js';

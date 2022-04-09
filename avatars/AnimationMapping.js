@@ -72,10 +72,15 @@ export const animationMappingConfig = [
 ];
 
 export const animationNameMapping = {
-  'One Hand Sword Combo.fbx': 'combo',
   'idle.fbx': 'idle',
   'walking.fbx': 'walk',
   'running.fbx': 'run',
   'jump.fbx': 'jump',
   'treading water.fbx': 'fly',
+  'One Hand Sword Combo.fbx': 'combo',
+  'bow draw.fbx': 'bowDraw',
+  'bow idle.fbx': 'bowIdle',
+  'bow loose.fbx': 'bowLoose',
+  'Pistol Aiming Idle.fbx': 'pistolAim',
+  'Pistol Idle.fbx': 'pistolIdle',
 }
