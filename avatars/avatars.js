@@ -2705,22 +2705,22 @@ class Avatar {
           // this.currentAction.play();
           this.mixer.addEventListener('finished', (event) => {
             console.log('finish');
-            this.fsms.send('finish')
+            // this.fsms.send('finish')
           })
-          this.fsms.send('loaded');
+          // this.fsms.send('loaded');
         }
 
-        if (moveFactors.walkRunFactor > 0.5) {
-          this.fsms.send('run');
-        } else if (moveFactors.idleWalkFactor > 0.5) {
-          this.fsms.send('walk');
-        } else {
-          this.fsms.send('idle');
-        }
-        if (this.jumpState) this.fsms.send('jump');
-        else this.fsms.send('stopJump');
-        if (this.flyState) this.fsms.send('fly');
-        else this.fsms.send('stopFly');
+        // if (moveFactors.walkRunFactor > 0.5) {
+        //   this.fsms.send('run');
+        // } else if (moveFactors.idleWalkFactor > 0.5) {
+        //   this.fsms.send('walk');
+        // } else {
+        //   this.fsms.send('idle');
+        // }
+        // if (this.jumpState) this.fsms.send('jump');
+        // else this.fsms.send('stopJump');
+        // if (this.flyState) this.fsms.send('fly');
+        // else this.fsms.send('stopFly');
         // console.log(window.localPlayer.characterPhysics.velocity.z)
         // if (['normal.ground.combo'].some(this.fsms.state.matches)) window.localPlayer.characterPhysics.velocity.set(0, 0, 0);
         // console.log(window.localPlayer.characterPhysics.velocity.z)

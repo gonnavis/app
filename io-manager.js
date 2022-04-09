@@ -411,9 +411,9 @@ ioManager.keydown = e => {
         /* if (game.canJumpOff()) {
           game.jumpOff();
         } */
-        if (window.localPlayer.avatar.fsms.state.hasTag('canFly')) {
+        // if (window.localPlayer.avatar.fsms.state.hasTag('canFly')) {
           game.toggleFly();
-        }
+        // }
       }
       break;
     }
