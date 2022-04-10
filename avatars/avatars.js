@@ -2607,6 +2607,7 @@ class Avatar {
 
       // _applyAnimation(this, now, moveFactors);
       window.domInfo.innerHTML = `
+        <div>avatar.direction: --- ${JSON.stringify(avatar.direction)}</div>
         <div>idleWalkFactor: --- ${moveFactors.idleWalkFactor.toFixed(2)}</div>
         <div>walkRunFactor: --- ${moveFactors.walkRunFactor.toFixed(2)}</div>
         <div>crouchFactor: --- ${moveFactors.crouchFactor.toFixed(2)}</div>
