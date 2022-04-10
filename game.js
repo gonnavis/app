@@ -373,7 +373,7 @@ const _mousedown = () => {
   _startUse();
 };
 const _mouseup = () => {
-  _endUse();
+  // _endUse();
 };
 
 const _grab = object => {
@@ -1137,6 +1137,9 @@ class GameManager extends EventTarget {
   }
   menuUse() {
     _use();
+  }
+  menuEndUse() {
+    _endUse();
   }
   menuDelete() {
     _delete();
