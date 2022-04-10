@@ -372,7 +372,6 @@ const _endUse = () => {
 const _mousedown = () => {
   _startUse();
   const useAction = localPlayer.getAction('use');
-  debugger
   if (!(
     useAction.animation ||
     useAction.animationCombo?.length > 0 ||
@@ -383,7 +382,6 @@ const _mousedown = () => {
 };
 const _mouseup = () => {
   const useAction = localPlayer.getAction('use');
-  debugger
   if (useAction?.animationEnvelope?.length > 0) {
     _endUse();
   }
