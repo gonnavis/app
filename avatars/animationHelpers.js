@@ -948,7 +948,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
               animationTimeBase += animation.duration;
             }
             if (useAnimation !== undefined) { // first iteration
-              if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
+              // if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
               t2 = Math.min(useTimeS - animationTimeBase, useAnimation.duration);
             } else { // loop
               const secondLastAnimationName = activeAvatar.useAnimationEnvelope[activeAvatar.useAnimationEnvelope.length - 2];
