@@ -72,7 +72,9 @@ let fallLoop;
 // let swordSideSlash;
 // let swordTopDownSlash;
 let hurtAnimations;
-let bowWalkForwardAnimation
+
+let bowIdleAnimation;
+let bowWalkForwardAnimation;
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -208,6 +210,7 @@ async function loadAnimations() {
     });
   window.animations = animations;
 
+  bowIdleAnimation = animations.filter(animation => animation.name.includes('Unarmed Idle 01.fbx'))[0];
   bowWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
 
   animationStepIndices = animationsJson.animationStepIndices;
@@ -719,15 +722,21 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   activeMoveFactors = moveFactors;
   activeAvatar = avatar;
   const angle = avatar.getAngle();
+  const nowS = now / 1000;
   for (const spec of activeAvatar.animationMappings) {
     const {
       animationTrackName: k,
       dst,
       isTop,
       isPosition,
+      lerpFn,
+      tempVQ
     } = spec;
 
-    dst.fromArray(bowWalkForwardAnimation.interpolants[k].evaluate((now / 1000) % bowWalkForwardAnimation.duration));
+    // debugger
+    dst.fromArray(bowIdleAnimation.interpolants[k].evaluate(nowS % bowIdleAnimation.duration));
+    tempVQ.fromArray(bowWalkForwardAnimation.interpolants[k].evaluate(nowS % bowWalkForwardAnimation.duration));
+    lerpFn.call(dst, tempVQ, moveFactors.idleWalkFactor);
 
     // ignore all animation position except y
     if (isPosition) {

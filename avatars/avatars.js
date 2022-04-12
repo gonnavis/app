@@ -889,6 +889,7 @@ class Avatar {
       const isPosition = /\.position$/.test(animationMapping.animationTrackName);
       animationMapping.dst = this.modelBoneOutputs[animationMapping.boneName][isPosition ? 'position' : 'quaternion'];
       animationMapping.lerpFn = _getLerpFn(isPosition);
+      animationMapping.tempVQ = isPosition ? new THREE.Vector3() : new THREE.Quaternion();
       return animationMapping;
     });
 
