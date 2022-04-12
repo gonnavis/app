@@ -74,7 +74,9 @@ let fallLoop;
 let hurtAnimations;
 
 let bowIdleAnimation;
-let bowWalkForwardAnimation;
+let bowStandingWalkForwardAnimation;
+let bowStandingAimWalkForwardAnimation;
+let bowStandingAimIdleAnimation;
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -211,7 +213,9 @@ async function loadAnimations() {
   window.animations = animations;
 
   bowIdleAnimation = animations.filter(animation => animation.name.includes('Unarmed Idle 01.fbx'))[0];
-  bowWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
+  bowStandingWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Walk Forward.fbx'))[0];
+  bowStandingAimWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
+  bowStandingAimIdleAnimation = animations.filter(animation => animation.name.includes('Standing Aim Idle 01.fbx'))[0];
 
   animationStepIndices = animationsJson.animationStepIndices;
   animations.index = {};
@@ -730,13 +734,24 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isTop,
       isPosition,
       lerpFn,
-      tempVQ
+      tempVQ,
+      tempVQ2,
+      tempVQ3,
     } = spec;
 
-    // debugger
+    // debugger 
     dst.fromArray(bowIdleAnimation.interpolants[k].evaluate(nowS % bowIdleAnimation.duration));
-    tempVQ.fromArray(bowWalkForwardAnimation.interpolants[k].evaluate(nowS % bowWalkForwardAnimation.duration));
+    tempVQ.fromArray(bowStandingWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingWalkForwardAnimation.duration));
     lerpFn.call(dst, tempVQ, moveFactors.idleWalkFactor);
+
+    tempVQ.fromArray(bowStandingAimIdleAnimation.interpolants[k].evaluate(nowS % bowStandingAimIdleAnimation.duration));
+    tempVQ2.fromArray(bowStandingAimWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkForwardAnimation.duration));
+    lerpFn.call(tempVQ, tempVQ2, moveFactors.idleWalkFactor);
+
+    lerpFn.call(dst, tempVQ, Math.min(1, activeAvatar.useTime / 100));
+
+    // lerpFn.call(dst, tempVQ3, Math.min(1, activeAvatar.useTime / 100));
+    // lerpFn.call(dst, tempVQ, moveFactors.idleWalkFactor);
 
     // ignore all animation position except y
     if (isPosition) {

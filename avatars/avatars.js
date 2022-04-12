@@ -890,6 +890,8 @@ class Avatar {
       animationMapping.dst = this.modelBoneOutputs[animationMapping.boneName][isPosition ? 'position' : 'quaternion'];
       animationMapping.lerpFn = _getLerpFn(isPosition);
       animationMapping.tempVQ = isPosition ? new THREE.Vector3() : new THREE.Quaternion();
+      animationMapping.tempVQ2 = isPosition ? new THREE.Vector3() : new THREE.Quaternion();
+      animationMapping.tempVQ3 = isPosition ? new THREE.Vector3() : new THREE.Quaternion();
       return animationMapping;
     });
 
