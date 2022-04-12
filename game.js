@@ -27,7 +27,6 @@ import metaversefileApi from './metaversefile-api.js';
 // import metaversefileConstants from 'metaversefile/constants.module.js';
 import * as metaverseModules from './metaverse-modules.js';
 import loadoutManager from './loadout-manager.js';
-import { localPlayer } from './players.js';
 // import soundManager from './sound-manager.js';
 
 // const {contractNames} = metaversefileConstants;
@@ -361,7 +360,6 @@ const _startUse = () => {
 const _endUse = () => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   const useAction = localPlayer.getAction('use');
-  // if (window.isDebugger) debugger
   if (useAction) {
     const app = metaversefileApi.getAppByInstanceId(useAction.instanceId);
     app.dispatchEvent({
@@ -372,7 +370,7 @@ const _endUse = () => {
   }
 };
 const _mousedown = () => {
-  // debugger
+  const localPlayer = metaversefileApi.useLocalPlayer();
   let useAction = localPlayer.getAction('use');
   if (useAction?.animationCombo?.length > 0) {
     window.needContinuCombo = true;
@@ -388,10 +386,9 @@ const _mousedown = () => {
   }
 };
 const _mouseup = () => {
+  const localPlayer = metaversefileApi.useLocalPlayer();
   const useAction = localPlayer.getAction('use');
-  // debugger
   if (
-    // useAction.animationCombo?.length > 0 ||
     useAction?.animationEnvelope?.length > 0
   ) {
     _endUse();
@@ -429,7 +426,6 @@ const damageMeshOffsetDistance = 1.5;
 let grabUseMesh = null;
 const _gameInit = () => {
   grabUseMesh = metaversefileApi.createApp();
-  window.grabUseMesh = grabUseMesh;
   (async () => {
     await metaverseModules.waitForLoad();
     const {modules} = metaversefileApi.useDefaultModules();
@@ -1186,7 +1182,6 @@ class GameManager extends EventTarget {
     _mouseup();
   }
   menuAim() {
-    // debugger
     const localPlayer = metaversefileApi.useLocalPlayer();
     if (!localPlayer.hasAction('aim')) {
       const localPlayer = metaversefileApi.useLocalPlayer();
@@ -1525,8 +1520,7 @@ class GameManager extends EventTarget {
 
   }
   isMovingBackward() {
-    // return ioManager.keysDirection.z > 0 && this.isAiming();
-    return localPlayer.avatar.direction.z > 0.1; // check > 0 will cause glitch when move left/right;
+    return ioManager.keysDirection.z > 0 && this.isAiming();
   }
   isAiming() {
     return metaversefileApi.useLocalPlayer().hasAction('aim');
