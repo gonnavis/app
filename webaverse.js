@@ -285,6 +285,7 @@ export default class Webaverse extends EventTarget {
     
     let lastTimestamp = performance.now();
     const animate = (timestamp, frame) => {
+      if (window.isDebugger) debugger
       performanceTracker.startFrame();
 
       const _frame = () => {
@@ -363,6 +364,15 @@ export default class Webaverse extends EventTarget {
 const _startHacks = webaverse => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
+
+  window.localPlayer = localPlayer;
+  window.THREE = THREE;
+  window.physicsManager = physicsManager;
+  window.physx = physx;
+  window.metaversefileApi = metaversefileApi;
+  window.rootScene = rootScene;
+  window.loadoutManager = loadoutManager;
+  window.game = game;
 
   // let playerDiorama = null;
   const lastEmoteKey = {
