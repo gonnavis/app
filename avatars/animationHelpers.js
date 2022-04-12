@@ -758,6 +758,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
     lerpFn.call(dst, tempVQ, moveFactors.crouchFactor);
 
+    // todo: add aimFactor and use it to limit walkRunFactor, like what crouchFactor do.
     tempVQ.fromArray(bowStandingAimIdleAnimation.interpolants[k].evaluate(nowS % bowStandingAimIdleAnimation.duration));
     tempVQ2.fromArray(bowStandingAimWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkForwardAnimation.duration));
     lerpFn.call(tempVQ, tempVQ2, moveFactors.idleWalkFactor);
