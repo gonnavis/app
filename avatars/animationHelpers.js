@@ -77,6 +77,9 @@ let bowIdleAnimation;
 let bowStandingWalkForwardAnimation;
 let bowStandingAimWalkForwardAnimation;
 let bowStandingAimIdleAnimation;
+let bowStandingRunForwardAnimation;
+let bowCrouchIdleAnimation;
+let bowCrouchWalkForwardAnimation;
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -216,6 +219,9 @@ async function loadAnimations() {
   bowStandingWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Walk Forward.fbx'))[0];
   bowStandingAimWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
   bowStandingAimIdleAnimation = animations.filter(animation => animation.name.includes('Standing Aim Idle 01.fbx'))[0];
+  bowStandingRunForwardAnimation = animations.filter(animation => animation.name.includes('Standing Run Forward.fbx'))[0];
+  bowCrouchIdleAnimation = animations.filter(animation => animation.name.includes('Crouch Idle 01.fbx'))[0];
+  bowCrouchWalkForwardAnimation = animations.filter(animation => animation.name.includes('Crouch Walk Forward.fbx'))[0];
 
   animationStepIndices = animationsJson.animationStepIndices;
   animations.index = {};
@@ -743,6 +749,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     dst.fromArray(bowIdleAnimation.interpolants[k].evaluate(nowS % bowIdleAnimation.duration));
     tempVQ.fromArray(bowStandingWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingWalkForwardAnimation.duration));
     lerpFn.call(dst, tempVQ, moveFactors.idleWalkFactor);
+    tempVQ.fromArray(bowStandingRunForwardAnimation.interpolants[k].evaluate(nowS % bowStandingRunForwardAnimation.duration));
+    lerpFn.call(dst, tempVQ, moveFactors.walkRunFactor);
+
+    tempVQ.fromArray(bowCrouchIdleAnimation.interpolants[k].evaluate(nowS % bowCrouchIdleAnimation.duration));
+    tempVQ2.fromArray(bowCrouchWalkForwardAnimation.interpolants[k].evaluate(nowS % bowCrouchWalkForwardAnimation.duration));
+    lerpFn.call(tempVQ, tempVQ2, moveFactors.idleWalkFactor);
+
+    lerpFn.call(dst, tempVQ, moveFactors.crouchFactor);
 
     tempVQ.fromArray(bowStandingAimIdleAnimation.interpolants[k].evaluate(nowS % bowStandingAimIdleAnimation.duration));
     tempVQ2.fromArray(bowStandingAimWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkForwardAnimation.duration));
