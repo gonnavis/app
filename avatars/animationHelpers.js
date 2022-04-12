@@ -72,6 +72,7 @@ let fallLoop;
 // let swordSideSlash;
 // let swordTopDownSlash;
 let hurtAnimations;
+let bowWalkForwardAnimation
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -206,6 +207,8 @@ async function loadAnimations() {
       return animationClip;
     });
   window.animations = animations;
+
+  bowWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
 
   animationStepIndices = animationsJson.animationStepIndices;
   animations.index = {};
@@ -723,6 +726,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isTop,
       isPosition,
     } = spec;
+
+    dst.fromArray(bowWalkForwardAnimation.interpolants[k].evaluate((now / 1000) % bowWalkForwardAnimation.duration));
 
     // ignore all animation position except y
     if (isPosition) {
