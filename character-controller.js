@@ -1114,12 +1114,6 @@ class LocalPlayer extends UninterpolatedPlayer {
 
       this.characterSfx.update(timestamp, timeDiffS);
       this.characterFx.update(timestamp, timeDiffS);
-
-      if (window.comboState.needEndUse) {
-        window.comboState.needEndUse = false;
-        gameManager.menuEndUse();
-      }
-
       this.updateInterpolation(timeDiff);
 
       const session = this.getSession();

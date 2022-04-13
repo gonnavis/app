@@ -120,16 +120,6 @@ export function applyPlayerActionsToAvatar(player, rig) {
     }
   }
   if (window.isDebugger) debugger
-  if (window.comboState.needIncreaseUseIndex) {
-    // debugger
-    window.comboState.needIncreaseUseIndex = false;
-    // rig.useAnimationIndex = useAction?.index;
-    rig.useAnimationIndex += 1;
-  }
-  if (window.comboState.needResetUseIndex) {
-    window.comboState.needResetUseIndex = false;
-    rig.useAnimationIndex = 0;
-  }
   rig.useTime = player.actionInterpolants.use.get();
   rig.unuseTime = player.actionInterpolants.unuse.get();
   if (rig.unuseTime === 0) { // this means use is active
