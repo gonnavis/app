@@ -949,7 +949,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             activeAvatar.useAnimationCombo.length > 0 ||
             activeAvatar.useAnimationEnvelope.length > 0
     ) {
-      return spec => {
+      return (spec, isLastBone) => {
         const {
           animationTrackName: k,
           dst,
@@ -979,7 +979,10 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // if (useAnimationName.indexOf('pistol') >= 0) debugger;
           useAnimation = useAnimations[useAnimationName];
 
-          if (k === 'mixamorigHips.quaternion') { // todo: check last.
+          t2 = Math.min(useTimeS - window.comboState.time, useAnimation.duration);
+          // console.log(t2 / useAnimation.duration)
+
+          if (isLastBone) {
             if (useTimeS - window.comboState.time >= useAnimation.duration) {
               // debugger
               if (window.comboState.needContinuCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
@@ -993,9 +996,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
               }
             }
           }
-
-          t2 = Math.min(useTimeS - window.comboState.time, useAnimation.duration);
-          // console.log(t2 / useAnimation.duration)
         } else if (activeAvatar.useAnimationEnvelope.length > 0) {
           if (k === 'mixamorigHips.quaternion') console.log('useAnimationEnvelope');
           // debugger
@@ -1316,7 +1316,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   };
   const applyFn = _getApplyFn();
 
-  for (const spec of activeAvatar.animationMappings) {
+  // for (const spec of activeAvatar.animationMappings) {
+  for (let i = 0; i < activeAvatar.animationMappings.length; i++) {
+    const spec = activeAvatar.animationMappings[i];
+    let isLastBone = false;
+    if (i === activeAvatar.animationMappings.length - 1) isLastBone = true;
+
     const {
       animationTrackName: k,
       dst,
@@ -1324,7 +1329,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    applyFn(spec);
+    applyFn(spec, isLastBone);
     _blendFly(spec);
     _blendActivateAction(spec);
 
