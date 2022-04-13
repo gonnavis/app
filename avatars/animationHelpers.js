@@ -979,36 +979,22 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // if (useAnimationName.indexOf('pistol') >= 0) debugger;
           useAnimation = useAnimations[useAnimationName];
 
-          if (k === 'mixamorigHips.quaternion') {
-            // if (useTimeS >= useAnimation.duration && (!window.comboState.needContinuCombo || activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1)) {
-            //   window.comboState.needEndUse = true;
-            // } else {
-            //   window.comboState.needEndUse = false;
-            // }
-
-            // if (k === 'mixamorigHips.quaternion' && useTimeS >= useAnimation.duration) {
-            if (useTimeS >= useAnimation.duration) {
-              window.comboState.needEndUse = true;
+          if (k === 'mixamorigHips.quaternion') { // todo: check last.
+            if (useTimeS - window.comboState.time >= useAnimation.duration) {
               // debugger
               if (window.comboState.needContinuCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
                 window.comboState.needContinuCombo = false;
-                window.comboState.needStartUse = true;
+                window.comboState.needIncreaseUseIndex = true;
+                window.comboState.time += useAnimation.duration;
+              } else {
+                window.comboState.needEndUse = true;
+                window.comboState.needResetUseIndex = true;
+                window.comboState.time = 0;
               }
-
-              //   window.isDebugger = true
-              //   window.comboState.isContinueCombo = true
-              //   debugger 
-              //   gameManager.menuEndUse();
-              //   // requestAnimationFrame(() => {
-              //   //   // requestAnimationFrame(() => {
-              //   //     debugger
-              //   //     gameManager.menuStartUse();
-              //   //   // });
-              //   // });
             }
           }
 
-          t2 = Math.min(useTimeS, useAnimation.duration);
+          t2 = Math.min(useTimeS - window.comboState.time, useAnimation.duration);
           // console.log(t2 / useAnimation.duration)
         } else if (activeAvatar.useAnimationEnvelope.length > 0) {
           if (k === 'mixamorigHips.quaternion') console.log('useAnimationEnvelope');

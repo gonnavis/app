@@ -1087,18 +1087,10 @@ class LocalPlayer extends UninterpolatedPlayer {
 
       if (window.comboState.needEndUse) {
         window.comboState.needEndUse = false;
-        if (!window.comboState.needStartUse) {
-          window.comboState.needResetUseIndex = true;
-        }
         gameManager.menuEndUse();
       }
 
       this.updateInterpolation(timeDiff);
-
-      if (window.comboState.needStartUse) {
-        window.comboState.needStartUse = false;
-        gameManager.menuStartUse();
-      }
 
       const session = this.getSession();
       const mirrors = metaversefile.getMirrors();
