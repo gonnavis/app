@@ -40,7 +40,6 @@ import {
   defaultPlayerBio,
 } from './ai/lore/lore-model.js';
 import {makeId, clone, unFrustumCull, enableShadows} from './util.js';
-import gameManager from './game.js';
 
 const localVector = new THREE.Vector3();
 // const localVector2 = new THREE.Vector3();
@@ -1084,6 +1083,7 @@ class LocalPlayer extends UninterpolatedPlayer {
       const timeDiffS = timeDiff / 1000;
       this.characterSfx.update(timestamp, timeDiffS);
       this.characterFx.update(timestamp, timeDiffS);
+
       this.updateInterpolation(timeDiff);
 
       const session = this.getSession();
