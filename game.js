@@ -370,10 +370,6 @@ const _endUse = () => {
     });
     localPlayer.removeAction('use');
   }
-  if (window.comboState.needResetUseIndex) {
-    window.comboState.needResetUseIndex = false;
-    lastUseIndex = 0;
-  }
 };
 const _mousedown = () => {
   // debugger

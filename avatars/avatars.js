@@ -942,6 +942,7 @@ class Avatar {
     // this.aimDirection = new THREE.Vector3();
     this.hurtTime = NaN;
     this.hurtAnimation = null;
+    this.useAnimationIndex = 0;
 
     // internal state
     this.lastPosition = new THREE.Vector3();
