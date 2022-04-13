@@ -1,4 +1,4 @@
-import {Vector3, Quaternion, AnimationClip} from 'three';
+import {Vector3, Quaternion, AnimationClip, DepthStencilFormat} from 'three';
 import metaversefile from 'metaversefile';
 import {VRMSpringBoneImporter, VRMLookAtApplyer, VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
 import easing from '../easing.js';
@@ -73,6 +73,7 @@ let fallLoop;
 // let swordSideSlash;
 // let swordTopDownSlash;
 let hurtAnimations;
+let lastActionTime;
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -159,6 +160,12 @@ const animationsIdleArrays = {
   run: {name: 'idle.fbx'},
   crouch: {name: 'Crouch Idle.fbx'},
 };
+// {
+//   reset: {name: 'reset.fbx', animation: AnimationClip}
+//   walk: {name: 'idle.fbx', animation: AnimationClip}
+//   run: {name: 'idle.fbx', animation: AnimationClip}
+//   crouch: {name: 'Crouch Idle.fbx', animation: AnimationClip}
+// }
 
 const cubicBezier = easing(0, 1, 0, 1);
 
@@ -189,10 +196,40 @@ async function loadAnimations() {
   const arrayBuffer = await res.arrayBuffer();
   const uint8Array = new Uint8Array(arrayBuffer);
   const animationsJson = zbdecode(uint8Array);
-  animations = animationsJson.animations
-    .map(a => AnimationClip.parse(a));
+  animations = animationsJson.animations.map(a => {
+    const animationClip = AnimationClip.parse(a);
+    return animationClip;
+  });
+
+  const swordStrikeContinuousAnimation = animations.filter(a => a.name === 'sword_strike_continuous.fbx')[0];
+  animations = animations.map(animationClip => {
+    if (animationClip.name === 'One Hand Sword Combo.fbx') {
+      trimClip(animationClip, 0.4, animationClip.duration - 0.5);
+      // trim start to make attack fast.
+      // trim end to prevent sword cross player's head.
+    } else if (animationClip.name === 'sword_side_slash.fbx') {
+      const bakName = animationClip.name;
+      animationClip = trimClip(swordStrikeContinuousAnimation.clone(), 0, 20 / 30);
+      animationClip.name = bakName;
+    } else if (animationClip.name === 'sword_side_slash_step.fbx') {
+      const bakName = animationClip.name;
+      animationClip = trimClip(swordStrikeContinuousAnimation.clone(), 20 / 30, 45 / 30);
+      animationClip.name = bakName;
+    } else if (animationClip.name === 'sword_topdown_slash.fbx') {
+      const bakName = animationClip.name;
+      animationClip = trimClip(swordStrikeContinuousAnimation.clone(), 45 / 30, 62 / 30);
+      animationClip.name = bakName;
+    } else if (animationClip.name === 'sword_topdown_slash_step.fbx') {
+      const bakName = animationClip.name;
+      animationClip = trimClip(swordStrikeContinuousAnimation.clone(), 62 / 30, 80 / 30);
+      animationClip.name = bakName;
+    }
+    return animationClip;
+  });
+
   animationStepIndices = animationsJson.animationStepIndices;
   animations.index = {};
+  window.animations = animations;
   for (const animation of animations) {
     animations.index[animation.name] = animation;
   }
@@ -326,12 +363,12 @@ export const loadPromise = (async () => {
   // hitAnimation = animations.find(a => a.isHit);
   aimAnimations = {
     swordSideIdle: animations.index['sword_idle_side.fbx'],
-    swordSideIdleStatic: animations.index['sword_idle_side_static.fbx'],
+    // swordSideIdleStatic: animations.index['sword_idle_side_static.fbx'],
     swordSideSlash: animations.index['sword_side_slash.fbx'],
     swordSideSlashStep: animations.index['sword_side_slash_step.fbx'],
     swordTopDownSlash: animations.index['sword_topdown_slash.fbx'],
     swordTopDownSlashStep: animations.index['sword_topdown_slash_step.fbx'],
-    swordUndraw: animations.index['sword_undraw.fbx'],
+    // swordUndraw: animations.index['sword_undraw.fbx'],
   };
   useAnimations = mergeAnimations({
     combo: animations.find(a => a.isCombo),
@@ -346,6 +383,7 @@ export const loadPromise = (async () => {
     bowIdle: animations.find(a => a.isBowIdle),
     bowLoose: animations.find(a => a.isBowLoose),
   }, aimAnimations);
+  window.useAnimations = useAnimations;
   sitAnimations = {
     chair: animations.find(a => a.isSitting),
     saddle: animations.find(a => a.isSitting),
@@ -642,7 +680,7 @@ const _blendFly = spec => {
   const {
     animationTrackName: k,
     dst,
-    // isTop,
+    isTop,
     lerpFn,
   } = spec;
 
@@ -665,7 +703,7 @@ const _blendActivateAction = spec => {
   const {
     animationTrackName: k,
     dst,
-    // isTop,
+    isTop,
     lerpFn,
   } = spec;
 
@@ -778,7 +816,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     const {
       animationTrackName: k,
       dst,
-      // isTop,
+      isTop,
       lerpFn,
       isPosition,
     } = spec;
@@ -791,14 +829,21 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          // isTop,
+          lastDst,
+          isTop,
         } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('jumpAnimation');
+        // debugger
 
         const t2 = activeAvatar.jumpTime / 1000 * 0.6 + 0.7;
         const src2 = jumpAnimation.interpolants[k];
         const v2 = src2.evaluate(t2);
 
         dst.fromArray(v2);
+
+        lastDst.copy(dst);
+        lastActionTime = now;
       };
     }
     if (activeAvatar.sitState) {
@@ -806,8 +851,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          // isTop,
+          lastDst,
+          isTop,
         } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('sitAnimation');
+        // debugger
 
         const sitAnimation = sitAnimations[activeAvatar.sitAnimation || defaultSitAnimation];
         const src2 = sitAnimation.interpolants[k];
@@ -821,9 +870,13 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          // isTop,
+          lastDst,
+          isTop,
           isPosition,
         } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('narutoRunAnimation');
+        // debugger
 
         const narutoRunAnimation = narutoRunAnimations[defaultNarutoRunAnimation];
         const src2 = narutoRunAnimation.interpolants[k];
@@ -833,6 +886,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.fromArray(v2);
 
         _clearXZ(dst, isPosition);
+
+        lastDst.copy(dst);
+        lastActionTime = now;
       };
     }
 
@@ -841,10 +897,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
+          lastDst,
           lerpFn,
-          // isTop,
+          isTop,
           isPosition,
         } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('danceAnimation');
+        // debugger
 
         _handleDefault(spec);
 
@@ -863,6 +923,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           );
 
         _clearXZ(dst, isPosition);
+
+        lastDst.copy(dst);
+        lastActionTime = now;
       };
     }
 
@@ -871,7 +934,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             const {
               animationTrackName: k,
               dst,
-              // isTop,
+              isTop,
             } = spec;
 
             const t2 = (activeAvatar.fallLoopTime/1000) ;
@@ -890,28 +953,48 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          // isTop,
+          lastDst,
+          isTop,
+          isCombo,
           isPosition,
         } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('useAnimation');
+        // debugger
 
         let useAnimation;
         let t2;
         const useTimeS = activeAvatar.useTime / 1000;
         if (activeAvatar.useAnimation) {
           const useAnimationName = activeAvatar.useAnimation;
+          // if (useAnimationName.indexOf('pistol') >= 0) debugger;
           useAnimation = useAnimations[useAnimationName];
           if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
           t2 = Math.min(useTimeS, useAnimation.duration);
         } else if (activeAvatar.useAnimationCombo.length > 0) {
           const useAnimationName = activeAvatar.useAnimationCombo[activeAvatar.useAnimationIndex];
+          // if (useAnimationName.indexOf('pistol') >= 0) debugger;
           useAnimation = useAnimations[useAnimationName];
 
+          // if (k === 'mixamorigHips.quaternion' && useTimeS >= useAnimation.duration) {
           if (useTimeS >= useAnimation.duration) {
             window.needEndUse = true;
+            // debugger
             if (window.needContinuCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
               window.needContinuCombo = false;
               window.needStartUse = true;
             }
+
+            //   window.isDebugger = true
+            //   window.isContinueCombo = true
+            //   debugger 
+            //   gameManager.menuEndUse();
+            //   // requestAnimationFrame(() => {
+            //   //   // requestAnimationFrame(() => {
+            //   //     debugger
+            //   //     gameManager.menuStartUse();
+            //   //   // });
+            //   // });
           }
 
           t2 = Math.min(useTimeS, useAnimation.duration);
@@ -919,6 +1002,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           let totalTime = 0;
           for (let i = 0; i < activeAvatar.useAnimationEnvelope.length - 1; i++) {
             const animationName = activeAvatar.useAnimationEnvelope[i];
+            // if (animationName.indexOf('pistol') >= 0) debugger;
             const animation = useAnimations[animationName];
             totalTime += animation.duration;
           }
@@ -927,6 +1011,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             let animationTimeBase = 0;
             for (let i = 0; i < activeAvatar.useAnimationEnvelope.length - 1; i++) {
               const animationName = activeAvatar.useAnimationEnvelope[i];
+              // if (animationName.indexOf('pistol') >= 0) debugger;
               const animation = useAnimations[animationName];
               if (useTimeS < (animationTimeBase + animation.duration)) {
                 useAnimation = animation;
@@ -935,9 +1020,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
               animationTimeBase += animation.duration;
             }
             if (useAnimation !== undefined) { // first iteration
+              // if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
               t2 = Math.min(useTimeS - animationTimeBase, useAnimation.duration);
             } else { // loop
               const secondLastAnimationName = activeAvatar.useAnimationEnvelope[activeAvatar.useAnimationEnvelope.length - 2];
+              // if (secondLastAnimationName.indexOf('pistol') >= 0) debugger;
               useAnimation = useAnimations[secondLastAnimationName];
               t2 = (useTimeS - animationTimeBase) % useAnimation.duration;
             }
@@ -948,43 +1035,84 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         if (useAnimation) {
           if (!isPosition) {
+            // debugger
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
+            localQuaternion2.fromArray(v2);
 
-            const idleAnimation = _getIdleAnimation('walk');
-            const t3 = 0;
-            const src3 = idleAnimation.interpolants[k];
-            const v3 = src3.evaluate(t3);
+            // const idleAnimation = _getIdleAnimation('walk');
+            // const t3 = 0;
+            // const src3 = idleAnimation.interpolants[k];
+            // const v3 = src3.evaluate(t3);
 
-            dst
-              .premultiply(localQuaternion2.fromArray(v3).invert())
-              .premultiply(localQuaternion2.fromArray(v2));
+            // dst
+            //   .premultiply(localQuaternion2.fromArray(v3).invert())
+            //   .premultiply(localQuaternion2.fromArray(v2));
+
+            if (moveFactors.crouchFactor === 0) {
+              if (isCombo) {
+                // do nothing: localQuaternion2 already pure combo animation
+              } else { // lerp legs between sword and walk/run by idleWalkFactor.
+                localQuaternion2.slerp(dst, moveFactors.idleWalkFactor);
+              }
+              // now localQuaternion2 is full combo animation ( which already processed legs )
+
+              // lerp default animation and combo animation when start combo.
+              dst.slerp(localQuaternion2, Math.min(1, activeAvatar.useTime / 100));
+            } else { // when crouch, only apply combo to isCombo bones ( arms with a little upper spines ).
+              if (isCombo) {
+                dst.slerp(localQuaternion2, Math.min(1, activeAvatar.useTime / 100));
+              }
+            }
           } else {
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
             localVector2.fromArray(v2);
             _clearXZ(localVector2, isPosition);
 
-            const idleAnimation = _getIdleAnimation('walk');
-            const t3 = 0;
-            const src3 = idleAnimation.interpolants[k];
-            const v3 = src3.evaluate(t3);
-            localVector3.fromArray(v3);
+            // const idleAnimation = _getIdleAnimation('walk');
+            // const t3 = 0;
+            // const src3 = idleAnimation.interpolants[k];
+            // const v3 = src3.evaluate(t3);
+            // localVector3.fromArray(v3);
 
-            dst
-              .sub(localVector3)
-              .add(localVector2);
+            // dst
+            //   .sub(localVector3)
+            //   .add(localVector2);
+
+            if (moveFactors.crouchFactor === 0) {
+              if (isCombo) {
+                // do nothing: localVector2 already pure combo animation
+              } else { // lerp legs between sword and walk/run by idleWalkFactor.
+                localVector2.lerp(dst, moveFactors.idleWalkFactor);
+              }
+              // now localVector2 is full combo animation ( which already processed legs )
+
+              // lerp default animation and combo animation when start combo.
+              dst.lerp(localVector2, Math.min(1, activeAvatar.useTime / 100));
+            } else { // when crouch, only apply combo to isCombo bones ( arms with a little upper spines ).
+              if (isCombo) {
+                dst.lerp(localVector2, Math.min(1, activeAvatar.useTime / 100));
+              }
+            }
           }
         }
+
+        lastDst.copy(dst);
+        lastActionTime = now;
       };
     } else if (activeAvatar.hurtAnimation) {
       return spec => {
         const {
           animationTrackName: k,
           dst,
-          // isTop,
+          lastDst,
+          isTop,
           isPosition,
         } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('hurtAnimation');
+        // debugger
 
         const hurtAnimation = (activeAvatar.hurtAnimation && hurtAnimations[activeAvatar.hurtAnimation]);
         _handleDefault(spec);
@@ -1018,61 +1146,82 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             .sub(localVector2.fromArray(v3))
             .add(localVector2.fromArray(v2));
         }
+
+        lastDst.copy(dst);
+        lastActionTime = now;
       };
     } else if (activeAvatar.aimAnimation) {
       return spec => {
         const {
           animationTrackName: k,
           dst,
+          lastDst,
           // isTop,
+          isArm,
           isPosition,
         } = spec;
 
-        const aimAnimation = (activeAvatar.aimAnimation && aimAnimations[activeAvatar.aimAnimation]);
+        if (k === 'mixamorigHips.quaternion') console.log('aimAnimation');
+        // debugger
+
         _handleDefault(spec);
-        const t2 = (activeAvatar.aimTime / aimMaxTime) % aimAnimation.duration;
-        if (!isPosition) {
-          if (aimAnimation) {
+
+        const aimAnimation = (activeAvatar.aimAnimation && aimAnimations[activeAvatar.aimAnimation]);
+        if (aimAnimation) {
+          const t2 = (activeAvatar.aimTime / aimMaxTime) % aimAnimation.duration;
+          if (!isPosition) {
             const src2 = aimAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
+            localQuaternion2.fromArray(v2);
 
-            const idleAnimation = _getIdleAnimation('walk');
-            const t3 = 0;
-            const src3 = idleAnimation.interpolants[k];
-            const v3 = src3.evaluate(t3);
+            if (isArm) {
+              dst.slerp(localQuaternion2, Math.min(0.5, activeAvatar.aimTime / 100 * 0.5));
+            } else {
+              localQuaternion2.slerp(dst, 0.5 + moveFactors.idleWalkFactor * 0.5);
+              dst.slerp(localQuaternion2, Math.min(1, activeAvatar.aimTime / 100));
+            }
+          } else {
+            const src2 = aimAnimation.interpolants[k];
+            const v2 = src2.evaluate(t2);
+            localVector2.fromArray(v2);
+            _clearXZ(localVector2, isPosition);
 
-            dst
-              .premultiply(localQuaternion2.fromArray(v3).invert())
-              .premultiply(localQuaternion2.fromArray(v2));
+            if (isArm) {
+              dst.lerp(localVector2, Math.min(0.5, activeAvatar.aimTime / 100 * 0.5));
+            } else {
+              localVector2.lerp(dst, 0.5 + moveFactors.idleWalkFactor * 0.5);
+              dst.lerp(localVector2, Math.min(1, activeAvatar.aimTime / 100));
+            }
           }
-        } else {
-          const src2 = aimAnimation.interpolants[k];
-          const v2 = src2.evaluate(t2);
-
-          const idleAnimation = _getIdleAnimation('walk');
-          const t3 = 0;
-          const src3 = idleAnimation.interpolants[k];
-          const v3 = src3.evaluate(t3);
-
-          dst
-            .sub(localVector2.fromArray(v3))
-            .add(localVector2.fromArray(v2));
         }
+
+        lastDst.copy(dst);
+        lastActionTime = now;
       };
     } else if (activeAvatar.unuseAnimation && activeAvatar.unuseTime >= 0) {
       return spec => {
         const {
           animationTrackName: k,
           dst,
+          lastDst,
           lerpFn,
-          // isTop,
+          isTop,
           isPosition,
         } = spec;
 
+        if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
+        // debugger
+
         _handleDefault(spec);
+
+        if (!activeAvatar.unuseAnimation) return;
+        // Though already checked outter, the codes here will run multiple times equal to bones number.
+        // So will cause error after first bone set `activeAvatar.unuseAnimation = null;` if not check here.
+        // todo: May can extract `activeAvatar.unuseAnimation = null;` and related codes to outter.
 
         const unuseTimeS = activeAvatar.unuseTime / 1000;
         const unuseAnimationName = activeAvatar.unuseAnimation;
+        // if (unuseAnimationName.indexOf('pistol') >= 0) debugger;
         const unuseAnimation = useAnimations[unuseAnimationName];
         const t2 = Math.min(unuseTimeS, unuseAnimation.duration);
         const f = Math.min(Math.max(unuseTimeS / unuseAnimation.duration, 0), 1);
@@ -1119,7 +1268,35 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
 
         if (f >= 1) {
-          activeAvatar.useAnimation = '';
+          activeAvatar.unuseAnimation = null;
+        }
+
+        lastDst.copy(dst);
+        lastActionTime = now;
+      };
+    }
+
+    const unactionTime = now - lastActionTime;
+    if (unactionTime <= 100) {
+      return spec => {
+        const {
+          animationTrackName: k,
+          dst,
+          lastDst,
+          lerpFn,
+          isTop,
+          isPosition,
+        } = spec;
+
+        if (k === 'mixamorigHips.quaternion') console.log('restoreAnimation');
+        // debugger
+
+        _handleDefault(spec);
+
+        if (!isPosition) {
+          dst.slerp(lastDst, 1 - Math.min(1, unactionTime / 100));
+        } else {
+          dst.lerp(lastDst, 1 - Math.min(1, unactionTime / 100));
         }
       };
     }
@@ -1131,7 +1308,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     const {
       animationTrackName: k,
       dst,
-      // isTop,
+      isTop,
       isPosition,
     } = spec;
 
@@ -1212,6 +1389,41 @@ export function getFirstPersonCurves(vrmExtension) {
   } else {
     return null;
   }
+}
+
+export function trimClip(clip, startTime, endTime) {
+  for (let i = 0; i < clip.tracks.length; i++) {
+    clip.tracks[i].trim(startTime, endTime);
+
+    if (clip.tracks[i].times[0] !== startTime) {
+      const interpolant = clip.tracks[i].createInterpolant(); // todo: performance.
+
+      const timesArr = Array.from(clip.tracks[i].times);
+      timesArr.unshift(startTime);
+      clip.tracks[i].times = new Float32Array(timesArr);
+
+      const valuesArr = Array.from(clip.tracks[i].values);
+      valuesArr.unshift(...interpolant.evaluate(startTime));
+      clip.tracks[i].values = new Float32Array(valuesArr);
+    }
+    if (clip.tracks[i].times[clip.tracks[i].times.length - 1] !== endTime) {
+      const interpolant = clip.tracks[i].createInterpolant(); // todo: performance.
+
+      const timesArr = Array.from(clip.tracks[i].times);
+      timesArr.push(endTime);
+      clip.tracks[i].times = new Float32Array(timesArr);
+
+      const valuesArr = Array.from(clip.tracks[i].values);
+      valuesArr.push(...interpolant.evaluate(endTime));
+      clip.tracks[i].values = new Float32Array(valuesArr);
+    }
+
+    for (let j = 0; j < clip.tracks[i].times.length; j++) {
+      clip.tracks[i].times[j] -= startTime;
+    }
+  }
+  clip.resetDuration();
+  return clip;
 }
 
 /* const _localizeMatrixWorld = bone => {
