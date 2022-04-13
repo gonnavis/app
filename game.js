@@ -368,8 +368,8 @@ const _endUse = () => {
     });
     localPlayer.removeAction('use');
   }
-  if (window.needResetUseIndex) {
-    window.needResetUseIndex = false;
+  if (window.comboState.needResetUseIndex) {
+    window.comboState.needResetUseIndex = false;
     lastUseIndex = 0;
   }
 };
@@ -377,7 +377,7 @@ const _mousedown = () => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   let useAction = localPlayer.getAction('use');
   if (useAction?.animationCombo?.length > 0) {
-    window.needContinuCombo = true;
+    window.comboState.needContinuCombo = true;
   }
   _startUse();
   useAction = localPlayer.getAction('use');
