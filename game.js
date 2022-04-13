@@ -373,7 +373,7 @@ const _mousedown = () => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   let useAction = localPlayer.getAction('use');
   if (useAction?.animationCombo?.length > 0) {
-    window.comboState.needContinuCombo = true;
+    localPlayer.avatar.needContinueCombo = true;
   }
   _startUse();
   useAction = localPlayer.getAction('use');

@@ -938,6 +938,8 @@ class Avatar {
     this.hurtTime = NaN;
     this.hurtAnimation = null;
     this.useAnimationIndex = 0;
+    this.comboAnimationTime = 0;
+    this.needContinueCombo = false;
 
     // internal state
     this.lastPosition = new THREE.Vector3();

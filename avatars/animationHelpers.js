@@ -979,20 +979,20 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // if (useAnimationName.indexOf('pistol') >= 0) debugger;
           useAnimation = useAnimations[useAnimationName];
 
-          t2 = Math.min(useTimeS - window.comboState.time, useAnimation.duration);
+          t2 = Math.min(useTimeS - activeAvatar.comboAnimationTime, useAnimation.duration);
           // console.log(t2 / useAnimation.duration)
 
           if (isLastBone) {
-            if (useTimeS - window.comboState.time >= useAnimation.duration) {
+            if (useTimeS - activeAvatar.comboAnimationTime >= useAnimation.duration) {
               // debugger
-              if (window.comboState.needContinuCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
-                window.comboState.needContinuCombo = false;
-                window.comboState.needIncreaseUseIndex = true;
-                window.comboState.time += useAnimation.duration;
+              if (activeAvatar.needContinueCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
+                activeAvatar.needContinueCombo = false;
+                activeAvatar.useAnimationIndex += 1;
+                activeAvatar.comboAnimationTime += useAnimation.duration;
               } else {
-                window.comboState.needEndUse = true;
-                window.comboState.needResetUseIndex = true;
-                window.comboState.time = 0;
+                gameManager.menuEndUse();
+                activeAvatar.useAnimationIndex = 0;
+                activeAvatar.comboAnimationTime = 0;
               }
             }
           }
