@@ -27,7 +27,6 @@ import metaversefileApi from './metaversefile-api.js';
 // import metaversefileConstants from 'metaversefile/constants.module.js';
 import * as metaverseModules from './metaverse-modules.js';
 import loadoutManager from './loadout-manager.js';
-import { localPlayer } from './players.js';
 // import soundManager from './sound-manager.js';
 
 // const {contractNames} = metaversefileConstants;
@@ -373,11 +372,17 @@ const _endUse = () => {
 };
 const _mousedown = () => {
   // debugger
+
   let useAction = localPlayer.getAction('use');
+  // note: can't check animationCombo after _startUse();
   if (useAction?.animationCombo?.length > 0) {
     localPlayer.avatar.needContinueCombo = true;
+  } else {
+    localPlayer.avatar.needContinueCombo = false;
   }
+
   _startUse();
+
   useAction = localPlayer.getAction('use');
   if (!(
     useAction.animation ||
