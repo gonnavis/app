@@ -908,8 +908,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          isTop,
-          isCombo,
+          // isTop,
+          isArm,
           isPosition,
         } = spec;
 
@@ -980,7 +980,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             //   .premultiply(localQuaternion2.fromArray(v2));
 
             if (moveFactors.crouchFactor === 0) {
-              if (isCombo) {
+              if (isArm) {
                 // do nothing: localQuaternion2 already pure combo animation
               } else { // lerp legs between sword and walk/run by idleWalkFactor.
                 localQuaternion2.slerp(dst, moveFactors.idleWalkFactor);
@@ -989,8 +989,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
               // lerp default animation and combo animation when start combo.
               dst.slerp(localQuaternion2, Math.min(1, activeAvatar.useTime / 100));
-            } else { // when crouch, only apply combo to isCombo bones ( arms with a little upper spines ).
-              if (isCombo) {
+            } else { // when crouch, only apply combo to isArm bones ( arms with a little upper spines ).
+              if (isArm) {
                 dst.slerp(localQuaternion2, Math.min(1, activeAvatar.useTime / 100));
               }
             }
@@ -1011,7 +1011,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             //   .add(localVector2);
 
             if (moveFactors.crouchFactor === 0) {
-              if (isCombo) {
+              if (isArm) {
                 // do nothing: localVector2 already pure combo animation
               } else { // lerp legs between sword and walk/run by idleWalkFactor.
                 localVector2.lerp(dst, moveFactors.idleWalkFactor);
@@ -1020,8 +1020,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
               // lerp default animation and combo animation when start combo.
               dst.lerp(localVector2, Math.min(1, activeAvatar.useTime / 100));
-            } else { // when crouch, only apply combo to isCombo bones ( arms with a little upper spines ).
-              if (isCombo) {
+            } else { // when crouch, only apply combo to isArm bones ( arms with a little upper spines ).
+              if (isArm) {
                 dst.lerp(localVector2, Math.min(1, activeAvatar.useTime / 100));
               }
             }
