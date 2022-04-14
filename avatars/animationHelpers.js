@@ -800,7 +800,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isTop,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('jumpAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('jumpAnimation');
         // debugger
 
         const t2 = activeAvatar.jumpTime / 1000 * 0.6 + 0.7;
@@ -818,7 +818,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isTop,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('sitAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('sitAnimation');
         // debugger
 
         const sitAnimation = sitAnimations[activeAvatar.sitAnimation || defaultSitAnimation];
@@ -837,7 +837,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('narutoRunAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('narutoRunAnimation');
         // debugger
 
         const narutoRunAnimation = narutoRunAnimations[defaultNarutoRunAnimation];
@@ -861,7 +861,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('danceAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('danceAnimation');
         // debugger
 
         _handleDefault(spec);
@@ -913,7 +913,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('useAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('useAnimation');
         // debugger
 
         let useAnimation;
@@ -964,6 +964,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         _handleDefault(spec);
 
         if (useAnimation) {
+          if (k === 'mixamorigHips.quaternion') console.log(useAnimation.name);
           if (!isPosition) {
             // debugger
             const src2 = useAnimation.interpolants[k];
@@ -1027,7 +1028,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('hurtAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('hurtAnimation');
         // debugger
 
         const hurtAnimation = (activeAvatar.hurtAnimation && hurtAnimations[activeAvatar.hurtAnimation]);
@@ -1073,7 +1074,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('aimAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('aimAnimation');
         // debugger
 
         _handleDefault(spec);
@@ -1117,7 +1118,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
         // debugger
 
         _handleDefault(spec);
