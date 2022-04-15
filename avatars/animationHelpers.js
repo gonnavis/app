@@ -72,6 +72,7 @@ let fallLoop;
 // let swordSideSlash;
 // let swordTopDownSlash;
 let hurtAnimations;
+let lastF;
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -1109,7 +1110,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
       };
     } else if (activeAvatar.unuseAnimation && activeAvatar.unuseTime >= 0) {
-      return (spec, isLastBone) => {
+      return spec => {
         const {
           animationTrackName: k,
           dst,
@@ -1171,28 +1172,22 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             );
         }
 
-        if (isLastBone && f >= 1) {
-          activeAvatar.unuseAnimation = null;
-        }
+        lastF = f;
       };
     }
     return _handleDefault;
   };
   const applyFn = _getApplyFn();
 
-  for (let i = 0; i < activeAvatar.animationMappings.length; i++) {
-    const spec = activeAvatar.animationMappings[i];
-    let isLastBone = false;
-    if (i === activeAvatar.animationMappings.length - 1) isLastBone = true;
-
+  for (const spec of activeAvatar.animationMappings) {
     const {
       animationTrackName: k,
       dst,
-      isTop,
+      // isTop,
       isPosition,
     } = spec;
 
-    applyFn(spec, isLastBone);
+    applyFn(spec);
     _blendFly(spec);
     _blendActivateAction(spec);
 
@@ -1206,6 +1201,10 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.y = activeAvatar.height * 0.55;
       }
     }
+  }
+  if (lastF >= 1) {
+    lastF = null;
+    activeAvatar.unuseAnimation = null;
   }
 };
 
