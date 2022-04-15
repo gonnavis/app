@@ -975,25 +975,52 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           if (k === 'mixamorigHips.quaternion') console.log('useAnimationCombo');
           // debugger
 
-          const useAnimationName = activeAvatar.useAnimationCombo[activeAvatar.useAnimationIndex];
-          // if (useAnimationName.indexOf('pistol') >= 0) debugger;
-          useAnimation = useAnimations[useAnimationName];
+          // const useAnimationName = activeAvatar.useAnimationCombo[activeAvatar.useAnimationIndex];
+          // // if (useAnimationName.indexOf('pistol') >= 0) debugger;
+          // useAnimation = useAnimations[useAnimationName];
 
-          t2 = Math.min(useTimeS - activeAvatar.comboAnimationTime, useAnimation.duration);
-          // console.log(t2 / useAnimation.duration)
+          // t2 = Math.min(useTimeS - activeAvatar.comboAnimationTime, useAnimation.duration);
+          // // console.log(t2 / useAnimation.duration)
 
-          if (isLastBone) {
-            if (useTimeS - activeAvatar.comboAnimationTime >= useAnimation.duration) {
-              // debugger
-              if (activeAvatar.needContinueCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
-                activeAvatar.needContinueCombo = false;
-                activeAvatar.useAnimationIndex += 1;
-                activeAvatar.comboAnimationTime += useAnimation.duration;
-              } else {
-                gameManager.menuEndUse();
-                activeAvatar.useAnimationIndex = 0;
-                activeAvatar.comboAnimationTime = 0;
+          // if (isLastBone) {
+          //   if (useTimeS - activeAvatar.comboAnimationTime >= useAnimation.duration) {
+          //     // debugger
+          //     if (activeAvatar.needContinueCombo && activeAvatar.useAnimationIndex < activeAvatar.useAnimationCombo.length - 1) {
+          //       activeAvatar.needContinueCombo = false;
+          //       activeAvatar.useAnimationIndex += 1;
+          //       activeAvatar.comboAnimationTime += useAnimation.duration;
+          //     } else {
+          //       gameManager.menuEndUse();
+          //       activeAvatar.useAnimationIndex = 0;
+          //       activeAvatar.comboAnimationTime = 0;
+          //     }
+          //   }
+          // }
+
+          // mimic envelope's logic
+          let totalTime = 0;
+          for (let i = 0; i < activeAvatar.useAnimationCombo.length - 1; i++) {
+            const animationName = activeAvatar.useAnimationCombo[i];
+            // if (animationName.indexOf('pistol') >= 0) debugger;
+            const animation = useAnimations[animationName];
+            totalTime += animation.duration;
+          }
+
+          if (totalTime > 0) {
+            let animationTimeBase = 0;
+            for (let i = 0; i < activeAvatar.useAnimationCombo.length; i++) {
+              const animationName = activeAvatar.useAnimationCombo[i];
+              // if (animationName.indexOf('pistol') >= 0) debugger;
+              const animation = useAnimations[animationName];
+              if (useTimeS < (animationTimeBase + animation.duration)) {
+                useAnimation = animation;
+                break;
               }
+              animationTimeBase += animation.duration;
+            }
+            if (useAnimation !== undefined) { // first iteration
+              // if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
+              t2 = Math.min(useTimeS - animationTimeBase, useAnimation.duration);
             }
           }
         } else if (activeAvatar.useAnimationEnvelope.length > 0) {
