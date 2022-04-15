@@ -972,7 +972,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
           t2 = Math.min(useTimeS, useAnimation.duration);
         } else if (activeAvatar.useAnimationCombo.length > 0) {
-          if (k === 'mixamorigHips.quaternion') console.log('useAnimationCombo');
+          // if (k === 'mixamorigHips.quaternion') console.log('useAnimationCombo');
           // debugger
 
           // const useAnimationName = activeAvatar.useAnimationCombo[activeAvatar.useAnimationIndex];
@@ -1021,8 +1021,15 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             if (useAnimation !== undefined) { // first iteration
               // if (useTimeS > useAnimation.duration) gameManager.menuEndUse();
               t2 = Math.min(useTimeS - animationTimeBase, useAnimation.duration);
+            } else {
+              const lastAnimationName = activeAvatar.useAnimationCombo[activeAvatar.useAnimationCombo.length - 1];
+              useAnimation = useAnimations[lastAnimationName];
+              t2 = useAnimation.duration;
+
+              gameManager.menuEndUse();
             }
-          }
+          } // else { error? }
+          if (k === 'mixamorigHips.quaternion') console.log(t2);
         } else if (activeAvatar.useAnimationEnvelope.length > 0) {
           if (k === 'mixamorigHips.quaternion') console.log('useAnimationEnvelope');
           // debugger
@@ -1138,6 +1145,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
 
         lastDst.copy(dst);
+        if (k === 'mixamorigHips.quaternion') console.log(dst);
         lastActionTime = now;
       };
     } else if (activeAvatar.hurtAnimation) {
