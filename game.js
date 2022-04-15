@@ -334,12 +334,18 @@ const _startUse = () => {
       if (!useAction) {
         const {instanceId} = wearApp;
         const {boneAttachment, animation, animationCombo, animationEnvelope, ik, behavior, position, quaternion, scale} = useComponent;
-        const index = _getNextUseIndex(animationCombo);
+
+        // const index = _getNextUseIndex(animationCombo);
+        const index = 0;
+
+        const newAnimationCombo = [];
+        newAnimationCombo[0] = animationCombo[0];
+
         const newUseAction = {
           type: 'use',
           instanceId,
           animation,
-          animationCombo,
+          animationCombo: newAnimationCombo,
           animationEnvelope,
           ik,
           behavior,
@@ -348,11 +354,23 @@ const _startUse = () => {
           position,
           quaternion,
           scale,
+          alreadyContinuedCombo: false,
         };
         // console.log('new use action', newUseAction, useComponent, {animation, animationCombo, animationEnvelope});
         localPlayer.addAction(newUseAction);
 
         wearApp.use();
+
+        console.log('newUseAction', newUseAction);
+        debugger
+      } else {
+        if (useAction.animationCombo?.length > 0 && !useAction.alreadyContinuedCombo) {
+          useAction.alreadyContinuedCombo = true;
+          const addAnimationCombo = useComponent.animationCombo[useAction.animationCombo.length];
+          if (addAnimationCombo) {
+            useAction.animationCombo.push(addAnimationCombo);
+          }
+        }
       }
     }
   }

@@ -999,7 +999,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
           // mimic envelope's logic
           let totalTime = 0;
-          for (let i = 0; i < activeAvatar.useAnimationCombo.length - 1; i++) {
+          for (let i = 0; i < activeAvatar.useAnimationCombo.length; i++) {
             const animationName = activeAvatar.useAnimationCombo[i];
             // if (animationName.indexOf('pistol') >= 0) debugger;
             const animation = useAnimations[animationName];
@@ -1029,7 +1029,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
               gameManager.menuEndUse();
             }
           } // else { error? }
-          if (k === 'mixamorigHips.quaternion') console.log(t2);
+          // if (k === 'mixamorigHips.quaternion') console.log(t2);
         } else if (activeAvatar.useAnimationEnvelope.length > 0) {
           if (k === 'mixamorigHips.quaternion') console.log('useAnimationEnvelope');
           // debugger
@@ -1145,7 +1145,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
 
         lastDst.copy(dst);
-        if (k === 'mixamorigHips.quaternion') console.log(dst);
+        // if (k === 'mixamorigHips.quaternion') console.log(dst);
         lastActionTime = now;
       };
     } else if (activeAvatar.hurtAnimation) {
