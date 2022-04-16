@@ -1119,7 +1119,7 @@ class LocalPlayer extends UninterpolatedPlayer {
 
       const useAction = this.getAction('use');
       if (useAction?.needEndUse) {
-        if (!useAction.needStartUse) {
+        if (!useAction.needContinuCombo) {
           useAction.needResetUseIndex = true;
         }
         gameManager.menuEndUse(); // must before updateInterpolation
@@ -1127,7 +1127,7 @@ class LocalPlayer extends UninterpolatedPlayer {
 
       this.updateInterpolation(timeDiff);
 
-      if (useAction?.needStartUse) {
+      if (useAction?.needContinuCombo) {
         gameManager.menuStartUse(); // must after updateInterpolation
       }
 
@@ -1144,11 +1144,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     const avatar = e.target;
     const useAction = this.getAction('use');
     if (useAction) {
-      useAction.needEndUse = true;
-      // debugger
-      if (useAction.needContinuCombo && avatar.useAnimationIndex < avatar.useAnimationCombo.length - 1) {
-        useAction.needStartUse = true;
-      }
+      useAction.needEndUse = true; // tell next frame need endUse();
     }
   }
   resetPhysics() {
