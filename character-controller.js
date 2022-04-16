@@ -1119,9 +1119,6 @@ class LocalPlayer extends UninterpolatedPlayer {
 
       const useAction = this.getAction('use');
       if (useAction?.needEndUse) {
-        if (!useAction.needContinuCombo) {
-          useAction.needResetUseIndex = true;
-        }
         gameManager.menuEndUse(); // must before updateInterpolation
       }
 
