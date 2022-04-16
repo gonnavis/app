@@ -1890,7 +1890,7 @@ class Avatar {
     } */
 
 
-    this.shoulderTransforms.Update();
+    // this.shoulderTransforms.Update();
     this.legsManager.Update();
 
     _updateEyeTarget();
