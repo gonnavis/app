@@ -585,25 +585,25 @@ const _get7wayBlend = (
   //   */
   // }
 
-  if (isFirst && mirrorFactor === 1) {
-    let logText = '';
-    if (horizontalWalkAnimationAngles[0].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAngles[0].name + ' --- ';
-    if (horizontalWalkAnimationAngles[1].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAngles[1].name + ' --- ';
-    if (horizontalWalkAnimationAnglesMirror[0].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAnglesMirror[0].name + ' --- ';
-    if (horizontalWalkAnimationAnglesMirror[1].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAnglesMirror[1].name + ' --- ';
-    // logText += angleFactor
-    console.log(logText);
-    /*
-      full  back:
-        left strafe walking.fbx --- right strafe walking reverse.fbx --- 
-        or
-        right strafe walking.fbx --- left strafe walking reverse.fbx --- 
-      left  back:
-        left strafe walking.fbx --- right strafe walking reverse.fbx --- 
-      right back:
-        right strafe walking.fbx --- left strafe walking reverse.fbx --- 
-    */
-  }
+  // if (isFirst && mirrorFactor === 1) {
+  //   let logText = '';
+  //   if (horizontalWalkAnimationAngles[0].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAngles[0].name + ' --- ';
+  //   if (horizontalWalkAnimationAngles[1].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAngles[1].name + ' --- ';
+  //   if (horizontalWalkAnimationAnglesMirror[0].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAnglesMirror[0].name + ' --- ';
+  //   if (horizontalWalkAnimationAnglesMirror[1].name !== 'walking backwards.fbx') logText += horizontalWalkAnimationAnglesMirror[1].name + ' --- ';
+  //   // logText += angleFactor
+  //   console.log(logText);
+  //   /*
+  //     full  back:
+  //       left strafe walking.fbx --- right strafe walking reverse.fbx --- 
+  //       or
+  //       right strafe walking.fbx --- left strafe walking reverse.fbx --- 
+  //     left  back:
+  //       left strafe walking.fbx --- right strafe walking reverse.fbx --- 
+  //     right back:
+  //       right strafe walking.fbx --- left strafe walking reverse.fbx --- 
+  //   */
+  // }
 
   // localQuaternion5.copy(localQuaternion3);
 
@@ -1138,7 +1138,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
         // debugger
 
         _handleDefault(spec);

@@ -1890,22 +1890,24 @@ class Avatar {
 
 
     // if (this.aimTime > 100) debugger
-    // for (const k in this.modelBoneOutputs) {
-    //   const modelBone = this.modelBoneOutputs[k];
-    //   modelBone.quaternionBak.copy(modelBone.quaternion);
-    // }
+    for (const k in this.modelBoneOutputs) {
+      const modelBone = this.modelBoneOutputs[k];
+      modelBone.quaternionBak.copy(modelBone.quaternion);
+    }
+    //
     this.shoulderTransforms.Update();
-    // let logText = '';
-    // for (const k in this.modelBoneOutputs) {
-    //   const modelBone = this.modelBoneOutputs[k];
-    //   if (!modelBone.quaternionBak.equals(modelBone.quaternion)) {
-    //     logText += k + ' - ';
-    //   }
-    // }
-    // console.log(logText);
-    // // Left_shoulder - Left_arm - Left_elbow - Left_wrist - Left_thumb0 - Left_thumb1 - Left_thumb2 - Left_indexFinger1 - Left_indexFinger2 - Left_indexFinger3 - Left_middleFinger1 - Left_middleFinger2 - Left_middleFinger3 - Left_ringFinger1 - Left_ringFinger2 - Left_ringFinger3 - Left_littleFinger1 - Left_littleFinger2 - Left_littleFinger3 - 
-    // // ---
-    // // Right_shoulder - Right_arm - Right_elbow - Right_wrist - Right_thumb0 - Right_thumb1 - Right_thumb2 - Right_indexFinger1 - Right_indexFinger2 - Right_indexFinger3 - Right_middleFinger1 - Right_middleFinger2 - Right_middleFinger3 - Right_ringFinger1 - Right_ringFinger2 - Right_ringFinger3 - Right_littleFinger1 - Right_littleFinger2 - Right_littleFinger3 - 
+    //
+    let logText = '';
+    for (const k in this.modelBoneOutputs) {
+      const modelBone = this.modelBoneOutputs[k];
+      if (!modelBone.quaternionBak.equals(modelBone.quaternion)) {
+        logText += k + ' - ';
+      }
+    }
+    console.log(logText);
+    // Left_shoulder - Left_arm - Left_elbow - Left_wrist - Left_thumb0 - Left_thumb1 - Left_thumb2 - Left_indexFinger1 - Left_indexFinger2 - Left_indexFinger3 - Left_middleFinger1 - Left_middleFinger2 - Left_middleFinger3 - Left_ringFinger1 - Left_ringFinger2 - Left_ringFinger3 - Left_littleFinger1 - Left_littleFinger2 - Left_littleFinger3 - 
+    // ---
+    // Right_shoulder - Right_arm - Right_elbow - Right_wrist - Right_thumb0 - Right_thumb1 - Right_thumb2 - Right_indexFinger1 - Right_indexFinger2 - Right_indexFinger3 - Right_middleFinger1 - Right_middleFinger2 - Right_middleFinger3 - Right_ringFinger1 - Right_ringFinger2 - Right_ringFinger3 - Right_littleFinger1 - Right_littleFinger2 - Right_littleFinger3 - 
 
     this.legsManager.Update();
 
