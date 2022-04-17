@@ -75,14 +75,23 @@ let hurtAnimations;
 
 let bowIdleAnimation;
 let bowStandingWalkForwardAnimation;
+let bowStandingWalkLeftAnimation;
+let bowStandingWalkRightAnimation;
+let bowStandingWalkBackAnimation;
 let bowStandingAimWalkForwardAnimation;
 let bowStandingAimWalkLeftAnimation;
 let bowStandingAimWalkRightAnimation;
 let bowStandingAimWalkBackAnimation;
 let bowStandingAimIdleAnimation;
 let bowStandingRunForwardAnimation;
+let bowStandingRunLeftAnimation;
+let bowStandingRunRightAnimation;
+let bowStandingRunBackAnimation;
 let bowCrouchIdleAnimation;
 let bowCrouchWalkForwardAnimation;
+let bowCrouchWalkLeftAnimation;
+let bowCrouchWalkRightAnimation;
+let bowCrouchWalkBackAnimation;
 
 const defaultSitAnimation = 'chair';
 const defaultUseAnimation = 'combo';
@@ -220,14 +229,23 @@ async function loadAnimations() {
 
   bowIdleAnimation = animations.filter(animation => animation.name.includes('Unarmed Idle 01.fbx'))[0];
   bowStandingWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Walk Forward.fbx'))[0];
+  bowStandingWalkLeftAnimation = animations.filter(animation => animation.name.includes('Standing Walk Left.fbx'))[0];
+  bowStandingWalkRightAnimation = animations.filter(animation => animation.name.includes('Standing Walk Right.fbx'))[0];
+  bowStandingWalkBackAnimation = animations.filter(animation => animation.name.includes('Standing Walk Back.fbx'))[0];
   bowStandingAimWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
   bowStandingAimWalkLeftAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Left.fbx'))[0];
   bowStandingAimWalkRightAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Right.fbx'))[0];
   bowStandingAimWalkBackAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Back.fbx'))[0];
   bowStandingAimIdleAnimation = animations.filter(animation => animation.name.includes('Standing Aim Idle 01.fbx'))[0];
   bowStandingRunForwardAnimation = animations.filter(animation => animation.name.includes('Standing Run Forward.fbx'))[0];
+  bowStandingRunLeftAnimation = animations.filter(animation => animation.name.includes('Standing Run Left.fbx'))[0];
+  bowStandingRunRightAnimation = animations.filter(animation => animation.name.includes('Standing Run Right.fbx'))[0];
+  bowStandingRunBackAnimation = animations.filter(animation => animation.name.includes('Standing Run Back.fbx'))[0];
   bowCrouchIdleAnimation = animations.filter(animation => animation.name.includes('Crouch Idle 01.fbx'))[0];
   bowCrouchWalkForwardAnimation = animations.filter(animation => animation.name.includes('Crouch Walk Forward.fbx'))[0];
+  bowCrouchWalkLeftAnimation = animations.filter(animation => animation.name.includes('Crouch Walk Left.fbx'))[0];
+  bowCrouchWalkRightAnimation = animations.filter(animation => animation.name.includes('Crouch Walk Right.fbx'))[0];
+  bowCrouchWalkBackAnimation = animations.filter(animation => animation.name.includes('Crouch Walk Back.fbx'))[0];
 
   animationStepIndices = animationsJson.animationStepIndices;
   animations.index = {};
@@ -754,13 +772,37 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
     // debugger 
     dst.fromArray(bowIdleAnimation.interpolants[k].evaluate(nowS % bowIdleAnimation.duration));
-    tempVQ.fromArray(bowStandingWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingWalkForwardAnimation.duration));
+    if (Math.abs(angle - Math.PI / 2) < 0.1) {
+      tempVQ.fromArray(bowStandingWalkLeftAnimation.interpolants[k].evaluate(nowS % bowStandingWalkLeftAnimation.duration));
+    } else if (Math.abs(angle + Math.PI / 2) < 0.1) {
+      tempVQ.fromArray(bowStandingWalkRightAnimation.interpolants[k].evaluate(nowS % bowStandingWalkRightAnimation.duration));
+    } else if (Math.abs(angle - Math.PI) < 0.1 || Math.abs(angle + Math.PI) < 0.1) {
+      tempVQ.fromArray(bowStandingWalkBackAnimation.interpolants[k].evaluate(nowS % bowStandingWalkBackAnimation.duration));
+    } else {
+      tempVQ.fromArray(bowStandingWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingWalkForwardAnimation.duration));
+    }
     lerpFn.call(dst, tempVQ, moveFactors.idleWalkFactor);
-    tempVQ.fromArray(bowStandingRunForwardAnimation.interpolants[k].evaluate(nowS % bowStandingRunForwardAnimation.duration));
+    if (Math.abs(angle - Math.PI / 2) < 0.1) {
+      tempVQ.fromArray(bowStandingRunLeftAnimation.interpolants[k].evaluate(nowS % bowStandingRunLeftAnimation.duration));
+    } else if (Math.abs(angle + Math.PI / 2) < 0.1) {
+      tempVQ.fromArray(bowStandingRunRightAnimation.interpolants[k].evaluate(nowS % bowStandingRunRightAnimation.duration));
+    } else if (Math.abs(angle - Math.PI) < 0.1 || Math.abs(angle + Math.PI) < 0.1) {
+      tempVQ.fromArray(bowStandingRunBackAnimation.interpolants[k].evaluate(nowS % bowStandingRunBackAnimation.duration));
+    } else {
+      tempVQ.fromArray(bowStandingRunForwardAnimation.interpolants[k].evaluate(nowS % bowStandingRunForwardAnimation.duration));
+    }
     lerpFn.call(dst, tempVQ, moveFactors.walkRunFactor);
 
     tempVQ.fromArray(bowCrouchIdleAnimation.interpolants[k].evaluate(nowS % bowCrouchIdleAnimation.duration));
-    tempVQ2.fromArray(bowCrouchWalkForwardAnimation.interpolants[k].evaluate(nowS % bowCrouchWalkForwardAnimation.duration));
+    if (Math.abs(angle - Math.PI / 2) < 0.1) {
+      tempVQ2.fromArray(bowCrouchWalkLeftAnimation.interpolants[k].evaluate(nowS % bowCrouchWalkLeftAnimation.duration));
+    } else if (Math.abs(angle + Math.PI / 2) < 0.1) {
+      tempVQ2.fromArray(bowCrouchWalkRightAnimation.interpolants[k].evaluate(nowS % bowCrouchWalkRightAnimation.duration));
+    } else if (Math.abs(angle - Math.PI) < 0.1 || Math.abs(angle + Math.PI) < 0.1) {
+      tempVQ2.fromArray(bowCrouchWalkBackAnimation.interpolants[k].evaluate(nowS % bowCrouchWalkBackAnimation.duration));
+    } else {
+      tempVQ2.fromArray(bowCrouchWalkForwardAnimation.interpolants[k].evaluate(nowS % bowCrouchWalkForwardAnimation.duration));
+    }
     lerpFn.call(tempVQ, tempVQ2, moveFactors.idleWalkFactor);
 
     lerpFn.call(dst, tempVQ, moveFactors.crouchFactor);
@@ -768,16 +810,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     // todo: add aimFactor and use it to limit walkRunFactor, like what crouchFactor do.
     tempVQ.fromArray(bowStandingAimIdleAnimation.interpolants[k].evaluate(nowS % bowStandingAimIdleAnimation.duration));
     if (Math.abs(angle - Math.PI / 2) < 0.1) {
-      if (isFirst) console.log('bowStandingAimWalkLeftAnimation', activeAvatar.direction.x);
       tempVQ2.fromArray(bowStandingAimWalkLeftAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkLeftAnimation.duration));
     } else if (Math.abs(angle + Math.PI / 2) < 0.1) {
-      if (isFirst) console.log('bowStandingAimWalkRightAnimation', activeAvatar.direction.x);
       tempVQ2.fromArray(bowStandingAimWalkRightAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkRightAnimation.duration));
     } else if (Math.abs(angle - Math.PI) < 0.1 || Math.abs(angle + Math.PI) < 0.1) {
-      if (isFirst) console.log('bowStandingAimWalkBackAnimation', activeAvatar.direction.x);
       tempVQ2.fromArray(bowStandingAimWalkBackAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkBackAnimation.duration));
     } else {
-      if (isFirst) console.log('bowStandingAimWalkForwardAnimation', activeAvatar.direction.x);
       tempVQ2.fromArray(bowStandingAimWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkForwardAnimation.duration));
     }
     lerpFn.call(tempVQ, tempVQ2, moveFactors.idleWalkFactor);
@@ -797,6 +835,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.y = activeAvatar.height * 0.55;
       }
     }
+
+    _clearXZ(dst, isPosition);
+
     isFirst = false;
   }
 };
