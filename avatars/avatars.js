@@ -784,6 +784,10 @@ class Avatar {
       Left_toe: this.legsManager.leftLeg.toe,
       Right_toe: this.legsManager.rightLeg.toe,
 	  };
+    for (const k in this.modelBoneOutputs) { // test
+      const modelBone = this.modelBoneOutputs[k];
+      modelBone.quaternionBak = modelBone.quaternion.clone();
+    }
 
     this.debugMesh = null;
 
@@ -1885,7 +1889,22 @@ class Avatar {
     } */
 
 
+    // if (this.aimTime > 100) debugger
+    for (const k in this.modelBoneOutputs) {
+      const modelBone = this.modelBoneOutputs[k];
+      modelBone.quaternionBak.copy(modelBone.quaternion);
+    }
     this.shoulderTransforms.Update();
+    let logText = '';
+    for (const k in this.modelBoneOutputs) {
+      const modelBone = this.modelBoneOutputs[k];
+      if (!modelBone.quaternionBak.equals(modelBone.quaternion)) {
+        logText += k + ' - ';
+      }
+    }
+    console.log(logText);
+    // Right_shoulder - Right_arm - Right_elbow - Right_wrist - Right_thumb0 - Right_thumb1 - Right_thumb2 - Right_indexFinger1 - Right_indexFinger2 - Right_indexFinger3 - Right_middleFinger1 - Right_middleFinger2 - Right_middleFinger3 - Right_ringFinger1 - Right_ringFinger2 - Right_ringFinger3 - Right_littleFinger1 - Right_littleFinger2 - Right_littleFinger3 - 
+
     this.legsManager.Update();
 
     _updateEyeTarget();

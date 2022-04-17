@@ -1,4 +1,4 @@
-import {Vector3, Quaternion, AnimationClip} from 'three';
+import {Vector3, Quaternion, AnimationClip, Euler} from 'three';
 import metaversefile from 'metaversefile';
 import {VRMSpringBoneImporter, VRMLookAtApplyer, VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
 import easing from '../easing.js';
@@ -51,6 +51,11 @@ const localQuaternion3 = new Quaternion();
 const localQuaternion4 = new Quaternion();
 const localQuaternion5 = new Quaternion();
 const localQuaternion6 = new Quaternion();
+
+const p45Quaternion = new Quaternion().setFromEuler(new Euler(0, Math.PI / 4, 0));
+const n45Quaternion = new Quaternion().setFromEuler(new Euler(0, -Math.PI / 4, 0));
+const p90Quaternion = new Quaternion().setFromEuler(new Euler(0, Math.PI / 2, 0));
+const n90Quaternion = new Quaternion().setFromEuler(new Euler(0, -Math.PI / 2, 0));
 
 let animations;
 let animationStepIndices;
@@ -678,6 +683,10 @@ const _get7wayBlend = (
         localQuaternion4,
         idleWalkFactor,
       );
+
+    // if (k === 'mixamorigHips.quaternion') {
+    //   target.multiply(n90Quaternion);
+    // }
   }
 };
 
