@@ -1,4 +1,4 @@
-import {Vector3, Quaternion, AnimationClip} from 'three';
+import {Vector3, Quaternion, AnimationClip, Euler} from 'three';
 import metaversefile from 'metaversefile';
 import {VRMSpringBoneImporter, VRMLookAtApplyer, VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
 import easing from '../easing.js';
@@ -51,6 +51,9 @@ const localQuaternion3 = new Quaternion();
 const localQuaternion4 = new Quaternion();
 const localQuaternion5 = new Quaternion();
 const localQuaternion6 = new Quaternion();
+
+const p45Quaternion = new Quaternion().setFromEuler(new Euler(0, Math.PI / 4, 0));
+const n45Quaternion = new Quaternion().setFromEuler(new Euler(0, -Math.PI / 4, 0));
 
 let animations;
 let animationStepIndices;
@@ -141,8 +144,8 @@ const animationsAngleArrays = {
 };
 const animationsAngleArraysMirror = {
   walk: [
-    {name: 'left strafe walking reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2},
-    {name: 'right strafe walking reverse.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2},
+    {name: 'walking backwards.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2},
+    {name: 'walking backwards.fbx', matchAngle: Math.PI / 2, angle: Math.PI / 2},
   ],
   run: [
     {name: 'left strafe reverse.fbx', matchAngle: -Math.PI / 2, angle: -Math.PI / 2},
@@ -504,11 +507,11 @@ const _get7wayBlend = (
   const {idleWalkFactor, walkRunFactor} = moveFactors;
   // WALK
   // normal horizontal walk blend
-  // debugger
+  // debugger 
 
-  // // test
-  // if (horizontalWalkAnimationAngles[0].name === 'walking backwards.fbx') angleFactor = 0;
-  // else angleFactor = 1;
+  // test
+  // if (horizontalWalkAnimationAngles[0].name === 'walking backwards.fbx') angleFactor = 1;
+  // else angleFactor = 0;
 
   {
     const t1 = timeSeconds % horizontalWalkAnimationAngles[0].animation.duration;
@@ -678,6 +681,15 @@ const _get7wayBlend = (
         localQuaternion4,
         idleWalkFactor,
       );
+  }
+
+  if (k === 'mixamorigHips.quaternion') {
+    // debugger
+    if (activeAvatar.direction.x > 0.35) {
+      target.multiply(p45Quaternion);
+    } else if (activeAvatar.direction.x < -0.35) {
+      target.multiply(n45Quaternion);
+    }
   }
 };
 
