@@ -76,6 +76,9 @@ let hurtAnimations;
 let bowIdleAnimation;
 let bowStandingWalkForwardAnimation;
 let bowStandingAimWalkForwardAnimation;
+let bowStandingAimWalkLeftAnimation;
+let bowStandingAimWalkRightAnimation;
+let bowStandingAimWalkBackAnimation;
 let bowStandingAimIdleAnimation;
 let bowStandingRunForwardAnimation;
 let bowCrouchIdleAnimation;
@@ -218,6 +221,9 @@ async function loadAnimations() {
   bowIdleAnimation = animations.filter(animation => animation.name.includes('Unarmed Idle 01.fbx'))[0];
   bowStandingWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Walk Forward.fbx'))[0];
   bowStandingAimWalkForwardAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Forward.fbx'))[0];
+  bowStandingAimWalkLeftAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Left.fbx'))[0];
+  bowStandingAimWalkRightAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Right.fbx'))[0];
+  bowStandingAimWalkBackAnimation = animations.filter(animation => animation.name.includes('Standing Aim Walk Back.fbx'))[0];
   bowStandingAimIdleAnimation = animations.filter(animation => animation.name.includes('Standing Aim Idle 01.fbx'))[0];
   bowStandingRunForwardAnimation = animations.filter(animation => animation.name.includes('Standing Run Forward.fbx'))[0];
   bowCrouchIdleAnimation = animations.filter(animation => animation.name.includes('Crouch Idle 01.fbx'))[0];
@@ -733,6 +739,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   activeAvatar = avatar;
   const angle = avatar.getAngle();
   const nowS = now / 1000;
+  let isFirst = true;
   for (const spec of activeAvatar.animationMappings) {
     const {
       animationTrackName: k,
@@ -760,7 +767,19 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
     // todo: add aimFactor and use it to limit walkRunFactor, like what crouchFactor do.
     tempVQ.fromArray(bowStandingAimIdleAnimation.interpolants[k].evaluate(nowS % bowStandingAimIdleAnimation.duration));
-    tempVQ2.fromArray(bowStandingAimWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkForwardAnimation.duration));
+    if (Math.abs(angle - Math.PI / 2) < 0.1) {
+      if (isFirst) console.log('bowStandingAimWalkLeftAnimation', activeAvatar.direction.x);
+      tempVQ2.fromArray(bowStandingAimWalkLeftAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkLeftAnimation.duration));
+    } else if (Math.abs(angle + Math.PI / 2) < 0.1) {
+      if (isFirst) console.log('bowStandingAimWalkRightAnimation', activeAvatar.direction.x);
+      tempVQ2.fromArray(bowStandingAimWalkRightAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkRightAnimation.duration));
+    } else if (Math.abs(angle - Math.PI) < 0.1 || Math.abs(angle + Math.PI) < 0.1) {
+      if (isFirst) console.log('bowStandingAimWalkBackAnimation', activeAvatar.direction.x);
+      tempVQ2.fromArray(bowStandingAimWalkBackAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkBackAnimation.duration));
+    } else {
+      if (isFirst) console.log('bowStandingAimWalkForwardAnimation', activeAvatar.direction.x);
+      tempVQ2.fromArray(bowStandingAimWalkForwardAnimation.interpolants[k].evaluate(nowS % bowStandingAimWalkForwardAnimation.duration));
+    }
     lerpFn.call(tempVQ, tempVQ2, moveFactors.idleWalkFactor);
 
     lerpFn.call(dst, tempVQ, Math.min(1, activeAvatar.useTime / 100));
@@ -778,6 +797,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.y = activeAvatar.height * 0.55;
       }
     }
+    isFirst = false;
   }
 };
 

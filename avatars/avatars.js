@@ -1831,6 +1831,7 @@ class Avatar {
     // console.log(avatar.direction)
     window.domInfo.innerHTML = `
       <div>keysDirection: --- ${window.logVector3(ioManager.keysDirection)}</div>
+      <div>getAngle(): --- ${window.logNum(this.getAngle())}</div>
       <div>avatar.direction: --- ${window.logVector3(avatar.direction)}</div>
       <div>velocity: --- ${window.logVector3(localPlayer.characterPhysics.velocity)}</div>
       <div>idleWalkFactor: --- ${moveFactors.idleWalkFactor.toFixed(2)}</div>
