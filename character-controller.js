@@ -896,15 +896,15 @@ class UninterpolatedPlayer extends StatePlayer {
     };
 
     // test
-    this.actionInterpolants.use = new Proxy(this.actionInterpolants.use, {
-      set: (obj, prop, newVal) => {
-        const oldVal = obj[prop];
-        // if (prop === 'value' && oldVal !== 0 && newVal === 0) debugger;
-        if (window.isDebugger && prop === 'value') debugger
-        obj[prop] = newVal;
-        return true;
-      }
-    })
+    // this.actionInterpolants.use = new Proxy(this.actionInterpolants.use, {
+    //   set: (obj, prop, newVal) => {
+    //     const oldVal = obj[prop];
+    //     if (prop === 'value' && oldVal !== 0 && newVal === 0) debugger;
+    //     // if (window.isDebugger && prop === 'value') debugger
+    //     obj[prop] = newVal;
+    //     return true;
+    //   }
+    // })
     // this.actionInterpolants.activate = new Proxy(this.actionInterpolants.activate, {
     //   set: (obj, prop, newVal) => {
     //     if (prop === 'fn') debugger;
@@ -1120,7 +1120,7 @@ class LocalPlayer extends UninterpolatedPlayer {
       const useAction = this.getAction('use');
       if (useAction?.needEndUse) {
         gameManager.menuEndUse(); // must before updateInterpolation
-        // debugger
+        debugger
       }
 
       this.updateInterpolation(timeDiff);
@@ -1142,6 +1142,8 @@ class LocalPlayer extends UninterpolatedPlayer {
     // const avatar = e.target;
     const useAction = this.getAction('use');
     if (useAction) {
+      debugger
+      window.isDebugger = true;
       useAction.needEndUse = true; // tell next frame need endUse();
     }
   }
