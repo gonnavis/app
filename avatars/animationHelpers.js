@@ -37,6 +37,7 @@ import {
   crouchMaxTime,
   // useMaxTime,
   aimMaxTime,
+  unjumpMaxTime,
   // avatarInterpolationFrameRate,
   // avatarInterpolationTimeDelay,
   // avatarInterpolationNumFrames,
@@ -750,6 +751,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const src2 = jumpAnimation.interpolants[k];
         const v2 = src2.evaluate(t2);
 
+        // todo: jump/fall loop animation.
+
         dst.fromArray(v2);
       };
     }
@@ -1096,6 +1099,44 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
       };
     }
+
+    if (avatar.unjumpTime < unjumpMaxTime) {
+      return spec => {
+        const {
+          animationTrackName: k,
+          dst,
+          isPosition,
+          lerpFn,
+        } = spec;
+
+        _handleDefault(spec);
+
+        // debugger
+        const t2 = avatar.unjumpTime / 1000 + 40 / 30;
+        const src2 = jumpAnimation.interpolants[k];
+        const v2 = src2.evaluate(t2);
+
+        let t = 1 - avatar.unjumpTime / unjumpMaxTime;
+        t = t ** (1 + (idleWalkFactor + walkRunFactor) * 3);
+        console.log(t);
+        if (!isPosition) {
+          lerpFn
+            .call(
+              dst,
+              localQuaternion.fromArray(v2),
+              t,
+            );
+        } else {
+          lerpFn
+            .call(
+              dst,
+              localVector.fromArray(v2),
+              t,
+            );
+        }
+      };
+    }
+
     return _handleDefault;
   };
   const applyFn = _getApplyFn();

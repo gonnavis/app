@@ -16,6 +16,6 @@
       }
     },
     { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/street/index.js" },
-    { "position": [ 12, 0, 5 ], "scale": [10, 10, 10], "start_url": "http://localhost/lib/webaverse_resource/ramp/index.js" }
+    { "position": [ 12, 0, 5 ], "quaternion": [0, 1, 0, 0], "scale": [10, 10, 10], "start_url": "http://localhost/lib/webaverse_resource/ramp/index.js" }
   ]
 }

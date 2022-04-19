@@ -896,6 +896,7 @@ class Avatar {
     this.direction = new THREE.Vector3();
     this.jumpState = false;
     this.jumpTime = NaN;
+    this.unjumpTime = -1;
     this.flyState = false;
     this.flyTime = NaN;
 
@@ -1857,6 +1858,7 @@ class Avatar {
       <div>flyTime: --- ${Math.floor(this.flyTime)}</div>
       <div>hurtTime: --- ${Math.floor(this.hurtTime)}</div>
       <div>jumpTime: --- ${Math.floor(this.jumpTime)}</div>
+      <div>unjumpTime: --- ${Math.floor(this.unjumpTime)}</div>
       <div>lastEyeTargetTime: --- ${Math.floor(this.lastEyeTargetTime)}</div>
       <div>lastMoveTime: --- ${Math.floor(this.lastMoveTime)}</div>
       <div>narutoRunTime: --- ${Math.floor(this.narutoRunTime)}</div>
