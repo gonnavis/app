@@ -1119,14 +1119,14 @@ class LocalPlayer extends UninterpolatedPlayer {
 
       const useAction = this.getAction('use');
       if (useAction?.needEndUse) {
-        gameManager.menuEndUse(); // must before updateInterpolation
+        gameManager.menuEndUse(); // must before updateInterpolation.
         debugger
       }
 
       this.updateInterpolation(timeDiff);
 
-      if (useAction?.needContinuCombo) {
-        gameManager.menuStartUse(); // must after updateInterpolation and before applyPlayerToAvatar
+      if (useAction?.needContinuCombo) { // must use the useAction gotten before menuEndUse().
+        gameManager.menuStartUse(); // must after updateInterpolation and before applyPlayerToAvatar.
       }
 
       const session = this.getSession();
