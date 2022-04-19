@@ -350,7 +350,7 @@ const _startUse = () => {
           quaternion,
           scale,
           needEndUse: false,
-          needContinuCombo: false,
+          needContinueCombo: false,
           needResetUseTime: false,
         };
         // console.log('new use action', newUseAction, useComponent, {animation, animationCombo, animationEnvelope});
@@ -372,7 +372,7 @@ const _endUse = () => {
       use: false,
     });
     localPlayer.removeAction('use');
-    if (!useAction.needContinuCombo) {
+    if (!useAction.needContinueCombo) {
       lastUseIndex = 0;
     }
   }
@@ -381,7 +381,7 @@ const _mousedown = () => {
   // debugger
   let useAction = localPlayer.getAction('use');
   if (useAction?.animationCombo?.length > 0 && useAction.index < useAction.animationCombo.length - 1) {
-    useAction.needContinuCombo = true;
+    useAction.needContinueCombo = true;
   }
   _startUse();
   useAction = localPlayer.getAction('use');
@@ -1061,10 +1061,10 @@ const _gameUpdate = (timestamp, timeDiff) => {
       gameManager.menuEndUse();
     }
   
-    if (oldUseAction?.needContinuCombo) {
+    if (oldUseAction?.needContinueCombo) {
       gameManager.menuStartUse();
       const newUseAction = localPlayer.getAction('use');
-      if (oldUseAction.needEndUse && oldUseAction.needContinuCombo) {
+      if (oldUseAction.needEndUse && oldUseAction.needContinueCombo) {
         newUseAction.needResetUseTime = true;
       }
     }
