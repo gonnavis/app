@@ -300,7 +300,6 @@ const _bindHitTracker = app => {
       physicsManager.disableGeometryQueries(app.npcPlayer.characterController);
       app.npcPlayer.avatar.ragdoll = true;
       setTimeout(() => {
-        debugger
         world.appManager.removeTrackedApp(app.instanceId);
       }, 5000);
     } else {
