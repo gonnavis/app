@@ -879,7 +879,19 @@ class UninterpolatedPlayer extends StatePlayer {
     this.actionInterpolants = {
       crouch: new BiActionInterpolant(() => this.hasAction('crouch'), 0, crouchMaxTime),
       activate: new UniActionInterpolant(() => this.hasAction('activate'), 0, activateMaxTime),
-      use: new InfiniteActionInterpolant(() => this.hasAction('use'), 0),
+      use: new InfiniteActionInterpolant(() => {
+        // return this.hasAction('use');
+        // if (window.isDebugger) debugger
+        const useAction = this.getAction('use')
+        if (useAction) {
+          if (useAction.needResetUseTime) {
+            useAction.needResetUseTime = false;
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }, 0),
       unuse: new InfiniteActionInterpolant(() => !this.hasAction('use'), 0),
       aim: new InfiniteActionInterpolant(() => this.hasAction('aim'), 0),
       narutoRun: new InfiniteActionInterpolant(() => this.hasAction('narutoRun'), 0),
@@ -1117,17 +1129,23 @@ class LocalPlayer extends UninterpolatedPlayer {
       this.characterSfx.update(timestamp, timeDiffS);
       this.characterFx.update(timestamp, timeDiffS);
 
-      const useAction = this.getAction('use');
-      if (useAction?.needEndUse) {
-        gameManager.menuEndUse(); // must before updateInterpolation.
+      const oldUseAction = this.getAction('use');
+      console.log(!!oldUseAction, oldUseAction?.needEndUse, oldUseAction?.needContinuCombo);
+
+      if (oldUseAction?.needEndUse) {
+        gameManager.menuEndUse();
         debugger
       }
 
-      this.updateInterpolation(timeDiff);
-
-      if (useAction?.needContinuCombo) { // must use the useAction gotten before menuEndUse().
-        gameManager.menuStartUse(); // must after updateInterpolation and before applyPlayerToAvatar.
+      if (oldUseAction?.needContinuCombo) {
+        gameManager.menuStartUse();
+        const newUseAction = this.getAction('use');
+        if (oldUseAction.needEndUse && oldUseAction.needContinuCombo) {
+          newUseAction.needResetUseTime = true;
+        }
       }
+
+      this.updateInterpolation(timeDiff);
 
       const session = this.getSession();
       const mirrors = metaversefile.getMirrors();
@@ -1142,7 +1160,7 @@ class LocalPlayer extends UninterpolatedPlayer {
     // const avatar = e.target;
     const useAction = this.getAction('use');
     if (useAction) {
-      debugger
+      // debugger
       window.isDebugger = true;
       useAction.needEndUse = true; // tell next frame need endUse();
     }
