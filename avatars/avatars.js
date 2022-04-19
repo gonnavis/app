@@ -1826,7 +1826,7 @@ class Avatar {
       if (this.ragdoll !== this.prevRagdoll) {
         if (!this.ragdollMesh) {
           this.ragdollMesh = makeRagdollMesh();
-          this.ragdollMesh.visible = false;
+          // this.ragdollMesh.visible = false;
           this.ragdollMesh.wrapToAvatar(this);
           this.ragdollMesh.createRagdoll(this);
           this.model.add(this.ragdollMesh);
