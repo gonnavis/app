@@ -367,7 +367,9 @@ const _startHacks = webaverse => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   const vpdAnimations = Avatar.getAnimations().filter(animation => animation.name.endsWith('.vpd'));
 
+  window.THREE = THREE;
   window.localPlayer = localPlayer;
+  window.physicsManager = physicsManager;
 
   // let playerDiorama = null;
   const lastEmotionKey = {

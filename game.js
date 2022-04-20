@@ -1500,6 +1500,17 @@ class GameManager extends EventTarget {
     // update velocity
     const localPlayer = metaversefileApi.useLocalPlayer();
     localPlayer.characterPhysics.velocity.y += 6;
+
+    // // compensate "prevent jump when go down slope"
+    // // don't need.
+    // physicsManager.moveCharacterController(
+    //   localPlayer.characterController,
+    //   localVector.set(0, 0.06, 0),
+    //   0,
+    //   0,
+    //   localPlayer.characterController.position,
+    // );
+    // localPlayer.characterController.updateMatrixWorld();
     
     // play sound
     // soundManager.play('jump');
