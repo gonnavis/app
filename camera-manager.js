@@ -355,10 +355,10 @@ class CameraManager extends EventTarget {
               localVector.copy(avatarCameraOffset)
                 .applyQuaternion(camera.quaternion)
             )
-            .add(
-              localVector.set(1, 0, 0)
-                .applyQuaternion(camera.quaternion)
-            );
+            // .add(
+            //   localVector.set(1, 0, 0)
+            //     .applyQuaternion(camera.quaternion)
+            // );
     
           break;
         }

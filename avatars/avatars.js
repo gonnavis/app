@@ -461,6 +461,7 @@ class Avatar {
     this.skinnedMeshes = skinnedMeshes;
     this.skeleton = skeleton;
     this.modelBones = modelBones;
+    window.modelBones = this.modelBones;
     this.foundModelBones = foundModelBones;
     this.flipZ = flipZ;
     this.flipY = flipY;
