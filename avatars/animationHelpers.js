@@ -747,17 +747,17 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // isTop,
         } = spec;
 
-        let t2 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+        let t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
 
-        // jump/fall loop animation.
-        if (t2 >= 33 / 30 + 0.03) {
-          t2 = -Math.sin(avatar.jumpTime / 150) * 0.03 + 33 / 30;
-        }
+        // // jump/fall loop animation.
+        // if (t1 >= 33 / 30 + 0.03) {
+        //   t1 = -Math.sin(avatar.jumpTime / 150) * 0.03 + 33 / 30;
+        // }
 
-        const src2 = jumpAnimation.interpolants[k];
-        const v2 = src2.evaluate(t2);
+        const src1 = jumpAnimation.interpolants[k];
+        const v1 = src1.evaluate(t1);
 
-        dst.fromArray(v2);
+        dst.fromArray(v1);
       };
     }
     if (avatar.sitState) {
@@ -1114,6 +1114,10 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         } = spec;
 
         _handleDefault(spec);
+
+        // const t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+        // const src1 = jumpAnimation.interpolants[k];
+        // const v1 = src1.evaluate(t1);
 
         // debugger
         const t2 = avatar.unjumpTime / 1000 + 37 / 30;
