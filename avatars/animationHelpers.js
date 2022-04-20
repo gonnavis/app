@@ -1043,7 +1043,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
         // debugger
 
         _handleDefault(spec);
