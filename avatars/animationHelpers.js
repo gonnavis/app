@@ -747,11 +747,15 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // isTop,
         } = spec;
 
-        const t2 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+        let t2 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+
+        // jump/fall loop animation.
+        if (t2 >= 33 / 30 + 0.03) {
+          t2 = -Math.sin(avatar.jumpTime / 150) * 0.03 + 33 / 30;
+        }
+
         const src2 = jumpAnimation.interpolants[k];
         const v2 = src2.evaluate(t2);
-
-        // todo: jump/fall loop animation.
 
         dst.fromArray(v2);
       };
@@ -1112,13 +1116,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         _handleDefault(spec);
 
         // debugger
-        const t2 = avatar.unjumpTime / 1000 + 40 / 30;
+        const t2 = avatar.unjumpTime / 1000 + 37 / 30;
         const src2 = jumpAnimation.interpolants[k];
         const v2 = src2.evaluate(t2);
 
         let t = 1 - avatar.unjumpTime / unjumpMaxTime;
         t = t ** (1 + (idleWalkFactor + walkRunFactor) * 3);
-        console.log(t);
         if (!isPosition) {
           lerpFn
             .call(
