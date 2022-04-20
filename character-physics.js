@@ -90,6 +90,7 @@ class CharacterPhysics {
         timeDiffS,
         this.player.characterController.position
       );
+      // console.log(flags);
       // const collided = flags !== 0;
       const grounded = !!(flags & 0x1); 
 
@@ -233,7 +234,8 @@ class CharacterPhysics {
     }
   }
   applyAvatarPhysics(now, timeDiffS) {
-    // const renderer = getRenderer();
+      // console.log('applyAvatarPhysics');
+      // const renderer = getRenderer();
     // const session = renderer.xr.getSession();
 
     /* if (session) {
