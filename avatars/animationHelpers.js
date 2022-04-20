@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import {Vector3, Quaternion, AnimationClip} from 'three';
 import metaversefile from 'metaversefile';
 import {/* VRMSpringBoneImporter, VRMLookAtApplyer, */ VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
@@ -42,16 +43,28 @@ import {
   // avatarInterpolationNumFrames,
 } from '../constants.js';
 
-const localVector = new Vector3();
-const localVector2 = new Vector3();
-const localVector3 = new Vector3();
+const localVectors = [];
+localVectors.push(new Vector3());
+localVectors.push(new Vector3());
+localVectors.push(new Vector3());
+localVectors.push(new Vector3());
 
-const localQuaternion = new Quaternion();
-const localQuaternion2 = new Quaternion();
-const localQuaternion3 = new Quaternion();
-const localQuaternion4 = new Quaternion();
-const localQuaternion5 = new Quaternion();
-const localQuaternion6 = new Quaternion();
+const localQuaternions = [];
+localQuaternions.push(new Quaternion());
+localQuaternions.push(new Quaternion());
+localQuaternions.push(new Quaternion());
+localQuaternions.push(new Quaternion());
+localQuaternions.push(new Quaternion());
+localQuaternions.push(new Quaternion());
+localQuaternions.push(new Quaternion());
+
+const getLocalTemp = (instance, i) => {
+  if (instance.constructor === THREE.Vector3) {
+    return localVectors[i];
+  } else if (instance.constructor === THREE.Quaternion) {
+    return localQuaternions[i];
+  }
+}
 
 let animations;
 let animationStepIndices;
@@ -480,8 +493,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       lerpFn
         .call(
-          localQuaternion3.fromArray(v2),
-          localQuaternion4.fromArray(v1),
+          localQuaternions[3].fromArray(v2),
+          localQuaternions[4].fromArray(v1),
           angleFactor,
         );
     }
@@ -498,8 +511,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       lerpFn
         .call(
-          localQuaternion4.fromArray(v2),
-          localQuaternion5.fromArray(v1),
+          localQuaternions[4].fromArray(v2),
+          localQuaternions[5].fromArray(v1),
           angleFactor,
         );
     }
@@ -507,8 +520,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     // blend mirrors together to get a smooth walk
     lerpFn
       .call(
-        localQuaternion5.copy(localQuaternion3), // Result is in localQuaternion5
-        localQuaternion4,
+        localQuaternions[5].copy(localQuaternions[3]), // Result is in localQuaternions[5]
+        localQuaternions[4],
         mirrorFactor,
       );
 
@@ -525,8 +538,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       lerpFn
         .call(
-          localQuaternion3.fromArray(v2),
-          localQuaternion4.fromArray(v1),
+          localQuaternions[3].fromArray(v2),
+          localQuaternions[4].fromArray(v1),
           angleFactor,
         );
     }
@@ -543,8 +556,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       lerpFn
         .call(
-          localQuaternion4.fromArray(v2),
-          localQuaternion6.fromArray(v1),
+          localQuaternions[4].fromArray(v2),
+          localQuaternions[6].fromArray(v1),
           angleFactor,
         );
     }
@@ -552,16 +565,16 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     // blend mirrors together to get a smooth run
     lerpFn
       .call(
-        localQuaternion6.copy(localQuaternion3), // Result is in localQuaternion6
-        localQuaternion4,
+        localQuaternions[6].copy(localQuaternions[3]), // Result is in localQuaternions[6]
+        localQuaternions[4],
         mirrorFactor,
       );
 
     // Blend walk/run
     lerpFn
       .call(
-        localQuaternion4.copy(localQuaternion5), // Result is in localQuaternion4
-        localQuaternion6,
+        localQuaternions[4].copy(localQuaternions[5]), // Result is in localQuaternions[4]
+        localQuaternions[6],
         walkRunFactor,
       );
 
@@ -578,14 +591,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         // target.x = 0;
         // target.z = 0;
 
-        localQuaternion4.x = 0;
-        localQuaternion4.z = 0;
+        localQuaternions[4].x = 0;
+        localQuaternions[4].z = 0;
       }
 
       lerpFn
         .call(
           target,
-          localQuaternion4,
+          localQuaternions[4],
           idleWalkFactor,
         );
     }
@@ -698,7 +711,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       k,
       lerpFn,
       isPosition,
-      localQuaternion,
+      localQuaternions[1],
     );
     _get7wayBlend(
       keyAnimationAnglesOther,
@@ -713,15 +726,15 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       k,
       lerpFn,
       isPosition,
-      localQuaternion2,
+      localQuaternions[2],
     );
 
-    // _get5wayBlend(keyAnimationAnglesOther, keyAnimationAnglesOtherMirror, idleAnimationOther, mirrorFactor, angleFactor, speedFactor, k, lerpFn, localQuaternion2);
+    // _get5wayBlend(keyAnimationAnglesOther, keyAnimationAnglesOtherMirror, idleAnimationOther, mirrorFactor, angleFactor, speedFactor, k, lerpFn, localQuaternions[2]);
 
     lerpFn
       .call(
-        target.copy(localQuaternion),
-        localQuaternion2,
+        target.copy(localQuaternions[1]),
+        localQuaternions[2],
         crouchFactor,
       );
   };
@@ -809,7 +822,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         lerpFn
           .call(
             dst,
-            localQuaternion.fromArray(v2),
+            localQuaternions[1].fromArray(v2),
             f,
           );
 
@@ -840,7 +853,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         lerpFn
           .call(
             dst,
-            localQuaternion.fromArray(v2),
+            localQuaternions[1].fromArray(v2),
             f,
           );
 
@@ -875,6 +888,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // isTop,
           isPosition,
         } = spec;
+        // debugger
 
         let useAnimation;
         let t2;
@@ -929,23 +943,23 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             const v3 = src3.evaluate(t3);
 
             dst
-              .premultiply(localQuaternion2.fromArray(v3).invert())
-              .premultiply(localQuaternion2.fromArray(v2));
+              .premultiply(localQuaternions[2].fromArray(v3).invert())
+              .premultiply(localQuaternions[2].fromArray(v2));
           } else {
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
-            localVector2.fromArray(v2);
-            _clearXZ(localVector2, isPosition);
+            localVectors[2].fromArray(v2);
+            _clearXZ(localVectors[2], isPosition);
 
             const idleAnimation = _getIdleAnimation('walk');
             const t3 = 0;
             const src3 = idleAnimation.interpolants[k];
             const v3 = src3.evaluate(t3);
-            localVector3.fromArray(v3);
+            localVectors[3].fromArray(v3);
 
             dst
-              .sub(localVector3)
-              .add(localVector2);
+              .sub(localVectors[3])
+              .add(localVectors[2]);
           }
         }
       };
@@ -974,8 +988,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             const v3 = src3.evaluate(t3);
 
             dst
-              .premultiply(localQuaternion2.fromArray(v3).invert())
-              .premultiply(localQuaternion2.fromArray(v2));
+              .premultiply(localQuaternions[2].fromArray(v3).invert())
+              .premultiply(localQuaternions[2].fromArray(v2));
           }
         } else {
           const src2 = hurtAnimation.interpolants[k];
@@ -987,8 +1001,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           const v3 = src3.evaluate(t3);
 
           dst
-            .sub(localVector2.fromArray(v3))
-            .add(localVector2.fromArray(v2));
+            .sub(localVectors[2].fromArray(v3))
+            .add(localVectors[2].fromArray(v2));
         }
       };
     } else if (avatar.aimAnimation) {
@@ -1014,8 +1028,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             const v3 = src3.evaluate(t3);
 
             dst
-              .premultiply(localQuaternion2.fromArray(v3).invert())
-              .premultiply(localQuaternion2.fromArray(v2));
+              .premultiply(localQuaternions[2].fromArray(v3).invert())
+              .premultiply(localQuaternions[2].fromArray(v2));
           }
         } else {
           const src2 = aimAnimation.interpolants[k];
@@ -1027,8 +1041,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           const v3 = src3.evaluate(t3);
 
           dst
-            .sub(localVector2.fromArray(v3))
-            .add(localVector2.fromArray(v2));
+            .sub(localVectors[2].fromArray(v3))
+            .add(localVectors[2].fromArray(v2));
         }
       };
     } else if (avatar.unuseAnimation && avatar.unuseTime >= 0) {
@@ -1059,14 +1073,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           const src3 = idleAnimation.interpolants[k];
           const v3 = src3.evaluate(t3);
 
-          localQuaternion.copy(dst)
-            .premultiply(localQuaternion2.fromArray(v3).invert())
-            .premultiply(localQuaternion2.fromArray(v2));
+          localQuaternions[1].copy(dst)
+            .premultiply(localQuaternions[2].fromArray(v3).invert())
+            .premultiply(localQuaternions[2].fromArray(v2));
 
           lerpFn
             .call(
               dst,
-              localQuaternion,
+              localQuaternions[1],
               f2,
             );
         } else {
@@ -1078,14 +1092,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           const src3 = idleAnimation.interpolants[k];
           const v3 = src3.evaluate(t3);
 
-          localVector.copy(dst)
-            .sub(localVector2.fromArray(v3))
-            .add(localVector2.fromArray(v2));
+          localVectors[1].copy(dst)
+            .sub(localVectors[2].fromArray(v3))
+            .add(localVectors[2].fromArray(v2));
 
           lerpFn
             .call(
               dst,
-              localVector,
+              localVectors[1],
               f2,
             );
         }
@@ -1115,7 +1129,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       lerpFn
         .call(
           dst,
-          localQuaternion.fromArray(v2),
+          localQuaternions[1].fromArray(v2),
           f,
         );
     }
@@ -1148,7 +1162,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       lerpFn
         .call(
           dst,
-          localQuaternion.fromArray(v2),
+          localQuaternions[1].fromArray(v2),
           f,
         );
     }
