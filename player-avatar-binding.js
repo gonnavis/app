@@ -94,7 +94,11 @@ export function applyPlayerActionsToAvatar(player, rig) {
   // const swordTopDownSlash = player.getAction('swordTopDownSlash');
   // const swordTopDownSlashAnimation = swordTopDownSlash ? swordTopDownSlash.animation : '';
 
-  rig.jumpState = !!jumpAction;
+  const jumpState = !!jumpAction;
+  if (jumpState && rig.jumpState !== jumpState) {
+    rig.jumpStartTime = performance.now();
+  };
+  rig.jumpState = jumpState;
   rig.jumpTime = player.actionInterpolants.jump.get();
   rig.unjumpTime = player.actionInterpolants.unjump.get();
   rig.flyState = !!flyAction;

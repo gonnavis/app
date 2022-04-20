@@ -1,4 +1,4 @@
-import {Vector3, Quaternion, AnimationClip} from 'three';
+import {Vector3, Quaternion, AnimationClip, RingGeometry} from 'three';
 import metaversefile from 'metaversefile';
 import {/* VRMSpringBoneImporter, VRMLookAtApplyer, */ VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
 // import easing from '../easing.js';
@@ -747,7 +747,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           // isTop,
         } = spec;
 
-        let t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+        // let t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+        let t1 = (now - avatar.jumpStartTime) / 1000 * 0.6 + 0.7;
 
         // // jump/fall loop animation.
         // if (t1 >= 33 / 30 + 0.03) {
@@ -1116,13 +1117,25 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         _handleDefault(spec);
 
         // const t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
-        // const src1 = jumpAnimation.interpolants[k];
-        // const v1 = src1.evaluate(t1);
+        const t1 = (now - avatar.jumpStartTime) / 1000 * 0.6 + 0.7;
+        const src1 = jumpAnimation.interpolants[k];
+        const v1 = src1.evaluate(t1);
+        if (!isPosition) localQuaternion.fromArray(v1);
+        else localVector.fromArray(v1);
 
         // debugger
         const t2 = avatar.unjumpTime / 1000 + 37 / 30;
         const src2 = jumpAnimation.interpolants[k];
+        // const src2 = sitAnimations.chair.interpolants[k];
         const v2 = src2.evaluate(t2);
+        if (!isPosition) localQuaternion2.fromArray(v2);
+        else localVector2.fromArray(v2);
+
+        if (!isPosition) {
+          localQuaternion.slerp(localQuaternion2, Math.min(1, avatar.unjumpTime / 1000 * 2));
+        } else {
+          localVector.lerp(localVector2, Math.min(1, avatar.unjumpTime / 1000 * 2));
+        }
 
         let t = 1 - avatar.unjumpTime / unjumpMaxTime;
         t = t ** (1 + (idleWalkFactor + walkRunFactor) * 3);
@@ -1130,14 +1143,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           lerpFn
             .call(
               dst,
-              localQuaternion.fromArray(v2),
+              localQuaternion,
               t,
             );
         } else {
           lerpFn
             .call(
               dst,
-              localVector.fromArray(v2),
+              localVector,
               t,
             );
         }
