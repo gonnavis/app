@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import {getRenderer, camera} from './renderer.js';
-import * as notifications from './notifications.js';
+// import * as notifications from './notifications.js';
 import metaversefile from 'metaversefile';
 import physicsManager from './physics-manager.js';
 import {shakeAnimationSpeed} from './constants.js';
@@ -353,6 +353,10 @@ class CameraManager extends EventTarget {
           camera.position.copy(localPlayer.position)
             .sub(
               localVector.copy(avatarCameraOffset)
+                .applyQuaternion(camera.quaternion)
+            )
+            .add(
+              localVector.set(1, 0, 0)
                 .applyQuaternion(camera.quaternion)
             );
     
