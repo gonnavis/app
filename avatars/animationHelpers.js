@@ -58,6 +58,8 @@ let animations;
 let animationStepIndices;
 // let animationsBaseModel;
 let jumpAnimation;
+let fallLoopAnimation;
+let landingAnimation;
 let floatAnimation;
 let useAnimations;
 let aimAnimations;
@@ -302,6 +304,9 @@ export const loadPromise = (async () => {
   // swordTopDownSlash = animations.find(a => a.isSwordTopDownSlash)
 
   jumpAnimation = animations.find(a => a.isJump);
+  // fallLoopAnimation = animations.index['fall_loop.fbx'];
+  fallLoopAnimation = animations.index['falling_idle.fbx'];
+  landingAnimation = animations.index['landing.fbx'];
   // sittingAnimation = animations.find(a => a.isSitting);
   floatAnimation = animations.find(a => a.isFloat);
   // rifleAnimation = animations.find(a => a.isRifle);
@@ -745,10 +750,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           animationTrackName: k,
           dst,
           // isTop,
+          isPosition,
         } = spec;
 
+        const jumpTime = now - avatar.jumpStartTime;
+        const jumpTimeS = jumpTime / 1000;
+
         // let t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
-        let t1 = (now - avatar.jumpStartTime) / 1000 * 0.6 + 0.7;
+        const t1 = jumpTimeS * 0.6 + 0.7;
 
         // // jump/fall loop animation.
         // if (t1 >= 33 / 30 + 0.03) {
@@ -759,6 +768,22 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const v1 = src1.evaluate(t1);
 
         dst.fromArray(v1);
+
+        if (jumpTimeS > 0.5) {
+          const t2 = jumpTimeS;
+          const src2 = fallLoopAnimation.interpolants[k];
+          const v2 = src2.evaluate(t2 % fallLoopAnimation.duration);
+          if (!isPosition) localQuaternion.fromArray(v2);
+          else localVector.fromArray(v2);
+
+          if (!isPosition) {
+            // dst.copy(localQuaternion);
+            dst.slerp(localQuaternion, Math.min(1, (jumpTimeS - 0.5) * 2));
+          } else {
+            // dst.copy(localVector);
+            dst.lerp(localVector, Math.min(1, (jumpTimeS - 0.5) * 2));
+          }
+        }
       };
     }
     if (avatar.sitState) {
@@ -1105,7 +1130,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
     }
 
-    if (avatar.unjumpTime < unjumpMaxTime) {
+    const unjumpTimeS = avatar.unjumpTime / 1000;
+    // if (avatar.unjumpTime < unjumpMaxTime) {
+    if (unjumpTimeS < landingAnimation.duration * 2) {
       return spec => {
         const {
           animationTrackName: k,
@@ -1116,44 +1143,48 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _handleDefault(spec);
 
-        // const t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
-        const t1 = (now - avatar.jumpStartTime) / 1000 * 0.6 + 0.7;
-        const src1 = jumpAnimation.interpolants[k];
-        const v1 = src1.evaluate(t1);
-        if (!isPosition) localQuaternion.fromArray(v1);
-        else localVector.fromArray(v1);
+        // // const t1 = avatar.jumpTime / 1000 * 0.6 + 0.7;
+        // const t1 = (now - avatar.jumpStartTime) / 1000 * 0.6 + 0.7;
+        // const src1 = jumpAnimation.interpolants[k];
+        // const v1 = src1.evaluate(t1);
+        // if (!isPosition) localQuaternion.fromArray(v1);
+        // else localVector.fromArray(v1);
 
         // debugger
-        const t2 = avatar.unjumpTime / 1000 + 37 / 30;
-        const src2 = jumpAnimation.interpolants[k];
+        // const t2 = unjumpTimeS + 37 / 30;
+        // const src2 = jumpAnimation.interpolants[k];
+        const t2 = unjumpTimeS;
+        const src2 = landingAnimation.interpolants[k];
         // const src2 = sitAnimations.chair.interpolants[k];
         const v2 = src2.evaluate(t2);
         if (!isPosition) localQuaternion2.fromArray(v2);
         else localVector2.fromArray(v2);
 
         if (!isPosition) {
-          localQuaternion.slerp(localQuaternion2, Math.min(1, avatar.unjumpTime / 1000 * 2));
+          dst.copy(localQuaternion2);
+          // localQuaternion.slerp(localQuaternion2, Math.min(1, unjumpTimeS * 2));
         } else {
-          localVector.lerp(localVector2, Math.min(1, avatar.unjumpTime / 1000 * 2));
+          dst.copy(localVector2);
+          // localVector.lerp(localVector2, Math.min(1, unjumpTimeS * 2));
         }
 
-        let t = 1 - avatar.unjumpTime / unjumpMaxTime;
-        t = t ** (1 + (idleWalkFactor + walkRunFactor) * 3);
-        if (!isPosition) {
-          lerpFn
-            .call(
-              dst,
-              localQuaternion,
-              t,
-            );
-        } else {
-          lerpFn
-            .call(
-              dst,
-              localVector,
-              t,
-            );
-        }
+        // let t = 1 - avatar.unjumpTime / unjumpMaxTime;
+        // t = t ** (1 + (idleWalkFactor + walkRunFactor) * 3);
+        // if (!isPosition) {
+        //   lerpFn
+        //     .call(
+        //       dst,
+        //       localQuaternion,
+        //       t,
+        //     );
+        // } else {
+        //   lerpFn
+        //     .call(
+        //       dst,
+        //       localVector,
+        //       t,
+        //     );
+        // }
       };
     }
 
