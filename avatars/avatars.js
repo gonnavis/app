@@ -1824,6 +1824,7 @@ class Avatar {
 
     _updateHmdPosition();
     window.domInfo.innerHTML = `
+      <div>camera.position: --- ${window.logVector3(camera.position)}</div>
       <div>keysDirection: --- ${window.logVector3(ioManager.keysDirection)}</div>
       <div>avatar.direction: --- ${window.logVector3(avatar.direction)}</div>
       <div>localPlayer.direction: --- ${window.logVector3(localPlayer.getWorldDirection(localVector))}</div>
