@@ -42,6 +42,7 @@ import {
   // avatarInterpolationTimeDelay,
   // avatarInterpolationNumFrames,
 } from '../constants.js';
+import { AnimAction } from './AnimAction.js';
 
 const localVector = new Vector3();
 const localVector2 = new Vector3();
@@ -58,6 +59,7 @@ let animations;
 let animationStepIndices;
 // let animationsBaseModel;
 let jumpAnimation;
+let jumpAction;
 let fallLoopAnimation;
 let landingAnimation;
 let floatAnimation;
@@ -304,6 +306,7 @@ export const loadPromise = (async () => {
   // swordTopDownSlash = animations.find(a => a.isSwordTopDownSlash)
 
   jumpAnimation = animations.find(a => a.isJump);
+  jumpAction = new AnimAction(jumpAnimation);
   // fallLoopAnimation = animations.index['fall_loop.fbx'];
   fallLoopAnimation = animations.index['falling_idle.fbx'];
   landingAnimation = animations.index['landing.fbx'];

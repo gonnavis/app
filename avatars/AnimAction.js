@@ -1,6 +1,6 @@
 class AnimAction {
-  constructor(name) {
-    this.name = name;
+  constructor(animationClip) {
+    this.clip = animationClip;
   }
 }
 
