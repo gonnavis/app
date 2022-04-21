@@ -25,6 +25,7 @@ import {
   // groundFriction,
   voiceEndpoint,
   numLoadoutSlots,
+  landMaxTime,
 } from './constants.js';
 import {AppManager} from './app-manager.js';
 import {CharacterPhysics} from './character-physics.js';
@@ -876,6 +877,7 @@ class UninterpolatedPlayer extends StatePlayer {
   static init() {
     this.actionInterpolants = {
       crouch: new BiActionInterpolant(() => this.hasAction('crouch'), 0, crouchMaxTime),
+      land: new BiActionInterpolant(() => this.hasAction('land'), 0, landMaxTime), // todo: UniBiActionInterpolant
       activate: new UniActionInterpolant(() => this.hasAction('activate'), 0, activateMaxTime),
       use: new InfiniteActionInterpolant(() => this.hasAction('use'), 0),
       unuse: new InfiniteActionInterpolant(() => !this.hasAction('use'), 0),

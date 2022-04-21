@@ -1486,6 +1486,7 @@ class GameManager extends EventTarget {
     }
 
     if (!jumpAction) {
+      // console.log('game.js jumpAction');
       const newJumpAction = {
         type: 'jump',
         // time: 0,

@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import physicsManager from './physics-manager.js';
 // import ioManager from './io-manager.js';
 import {getVelocityDampingFactor} from './util.js';
-import {groundFriction, flyFriction, airFriction} from './constants.js';
+import {groundFriction, flyFriction, airFriction, landMaxTime} from './constants.js';
 import {applyVelocity} from './util.js';
 import {getRenderer, camera} from './renderer.js';
 // import physx from './physx.js';
@@ -127,13 +127,24 @@ class CharacterPhysics {
               type: 'jump',
               time: 0,
             };
+            // console.log('character-physics.js jumpAction');
             this.player.addAction(newJumpAction);
           } else {
             jumpAction.set('time', 0);
           }
         };
         const _ensureNoJumpAction = () => {
-          this.player.removeAction('jump');
+          const jumpAction = this.player.getAction('jump');
+          if (jumpAction) {
+            this.player.removeAction('jump');
+            
+            this.player.addAction({type: 'land'});
+            console.log('add land');
+            setTimeout(() => {
+              console.log('remove land');
+              this.player.removeAction('land');
+            }, landMaxTime + 100);
+          }
         };
 
         if (grounded) {

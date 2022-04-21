@@ -70,6 +70,7 @@ export function makeAvatar(app) {
 }
 export function applyPlayerActionsToAvatar(player, rig) {
   const jumpAction = player.getAction('jump');
+  const landAction = player.getAction('land');
   const flyAction = player.getAction('fly');
   const useAction = player.getAction('use');
   const narutoRunAction = player.getAction('narutoRun');
@@ -99,6 +100,7 @@ export function applyPlayerActionsToAvatar(player, rig) {
     rig.jumpStartTime = performance.now();
   };
   rig.jumpState = jumpState;
+  rig.landState = !!landAction;
   rig.jumpTime = player.actionInterpolants.jump.get();
   rig.unjumpTime = player.actionInterpolants.unjump.get();
   rig.flyState = !!flyAction;
@@ -153,6 +155,7 @@ export function applyPlayerActionsToAvatar(player, rig) {
   // rig.throwState = !!throwAction;
   // rig.throwTime = player.actionInterpolants.throw.get();
   rig.crouchTime = player.actionInterpolants.crouch.getInverse();
+  rig.landTime = player.actionInterpolants.land.get();
   // rig.chargeJumpTime = player.actionInterpolants.chargeJump.get();
   // rig.chargeAnimation = chargeJumpAnimation;
   // rig.chargeJumpState = !!chargeJump;

@@ -402,7 +402,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   // const runSpeed = 0.5;
   const angle = avatar.getAngle();
   const timeSeconds = now / 1000;
-  const {idleWalkFactor, walkRunFactor, crouchFactor} = moveFactors;
+  const {idleWalkFactor, walkRunFactor, crouchFactor, landFactor} = moveFactors;
 
   /* const _getAnimationKey = crouchState => {
     if (crouchState) {
@@ -747,7 +747,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     _getHorizontalBlend(k, lerpFn, isPosition, dst);
   };
   const _getApplyFn = () => {
-    if (avatar.jumpState) {
+    // const blendList = [];
+    if (avatar.jumpState || avatar.landState) {
       return spec => {
         const {
           animationTrackName: k,
@@ -785,6 +786,20 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           } else {
             // dst.copy(localVector);
             dst.lerp(localVector, Math.min(1, (jumpTimeS - 0.5) * 2));
+          }
+        }
+        if (landFactor > 0) {
+          // if (k === 'mixamorigHips.quaternion') console.log('playing land');
+
+          const src2 = landingAnimation.interpolants[k];
+          const v2 = src2.evaluate(landFactor * landingAnimation.duration);
+          if (!isPosition) localQuaternion2.fromArray(v2);
+          else localVector2.fromArray(v2);
+
+          if (!isPosition) {
+            dst.slerp(localQuaternion2, landFactor);
+          } else {
+            dst.lerp(localVector2, landFactor);
           }
         }
       };

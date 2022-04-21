@@ -15,6 +15,7 @@ import {
 // import Simplex from '../simplex-noise.js';
 import {
   crouchMaxTime,
+  landMaxTime,
   // useMaxTime,
   aimMaxTime,
   // avatarInterpolationFrameRate,
@@ -1410,6 +1411,7 @@ class Avatar {
     moveFactors.idleWalkFactor = Math.min(Math.max((currentSpeed - idleFactorSpeed) / (walkFactorSpeed - idleFactorSpeed), 0), 1);
     moveFactors.walkRunFactor = Math.min(Math.max((currentSpeed - walkFactorSpeed) / (runFactorSpeed - walkFactorSpeed), 0), 1);
     moveFactors.crouchFactor = Math.min(Math.max(1 - (this.crouchTime / crouchMaxTime), 0), 1);
+    moveFactors.landFactor = Math.min(Math.max(this.landTime / landMaxTime, 0), 1);
     // console.log('current speed', currentSpeed, idleWalkFactor, walkRunFactor);
 
     const _updateHmdPosition = () => {
@@ -1831,6 +1833,9 @@ class Avatar {
       <div>idleWalkFactor: --- ${moveFactors.idleWalkFactor.toFixed(2)}</div>
       <div>walkRunFactor: --- ${moveFactors.walkRunFactor.toFixed(2)}</div>
       <div>crouchFactor: --- ${moveFactors.crouchFactor.toFixed(2)}</div>
+      <div>landState: --- ${this.landState}</div>
+      <div>landTime: --- ${Math.floor(this.landTime)}</div>
+      <div>landFactor: --- ${moveFactors.landFactor.toFixed(2)}</div>
       <div>chargeJumpState: --- ${this.chargeJumpState}</div>
       <div>danceState: --- ${this.danceState}</div>
       <div>fallLoopState: --- ${this.fallLoopState}</div>
