@@ -708,31 +708,17 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
       localQuaternion,
     );
-    _get7wayBlend(
-      keyAnimationAnglesOther,
-      keyAnimationAnglesOtherMirror,
-      keyAnimationAnglesOther,
-      keyAnimationAnglesOtherMirror,
-      idleAnimationOther,
-      // mirrorFactor,
-      // angleFactor,
-      // walkRunFactor,
-      // idleWalkFactor,
-      k,
-      lerpFn,
-      isPosition,
-      localQuaternion2,
-    );
 
     // _get5wayBlend(keyAnimationAnglesOther, keyAnimationAnglesOtherMirror, idleAnimationOther, mirrorFactor, angleFactor, speedFactor, k, lerpFn, localQuaternion2);
 
-    lerpFn
-      .call(
-        target.copy(localQuaternion),
-        localQuaternion2,
-        crouchFactor,
-      );
+    // lerpFn
+    //   .call(
+    //     target.copy(localQuaternion),
+    //     localQuaternion2,
+    //     crouchFactor,
+    //   );
 
+    target.copy(localQuaternion);
     return target.toArray();
   };
 
@@ -757,6 +743,40 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   // }
 
   const _getApplyFn = () => {
+    if (crouchFactor > 0) {
+      const applyFnCrouch = spec => {
+        const {
+          animationTrackName: k,
+          lerpFn,
+          isPosition,
+        } = spec;
+
+        _get7wayBlend(
+          keyAnimationAnglesOther,
+          keyAnimationAnglesOtherMirror,
+          keyAnimationAnglesOther,
+          keyAnimationAnglesOtherMirror,
+          idleAnimationOther,
+          // mirrorFactor,
+          // angleFactor,
+          // walkRunFactor,
+          // idleWalkFactor,
+          k,
+          lerpFn,
+          isPosition,
+          localQuaternion2,
+        );
+
+        const blendee = {
+          arr: localQuaternion2.toArray(),
+          intensity: crouchFactor,
+        };
+        // if (k === 'mixamorigHips.quaternion') console.log(blendee.intensity); // todo: if (isPosition)
+        return blendee;
+      };
+      // debugger
+      avatar.blendList.push(applyFnCrouch);
+    }
     if (avatar.jumpState || avatar.unjumpTime <= 200) {
       const applyFnJump = spec => {
         const {
@@ -799,7 +819,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       avatar.blendList.push(applyFnJump);
     }
-    if (avatar.flyTransitionTime > 0) {
+    if (avatar.flyTransitionTime > 0) { // todo: check factor?
       const applyFnFly = spec => {
         const {
           animationTrackName: k,
@@ -819,7 +839,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       // debugger
       avatar.blendList.push(applyFnFly);
     }
-    if (avatar.fallTransitionTime > 0) {
+    if (avatar.fallTransitionTime > 0) { // todo: check factor?
       const applyFnFall = spec => {
         const {
           animationTrackName: k,
@@ -839,7 +859,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       // debugger
       avatar.blendList.push(applyFnFall);
     }
-    if (avatar.landTransitionTime > 0) {
+    if (avatar.landTransitionTime > 0) { // todo: check factor?
       const applyFnLand = spec => {
         const {
           animationTrackName: k,
@@ -863,7 +883,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       // debugger
       avatar.blendList.push(applyFnLand);
     }
-    if (avatar.sitTransitionTime > 0) {
+    if (avatar.sitTransitionTime > 0) { // todo: check factor?
       const applyFnSit = spec => {
         const {
           animationTrackName: k,
