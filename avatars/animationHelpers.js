@@ -692,7 +692,16 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   }
   avatar.lastEmoteAnimation = avatar.emoteAnimation;
 
-  const _getHorizontalBlend = (k, lerpFn, isPosition, target) => {
+  // if (avatar.idleFactor > 0) {
+  const applyFnDefault = spec => {
+    const {
+      animationTrackName: k,
+      dst,
+      // isTop,
+      lerpFn,
+      isPosition,
+    } = spec;
+
     _get7wayBlend(
       keyWalkAnimationAngles,
       keyWalkAnimationAnglesMirror,
@@ -709,32 +718,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       localQuaternion,
     );
 
-    // _get5wayBlend(keyAnimationAnglesOther, keyAnimationAnglesOtherMirror, idleAnimationOther, mirrorFactor, angleFactor, speedFactor, k, lerpFn, localQuaternion2);
-
-    // lerpFn
-    //   .call(
-    //     target.copy(localQuaternion),
-    //     localQuaternion2,
-    //     crouchFactor,
-    //   );
-
-    target.copy(localQuaternion);
-    return target.toArray();
-  };
-
-  // if (avatar.idleFactor > 0) {
-  const applyFnDefault = spec => {
-    const {
-      animationTrackName: k,
-      dst,
-      // isTop,
-      lerpFn,
-      isPosition,
-    } = spec;
-
-    const arr = _getHorizontalBlend(k, lerpFn, isPosition, dst);
     const blendee = {
-      arr,
+      arr: localQuaternion.toArray(),
       intensity: idleFactor,
     };
     return blendee;
