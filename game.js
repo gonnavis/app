@@ -369,6 +369,11 @@ const _endUse = () => {
       use: false,
     });
     localPlayer.removeAction('use');
+    console.log(useAction)
+    const unuseAction = useAction;
+    unuseAction.type = 'unuse';
+    localPlayer.addAction(unuseAction);
+    console.log(unuseAction)
   }
 };
 const _mousedown = () => {

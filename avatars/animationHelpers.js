@@ -990,13 +990,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.fromArray(v2);
       };
     } */
-
-    // if (
-    //   avatar.useAnimation ||
-    //   avatar.useAnimationCombo.length > 0 ||
-    //   avatar.useAnimationEnvelope.length > 0
-    // ) {
-    if (avatar.useTransitionTime > 0) {
+    if (
+      avatar.useAnimation ||
+      avatar.useAnimationCombo.length > 0 ||
+      avatar.useAnimationEnvelope.length > 0
+    ) {
       const applyFnUse = spec => {
         const {
           animationTrackName: k,
@@ -1008,15 +1006,15 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         let useAnimation;
         let t2;
         const useTimeS = avatar.useTime / 1000;
-        if (avatar.useType === 'normal') {
+        if (avatar.useAnimation) {
           const useAnimationName = avatar.useAnimation;
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
-        } else if (avatar.useType === 'combo') {
+        } else if (avatar.useAnimationCombo.length > 0) {
           const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex];
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
-        } else if (avatar.useType === 'envelope') {
+        } else if (avatar.useAnimationEnvelope.length > 0) {
           let totalTime = 0;
           for (let i = 0; i < avatar.useAnimationEnvelope.length - 1; i++) {
             const animationName = avatar.useAnimationEnvelope[i];
@@ -1104,7 +1102,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       // debugger
       avatar.blendList.push(applyFnUse);
-    } else if (avatar.hurtAnimation) {
+    }
+    if (avatar.hurtAnimation) {
       const applyFnHurt = spec => {
         const {
           animationTrackName: k,
@@ -1148,7 +1147,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       // debugger
       avatar.blendList.push(applyFnHurt);
-    } else if (avatar.aimAnimation) {
+    }
+    if (avatar.aimAnimation) {
       const applyFnAim = spec => {
         const {
           animationTrackName: k,
@@ -1201,8 +1201,52 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       // debugger
       avatar.blendList.push(applyFnAim);
-    } else if (avatar.unuseAnimation && avatar.unuseTime >= 0) {
+    }
+    if (avatar.unuseAnimation && avatar.unuseFactor < 1) {
       const applyFnUnuse = spec => {
+        const {
+          animationTrackName: k,
+          dst,
+          lerpFn,
+          // isTop,
+          isPosition,
+        } = spec;
+
+        // _handleDefault(spec);
+
+        const unuseTimeS = avatar.unuseTime / 1000;
+        const unuseAnimationName = avatar.unuseAnimation;
+        const unuseAnimation = useAnimations[unuseAnimationName];
+        const t2 = Math.min(unuseTimeS, unuseAnimation.duration);
+        const f = Math.min(Math.max(unuseTimeS / unuseAnimation.duration, 0), 1);
+        // if (isPosition) console.log(f);
+        const f2 = Math.pow(1 - f, 2);
+
+        let arr = [];
+        if (!isPosition) {
+          const src2 = unuseAnimation.interpolants[k];
+          arr = src2.evaluate(unuseAnimation.duration);
+        } else {
+          const src2 = unuseAnimation.interpolants[k];
+          arr = src2.evaluate(unuseAnimation.duration);
+        }
+
+        // if (k === 'mixamorigLeftToeBase.quaternion' && unuseFactor >= 1) { // todo: do not use 'mixamorigLeftToeBase.quaternion' to check last bone.
+        //   localPlayer.removeAction('unuse');
+        //   avatar.unuseAnimation = '';
+        // }
+
+        const blendee = {
+          arr,
+          intensity: 1 - avatar.unuseFactor,
+        };
+        return blendee;
+      };
+      // debugger
+      avatar.blendList.push(applyFnUnuse);
+    }
+    if (false && avatar.specialUnuseAnimation) {
+      const applyFnSpecialUnuse = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -1253,6 +1297,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
 
         if (k === 'mixamorigLeftToeBase.quaternion' && f >= 1) { // todo: do not use 'mixamorigLeftToeBase.quaternion' to check last bone.
+          localPlayer.removeAction('unuse');
           avatar.unuseAnimation = '';
         }
 
@@ -1263,7 +1308,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnUnuse);
+      avatar.blendList.push(applyFnSpecialUnuse);
     }
   };
   // const applyFn = _getApplyFn();

@@ -74,6 +74,7 @@ export function applyPlayerActionsToAvatar(player, rig) {
   const fallAction = player.getAction('fall');
   const landAction = player.getAction('land');
   const useAction = player.getAction('use');
+  const unuseAction = player.getAction('unuse');
   const narutoRunAction = player.getAction('narutoRun');
   const sitAction = player.getAction('sit');
   const sitAnimation = sitAction ? sitAction.animation : '';
@@ -123,29 +124,59 @@ export function applyPlayerActionsToAvatar(player, rig) {
   rig.activateTime = player.actionInterpolants.activate.get();
 
   if (useAction?.animation) {
-    rig.useType = 'normal';
     rig.useAnimation = useAction.animation;
-  } else if (useAction?.animationCombo) {
-    rig.useType = 'combo';
+  } else {
+    if (rig.useAnimation) {
+      rig.useAnimation = '';
+    }
+  }
+  if (useAction?.animationCombo) {
     rig.useAnimationCombo = useAction.animationCombo;
-  } else if (useAction?.animationEnvelope) {
-    rig.useType = 'envelope';
+  } else {
+    if (rig.useAnimationCombo.length > 0) {
+      rig.useAnimationCombo = [];
+    }
+  }
+  if (useAction?.animationEnvelope) {
     rig.useAnimationEnvelope = useAction.animationEnvelope;
   } else {
-    // rig.useType = null // eg: pistol
+    if (rig.useAnimationEnvelope.length > 0) {
+      rig.useAnimationEnvelope = [];
+    }
   }
-
-  // rig.useAnimationIndex = useAction?.index;
-  if (useAction) {
-    rig.useAnimationIndex = useAction.index;
-  }
+  rig.useAnimationIndex = useAction?.index;
   rig.useTime = player.actionInterpolants.use.get();
   rig.useTransitionTime = player.actionInterpolants.useTransition.get();
   rig.unuseTime = player.actionInterpolants.unuse.get();
-  if (rig.unuseTime === 0) { // this means use is active
-    if (useAction?.animationEnvelope) {
-      rig.unuseAnimation = rig.useAnimationEnvelope[2]; // the last animation in the triplet is the unuse animation
+  if (unuseAction) {
+    if (unuseAction.animation) {
+      rig.unuseAnimation = unuseAction.animation;
+    } else if (unuseAction.animationCombo) {
+      rig.unuseAnimation = unuseAction.animationCombo[unuseAction.index];
+    } else if (unuseAction.animationEnvelope) {
+      rig.unuseAnimation = unuseAction.animationEnvelope[1];
+    } else {
+      rig.unuseAnimation = null // eg: pistol
     }
+  }
+  if (rig.unuseTime === 0) { // this means use is active
+    if (useAction) {
+      // if (useAction.animation) {
+      //   rig.unuseAnimation = rig.useAnimation;
+      // } else if (useAction.animationCombo) {
+      //   rig.unuseAnimation = rig.useAnimationCombo[0];
+      // } else 
+      if (useAction.animationEnvelope) {
+        rig.specialUnuseAnimation = rig.useAnimationEnvelope[2]; // the last animation in the triplet is the unuse animation
+      } else {
+        rig.specialUnuseAnimation = null;
+      }
+    }
+  }
+  rig.unuseFactor = player.actionInterpolants.unuseTransition.getNormalized();
+  if (rig.unuseFactor >= 1) {
+    player.removeAction('unuse');
+    rig.unuseAnimation = '';
   }
 
   rig.narutoRunState = !!narutoRunAction && !crouchAction;
