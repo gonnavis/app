@@ -1,4 +1,4 @@
-import {Vector3, Quaternion, AnimationClip} from 'three';
+import {Vector3, Quaternion, AnimationClip, Euler} from 'three';
 import metaversefile from 'metaversefile';
 import {/* VRMSpringBoneImporter, VRMLookAtApplyer, */ VRMCurveMapper} from '@pixiv/three-vrm/lib/three-vrm.module.js';
 // import easing from '../easing.js';
@@ -52,6 +52,8 @@ const localQuaternion3 = new Quaternion();
 const localQuaternion4 = new Quaternion();
 const localQuaternion5 = new Quaternion();
 const localQuaternion6 = new Quaternion();
+
+const localEuler = new Euler();
 
 let animations;
 let animationStepIndices;
@@ -177,6 +179,7 @@ async function loadAnimations() {
   for (const animation of animations) {
     animations.index[animation.name] = animation;
   }
+  window.animations = animations;
 
   /* const animationIndices = animationStepIndices.find(i => i.name === 'Fast Run.fbx');
           for (let i = 0; i < animationIndices.leftFootYDeltas.length; i++) {
@@ -391,7 +394,7 @@ export const loadPromise = (async () => {
 
 export const _applyAnimation = (avatar, now, moveFactors) => {
   // const runSpeed = 0.5;
-  const angle = avatar.getAngle();
+  let angle = avatar.getAngle();
   const timeSeconds = now / 1000;
   const {idleWalkFactor, walkRunFactor, crouchFactor} = moveFactors;
 
@@ -591,6 +594,19 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         );
     }
   };
+
+  // //
+  // if (
+  //   avatar.useAnimationEnvelope.length > 0
+  // ) {
+  //   localQuaternion.fromArray(animations.index['bow draw.fbx'].interpolants['mixamorigHips.quaternion'].evaluate(0));
+  //   localEuler.setFromQuaternion(localQuaternion);
+  //   angle += localEuler.y;
+  //   console.log(localEuler.y.toFixed(2));
+  //   // const hipsAngle =
+  // }
+
+  // angle += Math.PI / 2;
 
   // stand
   // const key = _getAnimationKey(false);
@@ -873,7 +889,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          // isTop,
+          isTop,
           isPosition,
         } = spec;
 
@@ -925,29 +941,44 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
 
-            const idleAnimation = _getIdleAnimation('walk');
-            const t3 = 0;
-            const src3 = idleAnimation.interpolants[k];
-            const v3 = src3.evaluate(t3);
+            if (isTop) localQuaternion2.fromArray(v2);
+            else localQuaternion2.copy(dst);
+            // dst.fromArray(v2);
 
-            dst
-              .premultiply(localQuaternion2.fromArray(v3).invert())
-              .premultiply(localQuaternion2.fromArray(v2));
+            // if (k === 'mixamorigSpine.quaternion') dst.multiply(localQuaternion.setFromEuler(localEuler.set(0, -Math.PI / 2 / 3, 0)));
+            if (k.includes('Spine')) localQuaternion2.multiply(localQuaternion.setFromEuler(localEuler.set(0, -Math.PI / 2 / 3 * idleWalkFactor, 0.1)));
+
+            dst.fromArray(v2);
+            dst.slerp(localQuaternion2, idleWalkFactor);
+
+            // const idleAnimation = _getIdleAnimation('walk');
+            // const t3 = 0;
+            // const src3 = idleAnimation.interpolants[k];
+            // const v3 = src3.evaluate(t3);
+
+            // dst
+            //   .premultiply(localQuaternion2.fromArray(v3).invert())
+            //   .premultiply(localQuaternion2.fromArray(v2));
           } else {
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
             localVector2.fromArray(v2);
             _clearXZ(localVector2, isPosition);
 
-            const idleAnimation = _getIdleAnimation('walk');
-            const t3 = 0;
-            const src3 = idleAnimation.interpolants[k];
-            const v3 = src3.evaluate(t3);
-            localVector3.fromArray(v3);
+            dst.fromArray(v2);
+            dst.lerp(localVector2, idleWalkFactor);
 
-            dst
-              .sub(localVector3)
-              .add(localVector2);
+            // dst.copy(localVector2);
+
+            // const idleAnimation = _getIdleAnimation('walk');
+            // const t3 = 0;
+            // const src3 = idleAnimation.interpolants[k];
+            // const v3 = src3.evaluate(t3);
+            // localVector3.fromArray(v3);
+
+            // dst
+            //   .sub(localVector3)
+            //   .add(localVector2);
           }
         }
       };
@@ -1043,7 +1074,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
+        // if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
         // debugger
 
         _handleDefault(spec);
