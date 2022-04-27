@@ -1131,13 +1131,14 @@ class GameManager extends EventTarget {
     _mouseup();
   }
   menuAim() {
-    // debugger
+    debugger
     const localPlayer = metaversefileApi.useLocalPlayer();
     if (!localPlayer.hasAction('aim')) {
       const localPlayer = metaversefileApi.useLocalPlayer();
       const wearApp = loadoutManager.getSelectedApp();
       const wearAimApp = (() => {
         if (wearApp) {
+          window.wearApp = wearApp;
           const aimComponent = wearApp.getComponent('aim');
           if (aimComponent) {
             return wearApp;

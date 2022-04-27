@@ -62,6 +62,14 @@ class ShoulderTransforms {
     this.rightArmIk = new VRArmIK(this.rightArm, this, this.shoulderPoser, this.shoulderPoser.shoulder.rightShoulderAnchor, this.shoulderPoser.vrTransforms.rightHand, false);
 
     this.handsEnabled = [true, true];
+    this.handsEnabled = new Proxy(this.handsEnabled, {
+      set: (obj, prop, newVal) => {
+        const oldVal = obj[prop];
+        if (newVal !== oldVal) debugger;
+        obj[prop] = newVal;
+        return true;
+      }
+    })
     this.enabled = true;
   }
 
