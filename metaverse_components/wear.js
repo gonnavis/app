@@ -252,17 +252,20 @@ export default (app, component) => {
         const appUseAction = Array.from(localPlayer.getActionsState())
           .find(action => action.type === 'use' && action.instanceId === instanceId);
         if (appUseAction?.boneAttachment && wearSpec.boneAttachment) {
+          // console.log(1);
           _copyBoneAttachment(appUseAction);
         } else {
           const appAimAction = Array.from(localPlayer.getActionsState())
             .find(action => action.type === 'aim' && action.instanceId === instanceId);
           if (appAimAction?.boneAttachment && wearSpec.boneAttachment) {
+            // console.log(2);
             _copyBoneAttachment(appAimAction);
           } else {
             if (modelBones) {
               Avatar.applyModelBoneOutputs(modelBones, localPlayer.avatar.modelBoneOutputs, localPlayer.avatar.getTopEnabled(), localPlayer.avatar.getBottomEnabled(), localPlayer.avatar.getHandEnabled(0), localPlayer.avatar.getHandEnabled(1));
               modelBones.Root.updateMatrixWorld();
             } else if (wearSpec.boneAttachment) {
+              // console.log(3);
               _copyBoneAttachment(wearSpec);
             }
           }

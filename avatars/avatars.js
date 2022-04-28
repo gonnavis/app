@@ -1203,7 +1203,7 @@ class Avatar {
           }
         } else if (k === 'Right_wrist') {
           if (lHandEnabled) {
-            // modelBone.quaternion.multiply(rightRotation); // center
+            modelBone.quaternion.multiply(rightRotation); // center
           }
         }
       // }
@@ -1884,7 +1884,7 @@ class Avatar {
       <div style="display:;">blendList.length: --- ${this.blendList?.length}</div>
       <div s  tyle="display:;">blendList: --- ${this.blendList?.map(applyFn=>applyFn.name.slice('applyFn'.length))}</div>
     `
-    // _applyAnimation(this, now, moveFactors);
+    _applyAnimation(this, now, moveFactors);
     // console.log(window.logVector3(this.modelBoneOutputs.Hips.getWorldDirection(localVector)));
 
     if (this.poseAnimation) {
@@ -1906,7 +1906,7 @@ class Avatar {
     } */
 
 
-    // this.shoulderTransforms.Update();
+    this.shoulderTransforms.Update();
     this.legsManager.Update();
 
     _updateEyeTarget();
