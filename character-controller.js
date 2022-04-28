@@ -140,7 +140,7 @@ class PlayerBase extends THREE.Object3D {
     this.leftHand = new Proxy(this.leftHand, {
       set: (obj, prop, newVal) => {
         const oldVal = obj[prop];
-        // if (prop === 'enabled' && newVal !== oldVal) debugger;
+        if (prop === 'enabled' && newVal !== oldVal) debugger;
         obj[prop] = newVal;
         return true;
       }
