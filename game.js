@@ -1131,7 +1131,7 @@ class GameManager extends EventTarget {
     _mouseup();
   }
   menuAim() {
-    debugger
+    // debugger
     const localPlayer = metaversefileApi.useLocalPlayer();
     if (!localPlayer.hasAction('aim')) {
       const localPlayer = metaversefileApi.useLocalPlayer();

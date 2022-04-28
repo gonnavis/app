@@ -65,7 +65,7 @@ class ShoulderTransforms {
     this.handsEnabled = new Proxy(this.handsEnabled, {
       set: (obj, prop, newVal) => {
         const oldVal = obj[prop];
-        if (newVal !== oldVal) debugger;
+        // if (newVal !== oldVal) debugger;
         obj[prop] = newVal;
         return true;
       }
