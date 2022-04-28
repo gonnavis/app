@@ -931,15 +931,16 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           if (!isPosition) {
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
+            localQuaternion2.fromArray(v2);
 
-            if (isTop) dst.fromArray(v2);
+            if (isTop) dst.slerp(localQuaternion2, 0.7);
           } else {
             const src2 = useAnimation.interpolants[k];
             const v2 = src2.evaluate(t2);
             localVector2.fromArray(v2);
             _clearXZ(localVector2, isPosition);
 
-            if (isTop) dst.copy(localVector2);
+            if (isTop) dst.lerp(localVector2, 0.7);
           }
         }
       };
