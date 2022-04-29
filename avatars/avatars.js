@@ -963,6 +963,7 @@ class Avatar {
     //
 
     this.blendList = []; // todo: rename to applyFnList.
+    this.manuallySetMouth=false;
   }
   static bindAvatar(object) {
     const model = object.scene;
@@ -1957,7 +1958,7 @@ class Avatar {
       }
       this.debugMesh.visible = debug.enabled;
     }
-	}
+  }
 
   isAudioEnabled() {
     return !!this.microphoneWorker;
@@ -1990,7 +1991,9 @@ class Avatar {
         emitBuffer: true,
       });
       this.microphoneWorker.addEventListener('volume', e => {
-        this.volume = this.volume*0.8 + e.data*0.2;
+        if(!this.manuallySetMouth){
+          this.volume = this.volume*0.8 + e.data*0.2;
+        }
       });
       this.microphoneWorker.addEventListener('buffer', e => {
         this.audioRecognizer.send(e.data);

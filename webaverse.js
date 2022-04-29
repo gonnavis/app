@@ -40,7 +40,8 @@ import performanceTracker from './performance-tracker.js';
 import renderSettingsManager from './rendersettings-manager.js';
 import metaversefileApi from 'metaversefile';
 import WebaWallet from './src/components/wallet.js';
-import {OffscreenEngine} from './offscreen-engine.js';
+import musicManager from './music-manager.js';
+// import {OffscreenEngine} from './offscreen-engine.js';
 
 const localVector = new THREE.Vector3();
 const localVector2 = new THREE.Vector3();
@@ -80,6 +81,7 @@ export default class Webaverse extends EventTarget {
         transformControls.waitForLoad(),
         metaverseModules.waitForLoad(),
         voices.waitForLoad(),
+        musicManager.waitForLoad(),
         WebaWallet.waitForLoad(),
       ]);
     })();
@@ -558,20 +560,6 @@ const _startHacks = webaverse => {
           titleCardHack: webaverse.titleCardHack,
         }
       }));
-    } else if (e.which === 75) { // K
-      if (!haloMeshApp) {
-        haloMeshApp = metaversefileApi.createApp();
-        (async () => {
-          const {modules} = metaversefileApi.useDefaultModules();
-          const m = modules['halo'];
-          await haloMeshApp.addModule(m);
-        })();
-        scene.add(haloMeshApp);
-      } else {
-        scene.remove(haloMeshApp);
-        haloMeshApp.destroy();
-        haloMeshApp = null;
-      }
     } else {
       const match = e.code.match(/^Numpad([0-9])$/);
       if (match) {
