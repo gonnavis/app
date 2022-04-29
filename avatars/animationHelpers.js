@@ -785,6 +785,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       const applyFnFly = spec => {
         const {
           animationTrackName: k,
+          isTop,
         } = spec;
 
         const t2 = nowS;
@@ -793,7 +794,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: flyFactor,
+          intensity: isTop ? flyFactor : 0, // test
         };
         // if (k === 'mixamorigHips.quaternion') console.log(blendNode.intensity); // todo: if (isPosition)
         return blendNode;
@@ -1216,14 +1217,16 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         //   dst.fromArray(blendNode.arr);
         //   break;
         // }
-        const t = blendNode.intensity / (intensityStep + blendNode.intensity);
-        // logText += t.toFixed(2) + ' --- ';
-        if (!isPosition) {
-          dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
-        } else {
-          dst.lerp(localVector.fromArray(blendNode.arr), t);
+        if (blendNode.intensity > 0) {
+          const t = blendNode.intensity / (intensityStep + blendNode.intensity);
+          // logText += t.toFixed(2) + ' --- ';
+          if (!isPosition) {
+            dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
+          } else {
+            dst.lerp(localVector.fromArray(blendNode.arr), t);
+          }
+          intensityStep += blendNode.intensity;
         }
-        intensityStep += blendNode.intensity;
       }
       // if (isPosition) console.log(logText);
     }
