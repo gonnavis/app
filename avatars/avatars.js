@@ -58,7 +58,7 @@ import Emoter from './Emoter.js'
 import Blinker from './Blinker.js'
 import Nodder from './Nodder.js'
 import Looker from './Looker.js'
-import ioManager from '../io-manager.js';
+// import ioManager from '../io-manager.js';
 
 
 const localVector = new THREE.Vector3();
@@ -963,6 +963,7 @@ class Avatar {
     //
 
     this.blendTree = [];
+    window.blendTree = this.blendTree;
     this.manuallySetMouth=false;
   }
   static bindAvatar(object) {
@@ -1841,8 +1842,10 @@ class Avatar {
     
 
     _updateHmdPosition();
-    window.domInfo.innerHTML = `
+    /*
       <div style="display:;">keysDirection: --- ${window.logVector3(ioManager.keysDirection)}</div>
+    */
+    window.domInfo.innerHTML = `
       <div style="display:;">avatar.direction: --- ${window.logVector3(avatar.direction)}</div>
       <div style="display:;">localPlayer.direction: --- ${window.logVector3(localPlayer.getWorldDirection(localVector))}</div>
       <div style="display:;">velocity: --- ${window.logVector3(localPlayer.characterPhysics.velocity)}</div>

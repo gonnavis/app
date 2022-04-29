@@ -747,13 +747,13 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       spec.defaultDst.fromArray(arr);
 
-      const blendee = {
+      const blendNode = {
         arr,
         intensity: idleFactor,
         // arr: [0, 0, 0, 0],
         // intensity: 0,
       };
-      return blendee;
+      return blendNode;
     };
     avatar.blendTree.push(applyFnDefault);
     // }
@@ -772,12 +772,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const v2 = src2.evaluate(t2);
         // if (isPosition) console.log(t2);
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: jumpFactor,
         };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendee.intensity);
-        return blendee;
+        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.intensity);
+        return blendNode;
       };
       avatar.blendTree.push(applyFnJump);
     }
@@ -791,12 +791,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const src2 = floatAnimation.interpolants[k];
         const v2 = src2.evaluate(t2 % floatAnimation.duration);
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: flyFactor,
         };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendee.intensity); // todo: if (isPosition)
-        return blendee;
+        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.intensity); // todo: if (isPosition)
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnFly);
@@ -813,11 +813,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const src2 = sitAnimation.interpolants[k];
         const v2 = src2.evaluate(1);
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: sitFactor,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnSit);
@@ -837,11 +837,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         // const f = avatar.activateTime > 0 ? Math.min(cubicBezier(t2), 1) : (1 - Math.min(cubicBezier(t2), 1));
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: activateFactor,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnActivate);
@@ -862,11 +862,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _clearXZ(v2, isPosition);
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: narutoRunFactor,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger 
       avatar.blendTree.push(applyFnNaruto);
@@ -892,11 +892,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _clearXZ(v2, isPosition);
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: f,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnDance);
@@ -923,11 +923,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _clearXZ(v2, isPosition);
 
-        const blendee = {
+        const blendNode = {
           arr: v2,
           intensity: f,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnEmote);
@@ -1023,11 +1023,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           }
         }
 
-        const blendee = {
+        const blendNode = {
           arr,
           intensity: useFactor,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnUse);
@@ -1121,11 +1121,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           localVector.toArray(arr);
         }
 
-        const blendee = {
+        const blendNode = {
           arr,
           intensity: aimFactor,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnAim);
@@ -1185,11 +1185,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           avatar.unuseAnimation = '';
         }
 
-        const blendee = {
+        const blendNode = {
           arr,
           intensity: f2,
         };
-        return blendee;
+        return blendNode;
       };
       // debugger
       avatar.blendTree.push(applyFnUnuse);
@@ -1206,24 +1206,24 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     } = spec;
 
     if (avatar.blendTree.length > 0) {
-      let blendee = avatar.blendTree[0](spec);
-      dst.fromArray(blendee.arr);
-      let intensityStep = blendee.intensity;
+      let blendNode = avatar.blendTree[0](spec);
+      dst.fromArray(blendNode.arr);
+      let intensityStep = blendNode.intensity;
       // let logText = '';
       for (let i = 1; i < avatar.blendTree.length; i++) {
-        blendee = avatar.blendTree[i](spec);
-        // if (blendee.intensity === Infinity) {
-        //   dst.fromArray(blendee.arr);
+        blendNode = avatar.blendTree[i](spec);
+        // if (blendNode.intensity === Infinity) {
+        //   dst.fromArray(blendNode.arr);
         //   break;
         // }
-        const t = blendee.intensity / (intensityStep + blendee.intensity);
+        const t = blendNode.intensity / (intensityStep + blendNode.intensity);
         // logText += t.toFixed(2) + ' --- ';
         if (!isPosition) {
-          dst.slerp(localQuaternion.fromArray(blendee.arr), t);
+          dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
         } else {
-          dst.lerp(localVector.fromArray(blendee.arr), t);
+          dst.lerp(localVector.fromArray(blendNode.arr), t);
         }
-        intensityStep += blendee.intensity;
+        intensityStep += blendNode.intensity;
       }
       // if (isPosition) console.log(logText);
     }
