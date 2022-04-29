@@ -58,8 +58,6 @@ let animations;
 let animationStepIndices;
 // let animationsBaseModel;
 let jumpAnimation;
-let fallAnimation;
-let landAnimation;
 let floatAnimation;
 let useAnimations;
 let aimAnimations;
@@ -304,8 +302,6 @@ export const loadPromise = (async () => {
   // swordTopDownSlash = animations.find(a => a.isSwordTopDownSlash)
 
   jumpAnimation = animations.find(a => a.isJump);
-  fallAnimation = animations.index['falling_idle.fbx'];
-  landAnimation = animations.index['landing.fbx'];
   // sittingAnimation = animations.find(a => a.isSitting);
   floatAnimation = animations.find(a => a.isFloat);
   // rifleAnimation = animations.find(a => a.isRifle);
@@ -400,7 +396,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   // const runSpeed = 0.5;
   const angle = avatar.getAngle();
   const timeSeconds = now / 1000;
-  const {idleWalkFactor, walkRunFactor, crouchFactor, flyFactor, sitFactor, fallFactor, landFactor, idleFactor, useFactor, activateFactor, aimFactor, narutoRunFactor, jumpFactor} = moveFactors;
+  const {idleWalkFactor, walkRunFactor, crouchFactor, flyFactor, sitFactor, idleFactor, useFactor, activateFactor, aimFactor, narutoRunFactor, jumpFactor} = moveFactors;
 
   /* const _getAnimationKey = crouchState => {
     if (crouchState) {
@@ -776,11 +772,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const v2 = src2.evaluate(t2);
         // if (isPosition) console.log(t2);
 
-        if (t2 > 1.5 && !localPlayer.hasAction('fall')) { // todo: don't directly add action at here.
-          localPlayer.addAction({type: 'fall'});
-          localPlayer.removeAction('jump');
-        }
-
         const blendee = {
           arr: v2,
           intensity: jumpFactor,
@@ -809,50 +800,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       // debugger
       avatar.blendList.push(applyFnFly);
-    }
-    if (fallFactor > 0) { // todo: use fallFactor.
-      const applyFnFall = spec => {
-        const {
-          animationTrackName: k,
-        } = spec;
-
-        const t2 = nowS;
-        const src2 = fallAnimation.interpolants[k];
-        const v2 = src2.evaluate(t2 % fallAnimation.duration);
-
-        const blendee = {
-          arr: v2,
-          intensity: fallFactor,
-        };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendee.intensity);
-        return blendee;
-      };
-      // debugger
-      avatar.blendList.push(applyFnFall);
-    }
-    if (landFactor > 0) {
-      const applyFnLand = spec => {
-        const {
-          animationTrackName: k,
-        } = spec;
-
-        const t2 = avatar.landTime / 1000;
-        const src2 = landAnimation.interpolants[k];
-        const v2 = src2.evaluate(t2);
-
-        if (t2 >= 1) {
-          localPlayer.removeAction('land');
-        }
-
-        const blendee = {
-          arr: v2,
-          intensity: landFactor,
-        };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendee.intensity);
-        return blendee;
-      };
-      // debugger
-      avatar.blendList.push(applyFnLand);
     }
     if (sitFactor > 0) {
       const applyFnSit = spec => {

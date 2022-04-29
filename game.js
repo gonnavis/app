@@ -352,7 +352,6 @@ const _startUse = () => {
         };
         // console.log('new use action', newUseAction, useComponent, {animation, animationCombo, animationEnvelope});
         localPlayer.addAction(newUseAction);
-        localPlayer.removeAction('crouch');
 
         wearApp.use();
       }
@@ -1405,18 +1404,12 @@ class GameManager extends EventTarget {
     const flyAction = localPlayer.getAction('fly');
     if (flyAction) {
       localPlayer.removeAction('fly');
-      if (localPlayer.hasAction('air') && !localPlayer.hasAction('fall')) {
-        localPlayer.addAction({type: 'fall'});
-      }
     } else {
       const flyAction = {
         type: 'fly',
         time: 0,
       };
       localPlayer.setControlAction(flyAction);
-      // console.log('remove jump');
-      localPlayer.removeAction('jump');
-      localPlayer.removeAction('fall');
     }
   }
   isCrouched() {
@@ -1479,30 +1472,30 @@ class GameManager extends EventTarget {
     return metaversefileApi.useLocalPlayer().hasAction('jump');
   }
   ensureJump() {
-    // const localPlayer = metaversefileApi.useLocalPlayer();
-    // const jumpAction = localPlayer.getAction('jump');
+    const localPlayer = metaversefileApi.useLocalPlayer();
+    const jumpAction = localPlayer.getAction('jump');
 
-    // const wearActions = Array.from(localPlayer.getActionsState()).filter(action => action.type === 'wear');
-    // for (const wearAction of wearActions) {
-    //   const instanceId = wearAction.instanceId;
-    //   const app = metaversefileApi.getAppByInstanceId(instanceId);
-    //   const sitComponent = app.getComponent('sit');
-    //   if (sitComponent) {
-    //     app.unwear();
-    //   }
-    // }
+    const wearActions = Array.from(localPlayer.getActionsState()).filter(action => action.type === 'wear');
+    for (const wearAction of wearActions) {
+      const instanceId = wearAction.instanceId;
+      const app = metaversefileApi.getAppByInstanceId(instanceId);
+      const sitComponent = app.getComponent('sit');
+      if (sitComponent) {
+        app.unwear();
+      }
+    }
 
-    // if (!jumpAction) {
-    //   const newJumpAction = {
-    //     type: 'jump',
-    //     // time: 0,
-    //   };
-    //   localPlayer.addAction(newJumpAction);
-    // }
+    if (!jumpAction) {
+      const newJumpAction = {
+        type: 'jump',
+        // time: 0,
+      };
+      localPlayer.addAction(newJumpAction);
+    }
   }
   jump() {
     // add jump action
-    // this.ensureJump();
+    this.ensureJump();
 
     // update velocity
     const localPlayer = metaversefileApi.useLocalPlayer();

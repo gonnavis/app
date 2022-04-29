@@ -18,8 +18,6 @@ import {
   // useMaxTime,
   aimMaxTime,
   flyTransitionMaxTime,
-  fallTransitionMaxTime,
-  landTransitionMaxTime,
   idleTransitionMaxTime,
   defaultTransitionMaxTime,
   sitTransitionMaxTime,
@@ -1425,11 +1423,9 @@ class Avatar {
     moveFactors.flyFactor = THREE.MathUtils.clamp(this.flyTransitionTime / flyTransitionMaxTime, 0, 1);
     moveFactors.useFactor = THREE.MathUtils.clamp(this.useTransitionTime / defaultTransitionMaxTime, 0, 1);
     moveFactors.jumpFactor = THREE.MathUtils.clamp(this.jumpTransitionTime / defaultTransitionMaxTime, 0, 1);
-    moveFactors.fallFactor = THREE.MathUtils.clamp(this.fallTransitionTime / fallTransitionMaxTime, 0, 1);
     moveFactors.activateFactor = THREE.MathUtils.clamp(this.activateTransitionTime / defaultTransitionMaxTime, 0, 1);
     moveFactors.narutoRunFactor = THREE.MathUtils.clamp(this.narutoRunTransitionTime / defaultTransitionMaxTime, 0, 1);
     moveFactors.aimFactor = THREE.MathUtils.clamp(this.aimTransitionTime / defaultTransitionMaxTime, 0, 1);
-    moveFactors.landFactor = THREE.MathUtils.clamp(this.landTransitionTime / landTransitionMaxTime, 0, 1);
     moveFactors.sitFactor = THREE.MathUtils.clamp(this.sitTransitionTime / sitTransitionMaxTime, 0, 1);
     // console.log('current speed', currentSpeed, idleWalkFactor, walkRunFactor);
 
@@ -1863,14 +1859,9 @@ class Avatar {
       <div style="display:;">flyState: --- ${this.flyState}</div>
       <div style="display:;">flyFactor: --- ${moveFactors.flyFactor?.toFixed(2)}</div>
       <div style="display:none;">flyTransitionTime: --- ${Math.floor(this.flyTransitionTime)}</div>
-      <div style="display:;">landState: --- ${this.landState}</div>
-      <div style="display:;">landFactor: --- ${moveFactors.landFactor?.toFixed(2)}</div>
-      <div style="display:none;">landTime: --- ${Math.floor(this.landTime)}</div>
-      <div style="display:none;">landTransitionTime: --- ${Math.floor(this.landTransitionTime)}</div>
       <div style="display:none;">sitTime: --- ${Math.floor(this.sitTime)}</div>
       <div style="display:;">chargeJumpState: --- ${this.chargeJumpState}</div>
       <div style="display:;">danceState: --- ${this.danceState}</div>
-      <div style="display:;">fallLoopState: --- ${this.fallLoopState}</div>
       <div style="display:;">narutoRunState: --- ${this.narutoRunState}</div>
       <div style="display:;">aimAnimation: --- ${this.aimAnimation}</div>
       <div style="display:;">danceAnimation: --- ${this.danceAnimation}</div>
@@ -1896,7 +1887,6 @@ class Avatar {
       <div style="display:none;">chargeJumpTime: --- ${Math.floor(this.chargeJumpTime)}</div>
       <div style="display:none;">crouchTime: --- ${Math.floor(this.crouchTime)}</div>
       <div style="display:;">danceTime: --- ${Math.floor(this.danceTime)}</div>
-      <div style="display:none;">fallLoopTime: --- ${Math.floor(this.fallLoopTime)}</div>
       <div style="display:;">hurtTime: --- ${Math.floor(this.hurtTime)}</div>
       <div style="display:;">unjumpTime: --- ${Math.floor(this.unjumpTime)}</div>
       <div style="display:;">lastEyeTargetTime: --- ${Math.floor(this.lastEyeTargetTime)}</div>

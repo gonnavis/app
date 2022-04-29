@@ -27,8 +27,6 @@ import {
   numLoadoutSlots,
   flyTransitionMaxTime,
   sitTransitionMaxTime,
-  fallTransitionMaxTime,
-  landTransitionMaxTime,
   idleTransitionMaxTime,
   defaultTransitionMaxTime,
 } from './constants.js';
@@ -904,9 +902,6 @@ class UninterpolatedPlayer extends StatePlayer {
       jump: new InfiniteUnstopActionInterpolant(() => this.hasAction('jump'), 0),
       jumpTransition: new BiActionInterpolant(() => this.hasAction('jump'), 0, defaultTransitionMaxTime),
       unjump: new InfiniteActionInterpolant(() => !this.hasAction('jump'), 0),
-      fallTransition: new BiActionInterpolant(() => this.hasAction('fall'), 0, fallTransitionMaxTime),
-      land: new InfiniteUnstopActionInterpolant(() => this.hasAction('land'), 0),
-      landTransition: new BiActionInterpolant(() => this.hasAction('land'), 0, landTransitionMaxTime),
       dance: new BiActionInterpolant(() => this.hasAction('dance'), 0, crouchTransitionMaxTime),
       emote: new BiActionInterpolant(() => this.hasAction('emote'), 0, crouchTransitionMaxTime),
       // throw: new UniActionInterpolant(() => this.hasAction('throw'), 0, throwMaxTime),
@@ -925,8 +920,6 @@ class UninterpolatedPlayer extends StatePlayer {
           !this.hasAction('fly') &&
           !this.hasAction('sit') &&
           !this.hasAction('jump') &&
-          !this.hasAction('fall') &&
-          !this.hasAction('land') &&
           !this.hasAction('dance') &&
           !this.hasAction('emote') &&
           !this.hasAction('hurt')
@@ -1132,13 +1125,6 @@ class LocalPlayer extends UninterpolatedPlayer {
       const timeDiffS = timeDiff / 1000;
       this.characterSfx.update(timestamp, timeDiffS);
       this.characterFx.update(timestamp, timeDiffS);
-
-      if (this.actionInterpolants.jump.get() > 2000) {
-        const fallAction = this.getAction('fall');
-        if (!fallAction) {
-          // this.addAction({type: 'fall'});
-        }
-      }
 
       this.updateInterpolation(timeDiff);
 
