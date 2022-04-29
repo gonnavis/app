@@ -1421,7 +1421,7 @@ class Avatar {
     moveFactors.idleWalkFactor = Math.min(Math.max((currentSpeed - idleFactorSpeed) / (walkFactorSpeed - idleFactorSpeed), 0), 1);
     moveFactors.walkRunFactor = Math.min(Math.max((currentSpeed - walkFactorSpeed) / (runFactorSpeed - walkFactorSpeed), 0), 1);
     moveFactors.crouchFactor = Math.min(Math.max(1 - (this.crouchTransitionTime / crouchTransitionMaxTime), 0), 1);
-    moveFactors.idleFactor = THREE.MathUtils.clamp(this.idleTransitionTime / idleTransitionMaxTime, 0, 1);
+    moveFactors.defaultFactor = THREE.MathUtils.clamp(this.idleTransitionTime / idleTransitionMaxTime, 0, 1);
     moveFactors.flyFactor = THREE.MathUtils.clamp(this.flyTransitionTime / flyTransitionMaxTime, 0, 1);
     moveFactors.useFactor = THREE.MathUtils.clamp(this.useTransitionTime / defaultTransitionMaxTime, 0, 1);
     moveFactors.jumpFactor = THREE.MathUtils.clamp(this.jumpTransitionTime / defaultTransitionMaxTime, 0, 1);
@@ -1857,7 +1857,7 @@ class Avatar {
       <div style="display:;">jumpFactor: --- ${moveFactors.jumpFactor?.toFixed(2)}</div>
       <div style="display:;">jumpState: --- ${this.jumpState}</div>
       <div style="display:;">jumpTime: --- ${Math.floor(this.jumpTime)}</div>
-      <div style="display:;">idleFactor: --- ${moveFactors.idleFactor?.toFixed(2)}</div>
+      <div style="display:;">defaultFactor: --- ${moveFactors.defaultFactor?.toFixed(2)}</div>
       <div style="display:;">aimFactor: --- ${moveFactors.aimFactor?.toFixed(2)}</div>
       <div style="display:;">sitFactor: --- ${moveFactors.sitFactor?.toFixed(2)}</div>
       <div style="display:;">sitState: --- ${this.sitState}</div>

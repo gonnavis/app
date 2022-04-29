@@ -429,7 +429,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   // const runSpeed = 0.5;
   const angle = avatar.getAngle();
   const timeSeconds = now / 1000;
-  const {idleWalkFactor, walkRunFactor, crouchFactor, flyFactor, sitFactor, idleFactor, useFactor, activateFactor, aimFactor, narutoRunFactor, jumpFactor} = moveFactors;
+  const {idleWalkFactor, walkRunFactor, crouchFactor, flyFactor, sitFactor, defaultFactor, useFactor, activateFactor, aimFactor, narutoRunFactor, jumpFactor} = moveFactors;
 
   /* const _getAnimationKey = crouchState => {
     if (crouchState) {
@@ -766,29 +766,112 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
   };
 
   const _getApplyFn = () => {
-    // if (avatar.idleFactor > 0) {
-    const applyFnDefault = spec => {
+    const applyFnWalk = spec => { // normal horizontal walk blend
       const {
         animationTrackName: k,
-        dst,
-        // isTop,
-        lerpFn,
         isPosition,
+        lerpFn,
       } = spec;
 
-      const arr = _getHorizontalBlend(k, lerpFn, isPosition, dst);
+      const t1 = timeSeconds % keyWalkAnimationAngles[0].animation.duration;
+      const src1 = keyWalkAnimationAngles[0].animation.interpolants[k];
+      const v1 = src1.evaluate(t1);
 
-      spec.defaultDst.fromArray(arr);
+      const t2 = timeSeconds % keyWalkAnimationAngles[1].animation.duration;
+      const src2 = keyWalkAnimationAngles[1].animation.interpolants[k];
+      const v2 = src2.evaluate(t2);
+
+      lerpFn
+        .call(
+          localQuaternion3.fromArray(v2),
+          localQuaternion4.fromArray(v1),
+          angleFactor,
+        );
+
+      const arr = localQuaternion3.toArray();
+      _clearXZ(arr, isPosition);
 
       const blendee = {
-        arr,
-        weight: idleFactor,
-        // arr: [0, 0, 0, 0],
-        // weight: 0,
+        arr: arr,
+        weight: 1 - mirrorFactor,
       };
       return blendee;
     };
-    // }
+    const applyFnWalkMirror = spec => { // mirror horizontal blend (backwards walk)
+      const {
+        animationTrackName: k,
+        isPosition,
+        lerpFn,
+      } = spec;
+
+      const t1 = timeSeconds % keyWalkAnimationAnglesMirror[0].animation.duration;
+      const src1 = keyWalkAnimationAnglesMirror[0].animation.interpolants[k];
+      const v1 = src1.evaluate(t1);
+
+      const t2 = timeSeconds % keyWalkAnimationAnglesMirror[1].animation.duration;
+      const src2 = keyWalkAnimationAnglesMirror[1].animation.interpolants[k];
+      const v2 = src2.evaluate(t2);
+
+      lerpFn
+        .call(
+          localQuaternion3.fromArray(v2),
+          localQuaternion4.fromArray(v1),
+          angleFactor,
+        );
+
+      const arr = localQuaternion3.toArray();
+      _clearXZ(arr, isPosition);
+
+      const blendee = {
+        arr: arr,
+        weight: mirrorFactor,
+      };
+      return blendee;
+    };
+
+    const applyFnIdle = spec => {
+      const {
+        animationTrackName: k,
+        isPosition,
+      } = spec;
+
+      const timeSinceLastMove = now - avatar.lastMoveTime;
+      const timeSinceLastMoveSeconds = timeSinceLastMove / 1000;
+      const t3 = timeSinceLastMoveSeconds % idleAnimation.duration;
+      const src3 = idleAnimation.interpolants[k];
+      const v3 = src3.evaluate(t3);
+      _clearXZ(v3, isPosition);
+
+      const blendee = {
+        arr: v3,
+        weight: 1 - idleWalkFactor,
+      };
+      return blendee;
+    }
+
+    // // if (avatar.defaultFactor > 0) {
+    // const applyFnDefault = spec => {
+    //   const {
+    //     animationTrackName: k,
+    //     dst,
+    //     // isTop,
+    //     lerpFn,
+    //     isPosition,
+    //   } = spec;
+
+    //   const arr = _getHorizontalBlend(k, lerpFn, isPosition, dst);
+
+    //   spec.defaultDst.fromArray(arr);
+
+    //   const blendee = {
+    //     arr,
+    //     weight: defaultFactor,
+    //     // arr: [0, 0, 0, 0],
+    //     // weight: 0,
+    //   };
+    //   return blendee;
+    // };
+    // // }
 
     let applyFnJump;
     if (jumpFactor > 0) {
@@ -907,7 +990,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         };
         return blendee;
       };
-      // debugger 
+      // debugger
     }
 
     let applyFnDance;
@@ -1082,7 +1165,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         } = spec;
 
         const hurtAnimation = (avatar.hurtAnimation && hurtAnimations[avatar.hurtAnimation]);
-        _handleDefault(spec);
+        // _handleDefault(spec);
         const hurtTimeS = avatar.hurtTime / 1000;
         const t2 = Math.min(hurtTimeS, hurtAnimation.duration);
         // console.log('hurtAnimation', avatar.hurtAnimation, avatar.hurtTime, hurtAnimation.duration, hurtTimeS, t2);
@@ -1172,7 +1255,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       // debugger
     }
-    
+
     let applyFnUnuse;
     if (avatar.unuseAnimation && avatar.unuseTime > 0) {
       applyFnUnuse = spec => {
@@ -1242,7 +1325,17 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     avatar.blendTree = {
       children: [
         {
-          children: [applyFnDefault, applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse],
+          children: [
+            {
+              children: [
+                {
+                  children: [applyFnWalk, applyFnWalkMirror],
+                  weight: idleWalkFactor,
+                },
+                applyFnIdle],
+              weight: defaultFactor,
+            },
+            applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse],
           weight: 1 - flyFactor,
         },
         applyFnFly,
