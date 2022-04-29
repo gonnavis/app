@@ -1844,6 +1844,7 @@ class Avatar {
     _updateHmdPosition();
     /*
       <div style="display:;">keysDirection: --- ${window.logVector3(ioManager.keysDirection)}</div>
+      <div s  tyle="display:;">blendTree: --- ${this.blendTree.map(applyFn=>applyFn?.name.slice('applyFn'.length))}</div>
     */
     window.domInfo.innerHTML = `
       <div style="display:;">avatar.direction: --- ${window.logVector3(avatar.direction)}</div>
@@ -1897,7 +1898,6 @@ class Avatar {
       <div style="display:;">lastMoveTime: --- ${Math.floor(this.lastMoveTime)}</div>
       <div style="display:;">narutoRunTime: --- ${Math.floor(this.narutoRunTime)}</div>
       <div style="display:;">blendTree.length: --- ${this.blendTree.length}</div>
-      <div s  tyle="display:;">blendTree: --- ${this.blendTree.map(applyFn=>applyFn?.name.slice('applyFn'.length))}</div>
     `
     _applyAnimation(this, now, moveFactors);
 

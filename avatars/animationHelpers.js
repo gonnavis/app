@@ -390,6 +390,37 @@ export const loadPromise = (async () => {
   console.log('load avatar animations error', err);
 });
 
+const _blendAnimations = (applyFn, spec) => {
+  // if (Array.isArray(applyFn)) {
+  // } else {
+  // }
+  const {
+    // animationTrackName: k,
+    dst,
+    // isTop,
+    isPosition,
+  } = spec;
+
+  if (applyFn.length > 0) {
+    let blendee = applyFn[0](spec);
+    dst.fromArray(blendee.arr);
+    let currentWeight = blendee.weight;
+    for (let i = 1; i < applyFn.length; i++) {
+      if (!applyFn[i]) continue;
+      blendee = applyFn[i](spec);
+      if (blendee.weight > 0) {
+        const t = blendee.weight / (currentWeight + blendee.weight);
+        if (!isPosition) {
+          dst.slerp(localQuaternion.fromArray(blendee.arr), t);
+        } else {
+          dst.lerp(localVector.fromArray(blendee.arr), t);
+        }
+        currentWeight += blendee.weight;
+      }
+    }
+  }
+};
+
 export const _applyAnimation = (avatar, now, moveFactors) => {
   const nowS = now / 1000;
   // const runSpeed = 0.5;
@@ -746,13 +777,13 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       spec.defaultDst.fromArray(arr);
 
-      const blendNode = {
+      const blendee = {
         arr,
         weight: idleFactor,
         // arr: [0, 0, 0, 0],
         // weight: 0,
       };
-      return blendNode;
+      return blendee;
     };
     // }
 
@@ -771,12 +802,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const v2 = src2.evaluate(t2);
         // if (isPosition) console.log(t2);
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: jumpFactor,
         };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.weight);
-        return blendNode;
+        // if (k === 'mixamorigHips.quaternion') console.log(blendee.weight);
+        return blendee;
       };
     }
 
@@ -792,12 +823,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const src2 = floatAnimation.interpolants[k];
         const v2 = src2.evaluate(t2 % floatAnimation.duration);
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: isTop ? flyFactor : 0, // test
         };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.weight); // todo: if (isPosition)
-        return blendNode;
+        // if (k === 'mixamorigHips.quaternion') console.log(blendee.weight); // todo: if (isPosition)
+        return blendee;
       };
       // debugger
     }
@@ -815,11 +846,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const src2 = sitAnimation.interpolants[k];
         const v2 = src2.evaluate(1);
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: sitFactor,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
@@ -840,11 +871,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         // const f = avatar.activateTime > 0 ? Math.min(cubicBezier(t2), 1) : (1 - Math.min(cubicBezier(t2), 1));
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: activateFactor,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
@@ -866,11 +897,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _clearXZ(v2, isPosition);
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: narutoRunFactor,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger 
     }
@@ -896,11 +927,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _clearXZ(v2, isPosition);
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: f,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
@@ -927,11 +958,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         _clearXZ(v2, isPosition);
 
-        const blendNode = {
+        const blendee = {
           arr: v2,
           weight: f,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
@@ -1027,11 +1058,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           }
         }
 
-        const blendNode = {
+        const blendee = {
           arr,
           weight: useFactor,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
@@ -1129,11 +1160,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           localVector.toArray(arr);
         }
 
-        const blendNode = {
+        const blendee = {
           arr,
           weight: aimFactor,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
@@ -1195,17 +1226,18 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           avatar.unuseAnimation = '';
         }
 
-        const blendNode = {
+        const blendee = {
           arr,
           weight: f2,
         };
-        return blendNode;
+        return blendee;
       };
       // debugger
     }
 
     avatar.blendTree = [
-      applyFnDefault, applyFnJump, applyFnFly, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse,
+      [applyFnDefault, applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse],
+      applyFnFly,
     ];
   };
   _getApplyFn();
@@ -1218,24 +1250,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    if (avatar.blendTree.length > 0) {
-      let blendNode = avatar.blendTree[0](spec);
-      dst.fromArray(blendNode.arr);
-      let currentWeight = blendNode.weight;
-      for (let i = 1; i < avatar.blendTree.length; i++) {
-        if (!avatar.blendTree[i]) continue;
-        blendNode = avatar.blendTree[i](spec);
-        if (blendNode.weight > 0) {
-          const t = blendNode.weight / (currentWeight + blendNode.weight);
-          if (!isPosition) {
-            dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
-          } else {
-            dst.lerp(localVector.fromArray(blendNode.arr), t);
-          }
-          currentWeight += blendNode.weight;
-        }
-      }
-    }
+    _blendAnimations(avatar.blendTree[0], spec);
 
     // ignore all animation position except y
     if (isPosition) {
