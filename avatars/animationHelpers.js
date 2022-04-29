@@ -749,9 +749,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       const blendNode = {
         arr,
-        intensity: idleFactor,
+        weight: idleFactor,
         // arr: [0, 0, 0, 0],
-        // intensity: 0,
+        // weight: 0,
       };
       return blendNode;
     };
@@ -774,9 +774,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: jumpFactor,
+          weight: jumpFactor,
         };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.intensity);
+        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.weight);
         return blendNode;
       };
       avatar.blendTree.push(applyFnJump);
@@ -794,9 +794,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: isTop ? flyFactor : 0, // test
+          weight: isTop ? flyFactor : 0, // test
         };
-        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.intensity); // todo: if (isPosition)
+        // if (k === 'mixamorigHips.quaternion') console.log(blendNode.weight); // todo: if (isPosition)
         return blendNode;
       };
       // debugger
@@ -816,7 +816,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: sitFactor,
+          weight: sitFactor,
         };
         return blendNode;
       };
@@ -840,7 +840,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: activateFactor,
+          weight: activateFactor,
         };
         return blendNode;
       };
@@ -865,7 +865,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: narutoRunFactor,
+          weight: narutoRunFactor,
         };
         return blendNode;
       };
@@ -895,7 +895,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: f,
+          weight: f,
         };
         return blendNode;
       };
@@ -926,7 +926,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr: v2,
-          intensity: f,
+          weight: f,
         };
         return blendNode;
       };
@@ -1026,7 +1026,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr,
-          intensity: useFactor,
+          weight: useFactor,
         };
         return blendNode;
       };
@@ -1124,7 +1124,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr,
-          intensity: aimFactor,
+          weight: aimFactor,
         };
         return blendNode;
       };
@@ -1188,7 +1188,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendNode = {
           arr,
-          intensity: f2,
+          weight: f2,
         };
         return blendNode;
       };
@@ -1209,23 +1209,23 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     if (avatar.blendTree.length > 0) {
       let blendNode = avatar.blendTree[0](spec);
       dst.fromArray(blendNode.arr);
-      let intensityStep = blendNode.intensity;
+      let weightStep = blendNode.weight;
       // let logText = '';
       for (let i = 1; i < avatar.blendTree.length; i++) {
         blendNode = avatar.blendTree[i](spec);
-        // if (blendNode.intensity === Infinity) {
+        // if (blendNode.weight === Infinity) {
         //   dst.fromArray(blendNode.arr);
         //   break;
         // }
-        if (blendNode.intensity > 0) {
-          const t = blendNode.intensity / (intensityStep + blendNode.intensity);
+        if (blendNode.weight > 0) {
+          const t = blendNode.weight / (weightStep + blendNode.weight);
           // logText += t.toFixed(2) + ' --- ';
           if (!isPosition) {
             dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
           } else {
             dst.lerp(localVector.fromArray(blendNode.arr), t);
           }
-          intensityStep += blendNode.intensity;
+          weightStep += blendNode.weight;
         }
       }
       // if (isPosition) console.log(logText);
