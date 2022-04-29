@@ -396,13 +396,10 @@ const _doBlend = (blendNode, spec) => {
     return applyFn(spec);
   } else if (blendNode.children.length > 0) {
     const {
-      // animationTrackName: k,
-      dst,
-      // isTop,
       isPosition,
     } = spec;
     let blendee = _doBlend(blendNode.children[0], spec);
-    dst.fromArray(blendee.arr);
+    const result = blendee.arr;
     let currentWeight = blendee.weight;
     for (let i = 1; i < blendNode.children.length; i++) {
       if (!blendNode.children[i]) continue;
@@ -410,15 +407,15 @@ const _doBlend = (blendNode, spec) => {
       if (blendee.weight > 0) {
         const t = blendee.weight / (currentWeight + blendee.weight);
         if (!isPosition) {
-          dst.slerp(localQuaternion.fromArray(blendee.arr), t);
+          Quaternion.slerpFlat(result, 0, result, 0, blendee.arr, 0, t);
         } else {
-          dst.lerp(localVector.fromArray(blendee.arr), t);
+          Vector3.lerpFlat(result, 0, result, 0, blendee.arr, 0, t);
         }
         currentWeight += blendee.weight;
       }
     }
     return { // blendee
-      arr: dst.toArray(),
+      arr: result,
       weight: blendNode.weight,
     };
   }
@@ -797,6 +794,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       return blendee;
     };
+
     const applyFnWalkMirror = spec => { // mirror horizontal blend (backwards walk)
       const {
         animationTrackName: k,
@@ -810,6 +808,70 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
       const t2 = timeSeconds % keyWalkAnimationAnglesMirror[1].animation.duration;
       const src2 = keyWalkAnimationAnglesMirror[1].animation.interpolants[k];
+      const v2 = src2.evaluate(t2);
+
+      lerpFn
+        .call(
+          localQuaternion3.fromArray(v2),
+          localQuaternion4.fromArray(v1),
+          angleFactor,
+        );
+
+      const arr = localQuaternion3.toArray();
+      _clearXZ(arr, isPosition);
+
+      const blendee = {
+        arr: arr,
+        weight: mirrorFactor,
+      };
+      return blendee;
+    };
+
+    const applyFnRun = spec => { // normal horizontal run blend
+      const {
+        animationTrackName: k,
+        isPosition,
+        lerpFn,
+      } = spec;
+
+      const t1 = timeSeconds % keyRunAnimationAngles[0].animation.duration;
+      const src1 = keyRunAnimationAngles[0].animation.interpolants[k];
+      const v1 = src1.evaluate(t1);
+
+      const t2 = timeSeconds % keyRunAnimationAngles[1].animation.duration;
+      const src2 = keyRunAnimationAngles[1].animation.interpolants[k];
+      const v2 = src2.evaluate(t2);
+
+      lerpFn
+        .call(
+          localQuaternion3.fromArray(v2),
+          localQuaternion4.fromArray(v1),
+          angleFactor,
+        );
+
+      const arr = localQuaternion3.toArray();
+      _clearXZ(arr, isPosition);
+
+      const blendee = {
+        arr: arr,
+        weight: 1 - mirrorFactor,
+      };
+      return blendee;
+    };
+
+    const applyFnRunMirror = spec => { // mirror horizontal blend (backwards run)
+      const {
+        animationTrackName: k,
+        isPosition,
+        lerpFn,
+      } = spec;
+
+      const t1 = timeSeconds % keyRunAnimationAnglesMirror[0].animation.duration;
+      const src1 = keyRunAnimationAnglesMirror[0].animation.interpolants[k];
+      const v1 = src1.evaluate(t1);
+
+      const t2 = timeSeconds % keyRunAnimationAnglesMirror[1].animation.duration;
+      const src2 = keyRunAnimationAnglesMirror[1].animation.interpolants[k];
       const v2 = src2.evaluate(t2);
 
       lerpFn
@@ -847,7 +909,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         weight: 1 - idleWalkFactor,
       };
       return blendee;
-    }
+    };
 
     // // if (avatar.defaultFactor > 0) {
     // const applyFnDefault = spec => {
@@ -1322,6 +1384,19 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       // debugger
     }
 
+    // avatar.blendTree = {
+    //   children: [
+    //     {
+    //       children: [applyFnWalk, applyFnWalkMirror],
+    //       weight: 1 - walkRunFactor,
+    //     },
+    //     {
+    //       children: [applyFnRun, applyFnRunMirror],
+    //       weight: walkRunFactor,
+    //     },
+    //   ],
+    // };
+
     avatar.blendTree = {
       children: [
         {
@@ -1329,7 +1404,16 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             {
               children: [
                 {
-                  children: [applyFnWalk, applyFnWalkMirror],
+                  children: [
+                    {
+                      children: [applyFnWalk, applyFnWalkMirror],
+                      weight: 1 - walkRunFactor,
+                    },
+                    {
+                      children: [applyFnRun, applyFnRunMirror],
+                      weight: walkRunFactor,
+                    },
+                  ],
                   weight: idleWalkFactor,
                 },
                 applyFnIdle],
@@ -1352,7 +1436,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    _doBlend(avatar.blendTree, spec);
+    const {arr} = _doBlend(avatar.blendTree, spec);
+    dst.fromArray(arr);
 
     // ignore all animation position except y
     if (isPosition) {
