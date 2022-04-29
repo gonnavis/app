@@ -293,9 +293,11 @@ const _getBindSceneForRenderPriority = renderPriority => {
 const _bindHitTracker = app => {
   const hitTracker = hpManager.makeHitTracker();
   hitTracker.bind(app);
+  // debugger
 
   const die = () => {
     if (app.npcPlayer?.avatar) {
+      debugger
       physicsManager.disableGeometry(app.npcPlayer.characterController);
       physicsManager.disableGeometryQueries(app.npcPlayer.characterController);
       app.npcPlayer.avatar.ragdoll = true;

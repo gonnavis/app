@@ -146,6 +146,7 @@ export const makeRagdollMesh = avatar => {
   };
 
   const flatMeshes = _makeMeshes(); // type: physicsObject/meshBone
+  window.flatMeshes = flatMeshes;
   const flatMesh = new THREE.Object3D();
   flatMesh.name = 'flatMesh';
   for (const k in flatMeshes) {
@@ -238,6 +239,7 @@ export const makeRagdollMesh = avatar => {
       const meshBone = flatMeshes[k];
       // physx.physxWorker.addBoxGeometryPhysics(physx.physics, meshBone.position, meshBone.quaternion, meshBone.sizeHalf, meshBone.physicsId, true, localPlayer.characterController.physicsId); // can't hardcode localPlayer here, used disableGeometryQueries instead.
       physx.physxWorker.addBoxGeometryPhysics(physx.physics, meshBone.position, meshBone.quaternion, meshBone.sizeHalf, meshBone.physicsId, true);
+      console.log(meshBone.physicsId, meshBone);
       physicsManager.disableGeometryQueries(meshBone); // prevent own CCT collide with ragdoll bones.
       avatar.app.physicsObjects.push(meshBone);
       // console.log('mass 1: ', physicsManager.getBodyMass(meshBone));

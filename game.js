@@ -545,6 +545,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
     }
     grabUseMesh.visible = false;
     if (!gameManager.editMode) {
+      // console.log('grabUseMesh')
       const avatarHeight = localPlayer.avatar ? localPlayer.avatar.height : 0;
       localVector.copy(localPlayer.position)
         .add(localVector2.set(0, avatarHeight * (1 - localPlayer.getCrouchFactor()) * 0.5, -0.3).applyQuaternion(localPlayer.quaternion));
@@ -553,6 +554,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
       const halfHeight = 0.1;
       const collision = physx.physxWorker.getCollisionObjectPhysics(physx.physics, radius, halfHeight, localVector, localPlayer.quaternion);
       if (collision) {
+        console.log(collision.objectId);
         const physicsId = collision.objectId;
         const object = metaversefileApi.getAppByPhysicsId(physicsId);
         const physicsObject = metaversefileApi.getPhysicsObjectByPhysicsId(physicsId);
@@ -931,7 +933,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
             const lastHitTime = lastHitTimes.get(app) ?? 0;
             const timeDiff = now - lastHitTime;
             if (timeDiff > 1000) {
-              const damage = typeof useAction.damage === 'number' ? useAction.damage : 10;
+              const damage = typeof useAction.damage === 'number' ? useAction.damage : 100;
               const hitDirection = app.position.clone()
                 .sub(localPlayer.position);
               hitDirection.y = 0;
