@@ -962,7 +962,7 @@ class Avatar {
 
     //
 
-    this.blendList = []; // todo: rename to applyFnList.
+    this.blendTree = [];
     this.manuallySetMouth=false;
   }
   static bindAvatar(object) {
@@ -1893,8 +1893,8 @@ class Avatar {
       <div style="display:;">lastEyeTargetTime: --- ${Math.floor(this.lastEyeTargetTime)}</div>
       <div style="display:;">lastMoveTime: --- ${Math.floor(this.lastMoveTime)}</div>
       <div style="display:;">narutoRunTime: --- ${Math.floor(this.narutoRunTime)}</div>
-      <div style="display:;">blendList.length: --- ${this.blendList.length}</div>
-      <div s  tyle="display:;">blendList: --- ${this.blendList.map(applyFn=>applyFn.name.slice('applyFn'.length))}</div>
+      <div style="display:;">blendTree.length: --- ${this.blendTree.length}</div>
+      <div s  tyle="display:;">blendTree: --- ${this.blendTree.map(applyFn=>applyFn.name.slice('applyFn'.length))}</div>
     `
     _applyAnimation(this, now, moveFactors);
 

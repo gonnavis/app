@@ -391,7 +391,7 @@ export const loadPromise = (async () => {
 });
 
 export const _applyAnimation = (avatar, now, moveFactors) => {
-  avatar.blendList.length = 0;
+  avatar.blendTree.length = 0;
   const nowS = now / 1000;
   // const runSpeed = 0.5;
   const angle = avatar.getAngle();
@@ -755,7 +755,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       return blendee;
     };
-    avatar.blendList.push(applyFnDefault);
+    avatar.blendTree.push(applyFnDefault);
     // }
 
     if (jumpFactor > 0) {
@@ -779,7 +779,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         // if (k === 'mixamorigHips.quaternion') console.log(blendee.intensity);
         return blendee;
       };
-      avatar.blendList.push(applyFnJump);
+      avatar.blendTree.push(applyFnJump);
     }
     if (flyFactor > 0) {
       const applyFnFly = spec => {
@@ -799,7 +799,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnFly);
+      avatar.blendTree.push(applyFnFly);
     }
     if (sitFactor > 0) {
       const applyFnSit = spec => {
@@ -820,7 +820,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnSit);
+      avatar.blendTree.push(applyFnSit);
     }
     if (activateFactor > 0) {
       const applyFnActivate = spec => {
@@ -844,7 +844,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnActivate);
+      avatar.blendTree.push(applyFnActivate);
     }
     if (narutoRunFactor) {
       const applyFnNaruto = spec => {
@@ -869,7 +869,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger 
-      avatar.blendList.push(applyFnNaruto);
+      avatar.blendTree.push(applyFnNaruto);
     }
 
     if (avatar.danceFactor > 0) {
@@ -899,7 +899,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnDance);
+      avatar.blendTree.push(applyFnDance);
     }
 
     if (avatar.emoteFactor > 0) {
@@ -930,7 +930,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnEmote);
+      avatar.blendTree.push(applyFnEmote);
     }
 
     if (useFactor > 0 && (
@@ -1030,7 +1030,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnUse);
+      avatar.blendTree.push(applyFnUse);
     } if (avatar.hurtAnimation) {
       const applyFnHurt = spec => {
         const {
@@ -1074,7 +1074,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
       };
       // debugger
-      avatar.blendList.push(applyFnHurt);
+      avatar.blendTree.push(applyFnHurt);
     } if (aimFactor && avatar.aimAnimation) {
       const applyFnAim = spec => {
         const {
@@ -1128,7 +1128,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnAim);
+      avatar.blendTree.push(applyFnAim);
     } if (avatar.unuseAnimation && avatar.unuseTime > 0) {
       const applyFnUnuse = spec => {
         const {
@@ -1192,7 +1192,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendee;
       };
       // debugger
-      avatar.blendList.push(applyFnUnuse);
+      avatar.blendTree.push(applyFnUnuse);
     }
   };
   _getApplyFn();
@@ -1205,13 +1205,13 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    if (avatar.blendList.length > 0) {
-      let blendee = avatar.blendList[0](spec);
+    if (avatar.blendTree.length > 0) {
+      let blendee = avatar.blendTree[0](spec);
       dst.fromArray(blendee.arr);
       let intensityStep = blendee.intensity;
       // let logText = '';
-      for (let i = 1; i < avatar.blendList.length; i++) {
-        blendee = avatar.blendList[i](spec);
+      for (let i = 1; i < avatar.blendTree.length; i++) {
+        blendee = avatar.blendTree[i](spec);
         // if (blendee.intensity === Infinity) {
         //   dst.fromArray(blendee.arr);
         //   break;
