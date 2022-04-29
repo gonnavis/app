@@ -1897,7 +1897,7 @@ class Avatar {
       <div style="display:;">lastMoveTime: --- ${Math.floor(this.lastMoveTime)}</div>
       <div style="display:;">narutoRunTime: --- ${Math.floor(this.narutoRunTime)}</div>
       <div style="display:;">blendTree.length: --- ${this.blendTree.length}</div>
-      <div s  tyle="display:;">blendTree: --- ${this.blendTree.map(applyFn=>applyFn.name.slice('applyFn'.length))}</div>
+      <div s  tyle="display:;">blendTree: --- ${this.blendTree.map(applyFn=>applyFn?.name.slice('applyFn'.length))}</div>
     `
     _applyAnimation(this, now, moveFactors);
 

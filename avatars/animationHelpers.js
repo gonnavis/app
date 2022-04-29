@@ -391,7 +391,6 @@ export const loadPromise = (async () => {
 });
 
 export const _applyAnimation = (avatar, now, moveFactors) => {
-  avatar.blendTree.length = 0;
   const nowS = now / 1000;
   // const runSpeed = 0.5;
   const angle = avatar.getAngle();
@@ -755,11 +754,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       };
       return blendNode;
     };
-    avatar.blendTree.push(applyFnDefault);
     // }
 
+    let applyFnJump;
     if (jumpFactor > 0) {
-      const applyFnJump = spec => {
+      applyFnJump = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -779,10 +778,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         // if (k === 'mixamorigHips.quaternion') console.log(blendNode.weight);
         return blendNode;
       };
-      avatar.blendTree.push(applyFnJump);
     }
+
+    let applyFnFly;
     if (flyFactor > 0) {
-      const applyFnFly = spec => {
+      applyFnFly = spec => {
         const {
           animationTrackName: k,
           isTop,
@@ -800,10 +800,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnFly);
     }
+
+    let applyFnSit;
     if (sitFactor > 0) {
-      const applyFnSit = spec => {
+      applyFnSit = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -821,10 +822,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnSit);
     }
+
+    let applyFnActivate;
     if (activateFactor > 0) {
-      const applyFnActivate = spec => {
+      applyFnActivate = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -845,10 +847,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnActivate);
     }
+
+    let applyFnNaruto;
     if (narutoRunFactor) {
-      const applyFnNaruto = spec => {
+      applyFnNaruto = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -870,11 +873,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger 
-      avatar.blendTree.push(applyFnNaruto);
     }
 
+    let applyFnDance;
     if (avatar.danceFactor > 0) {
-      const applyFnDance = spec => {
+      applyFnDance = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -900,11 +903,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnDance);
     }
 
+    let applyFnEmote;
     if (avatar.emoteFactor > 0) {
-      const applyFnEmote = spec => {
+      applyFnEmote = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -931,15 +934,15 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnEmote);
     }
 
+    let applyFnUse;
     if (useFactor > 0 && (
       avatar.useAnimation ||
       avatar.useAnimationCombo.length > 0 ||
       avatar.useAnimationEnvelope.length > 0
     )) {
-      const applyFnUse = spec => {
+      applyFnUse = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -1031,9 +1034,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnUse);
-    } if (avatar.hurtAnimation) {
-      const applyFnHurt = spec => {
+    }
+
+    let applyFnHurt;
+    if (avatar.hurtAnimation) {
+      applyFnHurt = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -1075,9 +1080,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         }
       };
       // debugger
-      avatar.blendTree.push(applyFnHurt);
-    } if (aimFactor && avatar.aimAnimation) {
-      const applyFnAim = spec => {
+    }
+
+    let applyFnAim;
+    if (aimFactor && avatar.aimAnimation) {
+      applyFnAim = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -1129,9 +1136,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnAim);
-    } if (avatar.unuseAnimation && avatar.unuseTime > 0) {
-      const applyFnUnuse = spec => {
+    }
+    
+    let applyFnUnuse;
+    if (avatar.unuseAnimation && avatar.unuseTime > 0) {
+      applyFnUnuse = spec => {
         const {
           animationTrackName: k,
           dst,
@@ -1193,8 +1202,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         return blendNode;
       };
       // debugger
-      avatar.blendTree.push(applyFnUnuse);
     }
+
+    avatar.blendTree = [
+      applyFnDefault, applyFnJump, applyFnFly, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse,
+    ];
   };
   _getApplyFn();
 
@@ -1211,6 +1223,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       dst.fromArray(blendNode.arr);
       let currentWeight = blendNode.weight;
       for (let i = 1; i < avatar.blendTree.length; i++) {
+        if (!avatar.blendTree[i]) continue;
         blendNode = avatar.blendTree[i](spec);
         if (blendNode.weight > 0) {
           const t = blendNode.weight / (currentWeight + blendNode.weight);
