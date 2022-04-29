@@ -1209,17 +1209,17 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     if (avatar.blendTree.length > 0) {
       let blendNode = avatar.blendTree[0](spec);
       dst.fromArray(blendNode.arr);
-      let weightStep = blendNode.weight;
+      let currentWeight = blendNode.weight;
       for (let i = 1; i < avatar.blendTree.length; i++) {
         blendNode = avatar.blendTree[i](spec);
         if (blendNode.weight > 0) {
-          const t = blendNode.weight / (weightStep + blendNode.weight);
+          const t = blendNode.weight / (currentWeight + blendNode.weight);
           if (!isPosition) {
             dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
           } else {
             dst.lerp(localVector.fromArray(blendNode.arr), t);
           }
-          weightStep += blendNode.weight;
+          currentWeight += blendNode.weight;
         }
       }
     }
