@@ -390,24 +390,23 @@ export const loadPromise = (async () => {
   console.log('load avatar animations error', err);
 });
 
-const _blendAnimations = (applyFn, spec) => {
-  // if (Array.isArray(applyFn)) {
-  // } else {
-  // }
-  const {
-    // animationTrackName: k,
-    dst,
-    // isTop,
-    isPosition,
-  } = spec;
-
-  if (applyFn.length > 0) {
-    let blendee = applyFn[0](spec);
+const _doBlend = (blendNode, spec) => {
+  if (typeof blendNode === 'function') {
+    const applyFn = blendNode;
+    return applyFn(spec);
+  } else if (blendNode.children.length > 0) {
+    const {
+      // animationTrackName: k,
+      dst,
+      // isTop,
+      isPosition,
+    } = spec;
+    let blendee = _doBlend(blendNode.children[0], spec);
     dst.fromArray(blendee.arr);
     let currentWeight = blendee.weight;
-    for (let i = 1; i < applyFn.length; i++) {
-      if (!applyFn[i]) continue;
-      blendee = applyFn[i](spec);
+    for (let i = 1; i < blendNode.children.length; i++) {
+      if (!blendNode.children[i]) continue;
+      blendee = _doBlend(blendNode.children[i], spec);
       if (blendee.weight > 0) {
         const t = blendee.weight / (currentWeight + blendee.weight);
         if (!isPosition) {
@@ -418,6 +417,10 @@ const _blendAnimations = (applyFn, spec) => {
         currentWeight += blendee.weight;
       }
     }
+    return { // blendee
+      arr: dst.toArray(),
+      weight: blendNode.weight,
+    };
   }
 };
 
@@ -825,7 +828,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
 
         const blendee = {
           arr: v2,
-          weight: isTop ? flyFactor : 0, // test
+          weight: flyFactor,
+          // weight: isTop ? flyFactor : 0, // test
         };
         // if (k === 'mixamorigHips.quaternion') console.log(blendee.weight); // todo: if (isPosition)
         return blendee;
@@ -1235,10 +1239,15 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       // debugger
     }
 
-    avatar.blendTree = [
-      [applyFnDefault, applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse],
-      applyFnFly,
-    ];
+    avatar.blendTree = {
+      children: [
+        {
+          children: [applyFnDefault, applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse],
+          weight: 1 - flyFactor,
+        },
+        applyFnFly,
+      ],
+    };
   };
   _getApplyFn();
 
@@ -1250,7 +1259,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    _blendAnimations(avatar.blendTree[0], spec);
+    _doBlend(avatar.blendTree, spec);
 
     // ignore all animation position except y
     if (isPosition) {
