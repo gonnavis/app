@@ -1210,16 +1210,10 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       let blendNode = avatar.blendTree[0](spec);
       dst.fromArray(blendNode.arr);
       let weightStep = blendNode.weight;
-      // let logText = '';
       for (let i = 1; i < avatar.blendTree.length; i++) {
         blendNode = avatar.blendTree[i](spec);
-        // if (blendNode.weight === Infinity) {
-        //   dst.fromArray(blendNode.arr);
-        //   break;
-        // }
         if (blendNode.weight > 0) {
           const t = blendNode.weight / (weightStep + blendNode.weight);
-          // logText += t.toFixed(2) + ' --- ';
           if (!isPosition) {
             dst.slerp(localQuaternion.fromArray(blendNode.arr), t);
           } else {
@@ -1228,10 +1222,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           weightStep += blendNode.weight;
         }
       }
-      // if (isPosition) console.log(logText);
     }
-
-    // _blendActivateAction(spec);
 
     // ignore all animation position except y
     if (isPosition) {
