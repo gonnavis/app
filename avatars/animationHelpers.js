@@ -414,9 +414,26 @@ export const loadPromise = (async () => {
 });
 
 const _doBlend = (blendNode, spec) => {
+  // if (!blendNode) {
+  //   debugger
+  //   return;
+  // }
   if (typeof blendNode === 'function') {
     const applyFn = blendNode;
     return applyFn(spec);
+  } else if (blendNode.type === 'AB01') {
+    const {
+      isPosition,
+    } = spec;
+    const blendee0 = _doBlend(blendNode.children[0], spec);
+    if (blendNode.children[1]) {
+      const blendee1 = _doBlend(blendNode.children[1], spec);
+      interpolateFlat(blendee0.arr, blendee0.arr, blendee1.arr, blendNode.childrenWeight, isPosition);
+    }
+    return { // blendee
+      arr: blendee0.arr,
+      weight: blendNode.weight,
+    };
   } else if (blendNode.children.length > 0) {
     const {
       isPosition,
@@ -1417,29 +1434,39 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     // };
 
     avatar.blendTree = {
+      name: 'defaultToFly',
+      type: 'AB01',
+      childrenWeight: flyFactor,
       children: [
         {
+          name: 'applyFns',
           children: [
             {
+              name: 'default_walkRunToIdle',
+              weight: defaultFactor,
+              type: 'AB01',
+              childrenWeight: 1 - idleWalkFactor,
               children: [
                 {
+                  name: 'walkToRun',
+                  type: 'AB01',
+                  childrenWeight: walkRunFactor,
                   children: [
                     {
+                      name: 'walks',
                       children: [applyFnWalk, applyFnWalkMirror],
-                      weight: 1 - walkRunFactor,
                     },
                     {
+                      name: 'runs',
                       children: [applyFnRun, applyFnRunMirror],
-                      weight: walkRunFactor,
                     },
                   ],
-                  weight: idleWalkFactor,
                 },
-                applyFnIdle],
-              weight: defaultFactor,
+                applyFnIdle,
+              ],
             },
-            applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse],
-          weight: 1 - flyFactor,
+            applyFnJump, applyFnSit, applyFnActivate, applyFnNaruto, applyFnDance, applyFnEmote, applyFnUse, applyFnHurt, applyFnAim, applyFnUnuse,
+          ],
         },
         applyFnFly,
       ],
