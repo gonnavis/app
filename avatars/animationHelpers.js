@@ -41,7 +41,30 @@ import {
   // avatarInterpolationTimeDelay,
   // avatarInterpolationNumFrames,
 } from '../constants.js';
-import { localPlayer } from '../players.js';
+import {localPlayer} from '../players.js';
+
+// // todo: Add to our custom three.js build if this PR get merged https://github.com/mrdoob/three.js/pull/23975
+// Vector3.lerpFlat = (dst, dstOffset, src0, srcOffset0, src1, srcOffset1, alpha) => {
+//   const x0 = src0[srcOffset0 + 0];
+//   const y0 = src0[srcOffset0 + 1];
+//   const z0 = src0[srcOffset0 + 2];
+
+//   const x1 = src1[srcOffset1 + 0];
+//   const y1 = src1[srcOffset1 + 1];
+//   const z1 = src1[srcOffset1 + 2];
+
+//   dst[dstOffset + 0] = x0 + (x1 - x0) * alpha;
+//   dst[dstOffset + 1] = y0 + (y1 - y0) * alpha;
+//   dst[dstOffset + 2] = z0 + (z1 - z0) * alpha;
+// };
+
+const interpolateFlat = (dst, src0, src1, t, isPosition) => {
+  if (!isPosition) {
+    Quaternion.slerpFlat(dst, 0, src0, 0, src1, 0, t);
+  } else {
+    Vector3.lerpFlat(dst, 0, src0, 0, src1, 0, t);
+  }
+};
 
 const localVector = new Vector3();
 const localVector2 = new Vector3();
@@ -406,11 +429,7 @@ const _doBlend = (blendNode, spec) => {
       blendee = _doBlend(blendNode.children[i], spec);
       if (blendee.weight > 0) {
         const t = blendee.weight / (currentWeight + blendee.weight);
-        if (!isPosition) {
-          Quaternion.slerpFlat(result, 0, result, 0, blendee.arr, 0, t);
-        } else {
-          Vector3.lerpFlat(result, 0, result, 0, blendee.arr, 0, t);
-        }
+        interpolateFlat(result, result, blendee.arr, t, isPosition);
         currentWeight += blendee.weight;
       }
     }
