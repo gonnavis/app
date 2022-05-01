@@ -375,6 +375,11 @@ const _startHacks = webaverse => {
   window.loadoutManager = loadoutManager;
   window.game = game;
 
+  if (window.npcPlayers && window.npcPlayers[0]) {
+    const hurtAction = window.npcPlayers[0].getAction('hurt');
+    if (hurtAction) debugger;
+  }
+
   if (!window.s) window.s = {};
   window.s.localPlayer = localPlayer;
   window.s.THREE = THREE;

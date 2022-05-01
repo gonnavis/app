@@ -984,6 +984,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         } = spec;
 
         const hurtAnimation = (avatar.hurtAnimation && hurtAnimations[avatar.hurtAnimation]);
+        debugger
         _handleDefault(spec);
         const hurtTimeS = avatar.hurtTime / 1000;
         const t2 = Math.min(hurtTimeS, hurtAnimation.duration);
