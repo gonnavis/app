@@ -72,6 +72,7 @@ const makeHitTracker = ({
     hitTracker.update(e.data.timeDiff);
   };
   hitTracker.bind = app => {
+    // debugger
     if (!currentApp) {
       app.parent.add(hitTracker);
       hitTracker.add(app);

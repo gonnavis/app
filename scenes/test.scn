@@ -37,12 +37,6 @@
           }
         }
       ]
-    },
-    {
-      "position": [ 3, 0, -7 ],
-      "quaternion": [ 0, 0.7071067811865475, 0, 0.7071067811865475 ],
-      "start_url": "http://localhost/lib/webaverse_resource/model49.vrm",
-      "dynamic": true
     }
   ]
 }
