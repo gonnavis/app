@@ -72,6 +72,7 @@ function loadPhysxCharacterController() {
 
   const contactOffset = 0.1/heightFactor * avatarHeight;
   const stepOffset = 0.5/heightFactor * avatarHeight;
+  // const stepOffset = 10/heightFactor * avatarHeight;
 
   const position = this.position.clone()
     .add(new THREE.Vector3(0, -avatarHeight/2, 0));

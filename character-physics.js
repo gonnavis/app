@@ -22,6 +22,7 @@ const localQuaternion = new THREE.Quaternion();
 const localQuaternion2 = new THREE.Quaternion();
 // const localEuler = new THREE.Euler();
 const localMatrix = new THREE.Matrix4();
+const localPlane = new THREE.Plane();
 
 // const localOffset = new THREE.Vector3();
 // const localOffset2 = new THREE.Vector3();
@@ -83,25 +84,62 @@ class CharacterPhysics {
       // move character controller
       const minDist = 0;
       let grounded;
+      let flags;
       const climbAction = this.player.getAction('climb');
       if (climbAction) {
         if (ioManager.keys.up || ioManager.keys.down || ioManager.keys.left || ioManager.keys.right) {
-          const flags = physicsManager.moveCharacterController(
-            this.player.characterController,
-            localVector3.set(0, 0.1, 0),
-            minDist,
-            0,
-            this.player.characterController.position
-          );
-          grounded = !!(flags & 0x1); 
+          this.velocity.set(0, 0, 0);
+          debugger
+          // flags = physicsManager.moveCharacterController(
+          //   this.player.characterController,
+          //   localVector3.set(0, 0.03, 0),
+          //   minDist,
+          //   timeDiffS,
+          //   // this.player.characterController.position,
+          //   localVector4,
+          // );
+          // flags = physicsManager.moveCharacterController(
+          //   this.player.characterController,
+          //   localVector3.set(0, 0.03, 0),
+          //   minDist,
+          //   timeDiffS,
+          //   this.player.characterController.position,
+          // );
+          // grounded = !!(flags & 0x1); 
           // grounded = true;
-        }
 
+          this.player.characterController.position.y += 0.03;
+          physicsManager.setCharacterControllerPosition(this.player.characterController, this.player.characterController.position);
+
+          {
+            flags = physicsManager.moveCharacterController(
+            // physicsManager.moveCharacterController(
+              this.player.characterController,
+              localVector3.set(0, 0, -0.1).applyQuaternion(this.player.quaternion),
+              minDist,
+              0,
+              localVector4,
+            );
+
+            this.player.characterController.position.x = localVector4.x;
+            this.player.characterController.position.z = localVector4.z;
+
+            // const newGrounded = !!(flags & 0x1); 
+            // if (newGrounded) {
+            //   grounded = true;
+            //   this.player.characterController.position.copy(localVector4);
+            //   this.player.removeAction('climb');
+            // }
+            if (!(flags & 2)) {
+              this.player.removeAction('climb');
+            }
+          }
+        }
       } else {
         localVector3.copy(this.velocity)
           .multiplyScalar(timeDiffS);
         // console.log('got local vector', this.velocity.toArray().join(','), localVector3.toArray().join(','), timeDiffS);
-        const flags = physicsManager.moveCharacterController(
+        flags = physicsManager.moveCharacterController(
           this.player.characterController,
           localVector3,
           minDist,
@@ -114,7 +152,7 @@ class CharacterPhysics {
 
         if (!grounded && !this.player.getAction('jump') && !this.player.getAction('fly')) { // prevent jump when go down slope
           const oldY = this.player.characterController.position.y;
-          const flags = physicsManager.moveCharacterController(
+          flags = physicsManager.moveCharacterController(
             this.player.characterController,
             localVector3.set(0, -groundStickOffset, 0),
             minDist,
@@ -134,7 +172,7 @@ class CharacterPhysics {
         // console.log(movedDistance.toFixed(2));
         if ((ioManager.keys.up || ioManager.keys.down || ioManager.keys.left || ioManager.keys.right) && movedDistance < 0.01) {
           // console.log(climbAction);
-          console.log('climb');
+          // console.log('climb');
           if (!climbAction) {
             this.player.addAction({type: 'climb'});
             // const result = physicsManager.raycast(this.player.characterController.position, this.player.quaternion);
@@ -143,6 +181,7 @@ class CharacterPhysics {
           }
         }
       }
+      console.log(flags, this.player.hasAction('climb'));
 
       this.player.characterController.updateMatrixWorld();
       this.player.characterController.matrixWorld.decompose(localVector, localQuaternion, localVector2);
@@ -470,7 +509,7 @@ class CharacterPhysics {
     _updateBowIkAnimation();
   }
   update(now, timeDiffS) {
-    this.applyGravity(timeDiffS);
+    if (!this.player.hasAction('climb')) this.applyGravity(timeDiffS);
     this.updateVelocity(timeDiffS);
     this.applyAvatarPhysics(now, timeDiffS);
     this.applyAvatarActionKinematics(now, timeDiffS);
