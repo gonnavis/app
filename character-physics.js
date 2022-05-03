@@ -5,7 +5,7 @@ import * as THREE from 'three';
 // import cameraManager from './camera-manager.js';
 // import {getPlayerCrouchFactor} from './character-controller.js';
 import physicsManager from './physics-manager.js';
-// import ioManager from './io-manager.js';
+import ioManager from './io-manager.js';
 import {getVelocityDampingFactor} from './util.js';
 import {groundFriction, flyFriction, airFriction} from './constants.js';
 import {applyVelocity} from './util.js';
@@ -35,6 +35,7 @@ const leftHandOffset = new THREE.Vector3(0.2, -0.2, -0.4);
 const rightHandOffset = new THREE.Vector3(-0.2, -0.2, -0.4);
 const z22Quaternion = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), -Math.PI/8);
 const groundStickOffset = 0.03;
+const lastPosition = new THREE.Vector3();
 
 class CharacterPhysics {
   constructor(player) {
@@ -109,6 +110,17 @@ class CharacterPhysics {
           this.player.characterController.position.copy(localVector4);
         } else {
           this.player.characterController.position.y = oldY;
+        }
+      }
+
+      const movedDistance = this.player.characterController.position.distanceTo(lastPosition);
+      // console.log(movedDistance.toFixed(2));
+      if ((ioManager.keys.up || ioManager.keys.down || ioManager.keys.left || ioManager.keys.right) && movedDistance < 0.01) {
+        const climbAction = this.player.getAction('climb');
+        // console.log(climbAction);
+        console.log('climb');
+        if (!climbAction) {
+          this.player.addAction({type: 'climb'});
         }
       }
 
@@ -238,6 +250,8 @@ class CharacterPhysics {
         }
         this.avatar.updateMatrixWorld();
       } */
+
+      lastPosition.copy(this.player.characterController.position);
     }
   }
   /* dampen the velocity to make physical sense for the current avatar state */

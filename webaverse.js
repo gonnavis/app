@@ -374,6 +374,7 @@ const _startHacks = webaverse => {
   window.rootScene = rootScene;
   window.loadoutManager = loadoutManager;
   window.game = game;
+  window.ioManager = ioManager;
 
   if (!window.s) window.s = {};
   window.s.localPlayer = localPlayer;
