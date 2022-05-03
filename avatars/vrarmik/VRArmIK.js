@@ -71,6 +71,8 @@ const FINGER_SPECS = [
 
 		Update()
 		{
+      window.domInfo.innerHTML += `<div style="display:;">localPlayer.position: --- ${window.logVector3(window.localPlayer.position)}</div>`;
+      window.domInfo.innerHTML += `<div style="display:;">target.position: --- ${window.logVector3(this.target.position)}</div>`;
       debugger
       this.shoulderAnchor.quaternion.identity();
       

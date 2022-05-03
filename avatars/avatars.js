@@ -1763,8 +1763,8 @@ class Avatar {
     const _motionControls = () => {
       this.sdkInputs.hmd.position.copy(this.inputs.hmd.position);
       this.sdkInputs.hmd.quaternion.copy(this.inputs.hmd.quaternion);
-      this.sdkInputs.leftGamepad.position.copy(this.inputs.leftGamepad.position).add(localVector.copy(this.handOffsetLeft).applyQuaternion(this.inputs.leftGamepad.quaternion));
-      this.sdkInputs.leftGamepad.quaternion.copy(this.inputs.leftGamepad.quaternion);
+      // this.sdkInputs.leftGamepad.position.copy(this.inputs.leftGamepad.position).add(localVector.copy(this.handOffsetLeft).applyQuaternion(this.inputs.leftGamepad.quaternion));
+      // this.sdkInputs.leftGamepad.quaternion.copy(this.inputs.leftGamepad.quaternion);
       this.sdkInputs.leftGamepad.pointer = this.inputs.leftGamepad.pointer;
       this.sdkInputs.leftGamepad.grip = this.inputs.leftGamepad.grip;
       this.sdkInputs.rightGamepad.position.copy(this.inputs.rightGamepad.position).add(localVector.copy(this.handOffsetRight).applyQuaternion(this.inputs.rightGamepad.quaternion));
@@ -1818,22 +1818,15 @@ class Avatar {
         _processFingerBones(false);
       }
     }
-    if (this.getTopEnabled() || this.getHandEnabled(0) || this.getHandEnabled(1)) {
+    // if (this.getTopEnabled() || this.getHandEnabled(0) || this.getHandEnabled(1)) {
       _motionControls.call(this)
-    }
+    // }
     
     
 
     _updateHmdPosition();
     /*
       <div style="display:;">keysDirection: --- ${false&&window.logVector3(window.ioManager?.keysDirection)}</div>
-    */
-    window.domInfo.innerHTML = ` 
-      <div style="display:;">actions: --- ${localPlayer.getActionsArray().map(n=>n.type)}</div>
-      <div style="display:;">avatar.direction: --- ${window.logVector3(avatar.direction)}</div>
-      <div style="display:;">localPlayer.direction: --- ${window.logVector3(localPlayer.getWorldDirection(localVector))}</div>
-      <div style="display:;">angle: --- ${window.logNum(this.getAngle())}</div>
-      <div style="display:;">velocity: --- ${window.logVector3(localPlayer.characterPhysics.velocity)}</div>
       <div style="display:;">idleWalkFactor: --- ${moveFactors.idleWalkFactor.toFixed(2)}</div>
       <div style="display:;">walkRunFactor: --- ${moveFactors.walkRunFactor.toFixed(2)}</div>
       <div style="display:;">crouchFactor: --- ${moveFactors.crouchFactor.toFixed(2)}</div>
@@ -1883,8 +1876,15 @@ class Avatar {
       <div style="display:;">narutoRunTime: --- ${Math.floor(this.narutoRunTime)}</div>
       <div style="display:;">blendList.length: --- ${this.blendList?.length}</div>
       <div s  tyle="display:;">blendList: --- ${this.blendList?.map(applyFn=>applyFn.name.slice('applyFn'.length))}</div>
+    */
+    window.domInfo.innerHTML = ` 
+      <div style="display:;">actions: --- ${localPlayer.getActionsArray().map(n=>n.type)}</div>
+      <div style="display:;">avatar.direction: --- ${window.logVector3(avatar.direction)}</div>
+      <div style="display:;">localPlayer.direction: --- ${window.logVector3(localPlayer.getWorldDirection(localVector))}</div>
+      <div style="display:;">angle: --- ${window.logNum(this.getAngle())}</div>
+      <div style="display:;">velocity: --- ${window.logVector3(localPlayer.characterPhysics.velocity)}</div>
     `
-    _applyAnimation(this, now, moveFactors);
+    // _applyAnimation(this, now, moveFactors);
     // console.log(window.logVector3(this.modelBoneOutputs.Hips.getWorldDirection(localVector)));
 
     if (this.poseAnimation) {
