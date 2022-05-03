@@ -93,7 +93,8 @@ class CharacterPhysics {
         this.player.characterController.position
       );
       // const collided = flags !== 0;
-      let grounded = !!(flags & 0x1); 
+      let grounded = !!(flags & 0x1);
+      grounded = true;
 
       if (!grounded && !this.player.getAction('jump') && !this.player.getAction('fly')) { // prevent jump when go down slope
         const oldY = this.player.characterController.position.y;
@@ -121,7 +122,22 @@ class CharacterPhysics {
         console.log('climb');
         if (!climbAction) {
           this.player.addAction({type: 'climb'});
+          // const result = physicsManager.raycast(this.player.characterController.position, this.player.quaternion);
+          // console.log(result);
+          // debugger
         }
+      }
+
+      if ((ioManager.keys.up || ioManager.keys.down || ioManager.keys.left || ioManager.keys.right) && this.player.hasAction('climb')) {
+        const flags = physicsManager.moveCharacterController(
+          this.player.characterController,
+          localVector3.set(0, 0.1, 0),
+          minDist,
+          0,
+          this.player.characterController.position
+        );
+        // grounded = !!(flags & 0x1); 
+        grounded = true;
       }
 
       this.player.characterController.updateMatrixWorld();
