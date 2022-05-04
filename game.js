@@ -317,15 +317,14 @@ const _click = () => {
     }
   }
 };
-let lastUseIndex = 0;
-const _getNextUseIndex = animationCombo => {
+const _getNextUseIndex = (animationCombo, lastUseIndex) => {
   if (Array.isArray(animationCombo)) {
     return (lastUseIndex++) % animationCombo.length;
   } else {
     return 0;
   }
 }
-const _startUse = () => {
+const _startUse = (lastUseIndex) => {
   const localPlayer = metaversefileApi.useLocalPlayer();
   const wearApp = loadoutManager.getSelectedApp();
   if (wearApp) {
@@ -335,7 +334,12 @@ const _startUse = () => {
       if (!useAction) {
         const {instanceId} = wearApp;
         const {boneAttachment, animation, animationCombo, animationEnvelope, ik, behavior, position, quaternion, scale} = useComponent;
-        const index = _getNextUseIndex(animationCombo);
+        let index;
+        if (lastUseIndex === 0 || lastUseIndex > 0) { // prevent (null >= 0) === true case.
+          index = _getNextUseIndex(animationCombo, lastUseIndex + 1);
+        } else {
+          index = 0;
+        }
         const newUseAction = {
           type: 'use',
           instanceId,
@@ -1028,18 +1032,17 @@ const _gameUpdate = (timestamp, timeDiff) => {
   }
 
   const handleUseActionCombo = () => {
-    if (localPlayer.hasAction('needEndUse')) {
-      localPlayer.removeAction('needEndUse');
-      gameManager.menuEndUse();
+    const oldUseAction = localPlayer.getAction('use');
+    if (localPlayer.needEndUse) {
+      localPlayer.needEndUse = false;
+      _endUse();
 
       if (localPlayer.hasAction('needContinueCombo')) {
         localPlayer.removeAction('needContinueCombo');
-        gameManager.menuStartUse();
+        _startUse(_getNextUseIndex(oldUseAction.index));
         if (!localPlayer.hasAction('needResetUseTime')) {
           localPlayer.addAction({type: 'needResetUseTime'});
         }
-      } else {
-        lastUseIndex = 0;
       }
     }
   }
@@ -1158,12 +1161,6 @@ class GameManager extends EventTarget {
   }
   menuUse() {
     _use();
-  }
-  menuStartUse() {
-    _startUse();
-  }
-  menuEndUse() {
-    _endUse();
   }
   menuDelete() {
     _delete();

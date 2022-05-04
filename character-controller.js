@@ -160,6 +160,7 @@ class PlayerBase extends THREE.Object3D {
     this.eyeballTargetEnabled = false;
     this.voicePack = null;
     this.voiceEndpoint = null;
+    this.needEndUse = false;
   }
   findAction(fn) {
     const actions = this.getActionsState();
@@ -1128,11 +1129,7 @@ class LocalPlayer extends UninterpolatedPlayer {
   }
   handleAnimationEnd(e) {
     // const avatar = e.target;
-    if (this.hasAction('use')) {
-      if (!this.hasAction('needEndUse')) {
-        this.addAction({type: 'needEndUse'}); // tell next frame need endUse();
-      }
-    }
+    this.needEndUse = true;
   }
   resetPhysics() {
     this.characterPhysics.reset();
