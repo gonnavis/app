@@ -435,9 +435,18 @@ let lastHitTimes = new WeakMap();
 const _gameUpdate = (timestamp, timeDiff) => {
   const now = timestamp;
   const renderer = getRenderer();
-  console.log(zTargeting?.focusTargetReticle?.position?.x, zTargeting?.focusTargetReticle?.position?.y, zTargeting?.focusTargetReticle?.position?.z);
   
   const localPlayer = metaversefileApi.useLocalPlayer();
+
+  if (localPlayer?.avatar) {
+    console.log(
+      localPlayer.avatar.eyeTargetEnabled,
+      localPlayer.avatar.eyeballTargetEnabled,
+      zTargeting?.focusTargetReticle?.position?.x,
+      zTargeting?.focusTargetReticle?.position?.y,
+      zTargeting?.focusTargetReticle?.position?.z,
+    );
+  }
 
   const _handlePush = () => {
     if (gameManager.canPush()) {
@@ -1009,8 +1018,12 @@ const _gameUpdate = (timestamp, timeDiff) => {
         localPlayer.avatar.eyeTarget.copy(zTargeting.focusTargetReticle.position);
         localPlayer.avatar.eyeTargetInverted = true;
         localPlayer.avatar.eyeTargetEnabled = true;
-        localPlayer.eyeballTarget.copy(zTargeting.focusTargetReticle.position);
-        localPlayer.eyeballTargetEnabled = true;
+        if (localPlayer.avatar.needsEyeTarget) {
+          localPlayer.eyeballTarget.copy(zTargeting.focusTargetReticle.position);
+          localPlayer.eyeballTargetEnabled = true;
+        } else {
+          localPlayer.eyeballTargetEnabled = false;
+        }
       } else {
         localPlayer.avatar.eyeTargetEnabled = false;
         localPlayer.eyeballTargetEnabled = false;
