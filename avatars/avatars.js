@@ -1521,6 +1521,7 @@ class Avatar {
 
       const lookerEyeballTarget = this.looker.update(now);
       const eyeballTarget = this.eyeballTargetEnabled ? this.eyeballTarget : lookerEyeballTarget;
+      if (this.eyeballTargetEnabled) debugger
 
       if (eyeballTarget && this.firstPersonCurves) {
         const {
