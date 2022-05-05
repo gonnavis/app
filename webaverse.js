@@ -374,6 +374,7 @@ const _startHacks = webaverse => {
   window.localPlayer = localPlayer;
   window.game = game;
   window.cameraManager = cameraManager;
+  window.metaversefileApi = metaversefileApi;
 
   // let playerDiorama = null;
   const lastEmotionKey = {
