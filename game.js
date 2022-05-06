@@ -438,17 +438,17 @@ const _gameUpdate = (timestamp, timeDiff) => {
   
   const localPlayer = metaversefileApi.useLocalPlayer();
 
-  if (localPlayer?.avatar) {
-    console.log(
-      localPlayer.avatar.eyeTargetEnabled,
-      localPlayer.avatar.eyeballTargetEnabled,
-      localPlayer.avatar.needsEyeTarget,
-      localPlayer.avatar.lastNeedsEyeTarget,
-      zTargeting?.focusTargetReticle?.position?.x,
-      zTargeting?.focusTargetReticle?.position?.y,
-      zTargeting?.focusTargetReticle?.position?.z,
-    );
-  }
+  // if (localPlayer?.avatar) {
+  //   console.log(
+  //     localPlayer.avatar.eyeTargetEnabled,
+  //     localPlayer.avatar.eyeballTargetEnabled,
+  //     localPlayer.avatar.needsEyeTarget,
+  //     localPlayer.avatar.lastNeedsEyeTarget,
+  //     zTargeting?.focusTargetReticle?.position?.x,
+  //     zTargeting?.focusTargetReticle?.position?.y,
+  //     zTargeting?.focusTargetReticle?.position?.z,
+  //   );
+  // }
 
   const _handlePush = () => {
     if (gameManager.canPush()) {
