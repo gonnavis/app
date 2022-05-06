@@ -290,6 +290,7 @@ export default class Webaverse extends EventTarget {
     
     let lastTimestamp = performance.now();
     const animate = (timestamp, frame) => {
+      debugger
       performanceTracker.startFrame();
 
       const _frame = () => {

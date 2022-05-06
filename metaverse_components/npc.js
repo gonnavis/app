@@ -193,6 +193,7 @@ try {
           }
         }
 
+        debugger
         app.npcPlayer.avatar.eyeTarget.copy(localPlayer.position);
         app.npcPlayer.avatar.eyeTargetEnabled = true;
         app.npcPlayer.avatar.eyeTargetInverted = true;

@@ -1001,6 +1001,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
   _updateBehavior();
   
   const _updateMouseLook = () => {
+    debugger
     if (localPlayer.avatar) {
       if (mouseSelectedObject && mouseSelectedPosition) {
         // console.log('got', mouseSelectedObject.position.toArray().join(','));

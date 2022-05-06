@@ -1468,6 +1468,7 @@ class Avatar {
     };
 
     const _updateEyeTarget = () => {
+      debugger
       const eyePosition = getEyePosition(this.modelBones);
       const globalQuaternion = localQuaternion2.setFromRotationMatrix(
         this.eyeTargetInverted ?
@@ -1521,7 +1522,7 @@ class Avatar {
 
       const lookerEyeballTarget = this.looker.update(now);
       const eyeballTarget = this.eyeballTargetEnabled ? this.eyeballTarget : lookerEyeballTarget;
-      if (this.eyeballTargetEnabled) debugger
+      // if (this.eyeballTargetEnabled) debugger
 
       if (eyeballTarget && this.firstPersonCurves) {
         const {
