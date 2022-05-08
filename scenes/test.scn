@@ -16,6 +16,6 @@
       }
     },
     { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/street/index.js" },
-    { "position": [ 0, 1, -5 ], "start_url": "http://localhost/lib/webaverse_resource/mesh-cut-example/" }
+    { "position": [ 0, 2, -5 ], "start_url": "http://localhost/lib/webaverse_resource/mesh-cut-example/" }
   ]
 }
