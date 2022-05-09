@@ -476,7 +476,7 @@ export const makeRagdollMesh = avatar => {
       physicsManager.setVelocity(meshBone, identityVector);
       physicsManager.setAngularVelocity(meshBone, identityVector);
     }
-    object.updateMatrixWorld();
+    // object.updateMatrixWorld(); // todo: don't need?
   };
   object.toAvatar = avatar => {
     avatar.modelBoneOutputs.Hips.position.set(0, 0, 0);
