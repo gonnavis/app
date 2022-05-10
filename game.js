@@ -940,7 +940,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
                 const lastHitTime = lastHitTimes.get(app) ?? 0;
                 const timeDiff = now - lastHitTime;
                 if (timeDiff > 1000) {
-                  const damage = typeof useAction.damage === 'number' ? useAction.damage : 10;
+                  const damage = typeof useAction.damage === 'number' ? useAction.damage : 0 /* 10 */;
                   const hitDirection = app.position.clone()
                     .sub(localPlayer.position);
                   hitDirection.y = 0;
