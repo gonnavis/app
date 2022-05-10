@@ -15,7 +15,7 @@
         "position": [1, 2, 3]
       }
     },
-    { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/grid/grid.glb" },
+    { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/grid/" },
     { "position": [ 0, 0, 0 ], "quaternion": [ 0, 0, 0, 1 ], "start_url": "http://localhost/lib/webaverse_resource/stacks/index.js" },
     { "position": [ 0, 1, -5 ], "start_url": "http://localhost/lib/webaverse_resource/bow/" },
     { "position": [ 1.5, 1, -5 ], "start_url": "http://localhost/lib/webaverse_resource/pistol/" },
@@ -27,7 +27,22 @@
 
     { "position": [ 0, 1, -1 ], "start_url": "http://localhost/lib/webaverse_resource/potion/" },
     { "position": [ 0, 1, -2 ], "start_url": "http://localhost/lib/webaverse_resource/potion/" },
-    { "position": [ 0, 1, -3 ], "start_url": "http://localhost/lib/webaverse_resource/potion/" }
+    { "position": [ 0, 1, -3 ], "start_url": "http://localhost/lib/webaverse_resource/potion/" },
+    {
+      "position": [ 0, 5, -7 ],
+      "quaternion": [ 0, 0, 0, 1 ],
+      "start_url": "/avatars/drake_hacker_v3_vian.vrm",
+      "components": [
+        {
+          "key": "npc",
+          "value": {
+            "name": "Drake",
+            "voice": "Shining Armor",
+            "bio": "His nickname is DRK. 15/M hacker. Loves guns. Likes plotting new hacks. He has the best equipment and is always ready for a fight."
+          }
+        }
+      ]
+    }
 
   ]
 }
