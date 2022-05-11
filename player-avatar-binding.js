@@ -177,6 +177,7 @@ export function applyPlayerActionsToAvatar(player, rig) {
 }
 // returns whether eyes were applied
 export function applyPlayerEyesToAvatar(player, rig) {
+  console.log(player.eyeballTargetEnabled)
   if (player.eyeballTargetEnabled) {
     rig.eyeballTarget.copy(player.eyeballTarget);
     rig.eyeballTargetEnabled = true;
@@ -187,6 +188,7 @@ export function applyPlayerEyesToAvatar(player, rig) {
   }
 }
 export function applyMirrorsToAvatar(player, rig, mirrors) {
+  debugger;
   rig.eyeballTargetEnabled = false;
 
   const closestMirror = mirrors.sort((a, b) => {
@@ -231,7 +233,9 @@ export function applyPlayerToAvatar(player, session, rig, mirrors) {
   
   applyPlayerModesToAvatar(player, session, rig);
   applyPlayerActionsToAvatar(player, rig);
-  applyPlayerEyesToAvatar(player, rig) || applyMirrorsToAvatar(player, rig, mirrors);
+  const isTarget = applyPlayerEyesToAvatar(player, rig);
+  // console.log(isTarget);
+  if (!isTarget) applyMirrorsToAvatar(player, rig, mirrors);
   
   applyFacePoseToAvatar(player, rig);
   applyPlayerPoseToAvatar(player, rig);

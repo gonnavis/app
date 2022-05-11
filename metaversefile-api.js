@@ -390,6 +390,7 @@ metaversefile.setApi({
     return mirrors;
   },
   registerMirror(mirror) {
+    debugger
     mirrors.push(mirror);
   },
   unregisterMirror(mirror) {
