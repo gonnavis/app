@@ -25,8 +25,11 @@ import transformControls from './transform-controls.js';
 import storyManager from './story.js';
 
 const localVector = new THREE.Vector3();
-// const localVector2 = new THREE.Vector3();
+const localVector2 = new THREE.Vector3();
 const localVector3 = new THREE.Vector3();
+const localVector4 = new THREE.Vector3();
+const localVector5 = new THREE.Vector3();
+const localVector6 = new THREE.Vector3();
 const localVector2D = new THREE.Vector2();
 const localVector2D2 = new THREE.Vector2();
 const localQuaternion = new THREE.Quaternion();
@@ -240,10 +243,25 @@ const _updateIo = timeDiff => {
       ioManager.lastCtrlKey = ioManager.keys.ctrl;
     }
     if (keysDirection.length() > 0 && physicsManager.getPhysicsEnabled()) {
-      localPlayer.characterPhysics.applyWasd(
-        keysDirection.normalize()
-          .multiplyScalar(game.getSpeed() * timeDiff)
-      );
+      // console.log(window.logVector3(keysDirection));
+      debugger
+
+      if (localPlayer.combatTargetEnabled) {
+        const arcLength = keysDirection.normalize().multiplyScalar(game.getSpeed() * timeDiff).length();
+        const playerPosition = localVector.copy(localPlayer.position).setY(0);
+        const targetPosition = localVector2.copy(localPlayer.combatTarget).setY(0);
+        const startVector = localVector4.copy(playerPosition).sub(targetPosition);
+        const radius = startVector.length();
+        const radian = arcLength / radius;
+        const destVector = localVector5.copy(startVector).applyAxisAngle(localVector6.set(0, 1, 0), radian);
+        localVector3.copy(destVector).sub(startVector);
+        localPlayer.characterPhysics.applyWasd(localVector3);
+      } else {
+        localPlayer.characterPhysics.applyWasd(
+          keysDirection.normalize()
+            .multiplyScalar(game.getSpeed() * timeDiff)
+        );
+      }
     }
   }
 };
