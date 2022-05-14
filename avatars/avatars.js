@@ -1886,7 +1886,9 @@ class Avatar {
         <div s  tyle="display:;">blendList: --- ${this.blendList?.map(applyFn=>applyFn.name.slice('applyFn'.length))}</div>
       `
     }
-    // _applyAnimation(this, now, moveFactors);
+    if (window.isApplyAnimation) {
+      _applyAnimation(this, now, moveFactors);
+    }
     // console.log(window.logVector3(this.modelBoneOutputs.Hips.getWorldDirection(localVector)));
 
     if (this.poseAnimation) {
