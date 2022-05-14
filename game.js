@@ -914,6 +914,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
     const useAction = localPlayer.getAction('use');
     if (useAction) {
       const _handleSword = () => {
+        return;
         localVector.copy(localPlayer.position)
           .add(localVector2.set(0, 0, -hitboxOffsetDistance).applyQuaternion(localPlayer.quaternion));
 
