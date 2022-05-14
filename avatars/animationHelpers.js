@@ -971,7 +971,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             localVector2.fromArray(v2);
             _clearXZ(localVector2, isPosition);
 
-            dst.copy(localVector2);
+            // dst.copy(localVector2);
+            dst.fromArray(v2);
 
             // const idleAnimation = _getIdleAnimation('walk');
             // const t3 = 0;
