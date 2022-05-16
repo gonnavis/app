@@ -972,6 +972,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex] + '2';
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
+          f = useTimeS / useAnimation.duration;
         }
 
         _handleDefault(spec);
