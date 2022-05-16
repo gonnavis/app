@@ -944,7 +944,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
     if (useAction) {
       const _handleSword = () => {
         const wearApp = loadoutManager.getSelectedApp();
-        if (wearApp && localPlayer.avatar?.useTime > 100) {
+        if (wearApp && localPlayer.avatar?.useTime > (useAction.index === 3 ? 1400 : 100)) {
           const useComponent = wearApp.getComponent('use');
           if (useComponent) {
             const damageBoxSize = useComponent.damageBoxSize ?? defaultDamageBoxSize;
@@ -968,8 +968,10 @@ const _gameUpdate = (timestamp, timeDiff) => {
                   const lastHitTime = lastHitTimes.get(app) ?? 0;
                   const lastHitIndex = lastHitIndices.get(app) ?? -1;
                   const timeDiff = now - lastHitTime;
-                  if (useAction.index !== lastHitIndex || timeDiff > 1000) {
-                    const damage = typeof useAction.damage === 'number' ? useAction.damage : 10;
+                  // if (useAction.index !== lastHitIndex || timeDiff > 1000) {
+                  if (useAction.index !== lastHitIndex) {
+                    console.log(useAction.index, localPlayer.avatar?.useTime);
+                    const damage = typeof useAction.damage === 'number' ? useAction.damage : 1;
                     const hitDirection = app.position.clone()
                       .sub(localPlayer.position);
                     hitDirection.y = 0;
