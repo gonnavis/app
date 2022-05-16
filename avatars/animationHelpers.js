@@ -74,7 +74,6 @@ let narutoRunAnimations;
 // let swordSideSlash;
 // let swordTopDownSlash;
 let hurtAnimations;
-let isFirst = true;
 
 const defaultSitAnimation = 'chair';
 // const defaultUseAnimation = 'combo';
@@ -177,7 +176,6 @@ async function loadAnimations() {
   for (const animation of animations) {
     animations.index[animation.name] = animation;
   }
-  window.animations = animations;
 
   /* const animationIndices = animationStepIndices.find(i => i.name === 'Fast Run.fbx');
           for (let i = 0; i < animationIndices.leftFootYDeltas.length; i++) {
@@ -242,37 +240,31 @@ export const loadPromise = (async () => {
     'left strafe walking.fbx',
     'right strafe walking.fbx',
   ].map(name => animations.index[name]);
-  window.walkingAnimations = walkingAnimations;
   const walkingBackwardAnimations = [
     'walking backwards.fbx',
     'left strafe walking reverse.fbx',
     'right strafe walking reverse.fbx',
   ].map(name => animations.index[name]);
-  window.walkingBackwardAnimations = walkingBackwardAnimations;
   const runningAnimations = [
     'Fast Run.fbx',
     'left strafe.fbx',
     'right strafe.fbx',
   ].map(name => animations.index[name]);
-  window.runningAnimations = runningAnimations;
   const runningBackwardAnimations = [
     'running backwards.fbx',
     'left strafe reverse.fbx',
     'right strafe reverse.fbx',
   ].map(name => animations.index[name]);
-  window.runningBackwardAnimations = runningBackwardAnimations;
   const crouchingForwardAnimations = [
     'Sneaking Forward.fbx',
     'Crouched Sneaking Left.fbx',
     'Crouched Sneaking Right.fbx',
   ].map(name => animations.index[name]);
-  window.crouchingForwardAnimations = crouchingForwardAnimations;
   const crouchingBackwardAnimations = [
     'Sneaking Forward reverse.fbx',
     'Crouched Sneaking Left reverse.fbx',
     'Crouched Sneaking Right reverse.fbx',
   ].map(name => animations.index[name]);
-  window.crouchingBackwardAnimations = crouchingBackwardAnimations;
   for (const animation of animations) {
     decorateAnimation(animation);
   }
@@ -906,7 +898,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        // debugger
         let useAnimation;
         let t2;
         const useTimeS = avatar.useTime / 1000;
@@ -1072,9 +1063,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           isPosition,
         } = spec;
 
-        if (k === 'mixamorigHips.quaternion') console.log('unuseAnimation');
-        // debugger
-
         _handleDefault(spec);
 
         const unuseTimeS = avatar.unuseTime / 1000;
@@ -1210,9 +1198,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.y = avatar.height * 0.55;
       }
     }
-    isFirst = false;
   }
-  isFirst = true;
 };
 
 export {

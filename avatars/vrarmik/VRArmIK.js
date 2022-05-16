@@ -71,7 +71,6 @@ const FINGER_SPECS = [
 
 		Update()
 		{
-      debugger
       this.shoulderAnchor.quaternion.identity();
       
 			Helpers.updateMatrixWorld(this.arm.transform);

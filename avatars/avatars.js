@@ -17,6 +17,7 @@ import {
   crouchMaxTime,
   // useMaxTime,
   aimMaxTime,
+  aimTransitionMaxTime,
   // avatarInterpolationFrameRate,
   // avatarInterpolationTimeDelay,
   // avatarInterpolationNumFrames,
@@ -395,7 +396,6 @@ const _makeDebugMesh = (avatar) => {
 
 class Avatar {
 	constructor(object, options = {}) {
-    window.avatar = this;
     if (!object) {
       object = {};
     }
@@ -780,7 +780,6 @@ class Avatar {
       Left_toe: this.legsManager.leftLeg.toe,
       Right_toe: this.legsManager.rightLeg.toe,
 	  };
-    window.modelBoneOutputs = this.modelBoneOutputs;
 
     this.debugMesh = null;
 
@@ -917,6 +916,13 @@ class Avatar {
     this.emoteAnimation = null;
     this.poseFactor = 0;
     this.poseAnimation = null;
+    this.aimState = false;
+    this.aimRightTransitionTime = 0;
+    this.aimRightFactor = 0;
+    this.aimRightFactorReverse = 1;
+    this.aimLeftTransitionTime = 0;
+    this.aimLeftFactor = 0;
+    this.aimLeftFactorReverse = 1;
     // this.throwState = null;
     // this.throwTime = 0;
     this.crouchTime = crouchMaxTime;
@@ -1185,7 +1191,7 @@ class Avatar {
       // retargetedAnimations,
     };
   }
-  static applyModelBoneOutputs(modelBones, modelBoneOutputs, /*topEnabled,*/ bottomEnabled, lHandEnabled, rHandEnabled) {
+  static applyModelBoneOutputs(avatar, modelBones, modelBoneOutputs, /*topEnabled,*/ bottomEnabled) {
     for (const k in modelBones) {
       const modelBone = modelBones[k];
       const modelBoneOutput = modelBoneOutputs[k];
@@ -1198,12 +1204,16 @@ class Avatar {
 
       // if (topEnabled) {
         if (k === 'Left_wrist') {
-          if (rHandEnabled) {
-            modelBone.quaternion.multiply(leftRotation); // center
+          if (avatar.aimLeftFactor > 0) {
+            // modelBone.quaternion.multiply(leftRotation); // center
+            localQuaternion.copy(modelBone.quaternion).multiply(leftRotation)
+            modelBone.quaternion.slerp(localQuaternion, avatar.aimLeftFactor);
           }
         } else if (k === 'Right_wrist') {
-          if (lHandEnabled) {
-            modelBone.quaternion.multiply(rightRotation); // center
+          if (avatar.aimRightFactor > 0) {
+            // modelBone.quaternion.multiply(rightRotation); // center
+            localQuaternion.copy(modelBone.quaternion).multiply(rightRotation)
+            modelBone.quaternion.slerp(localQuaternion, avatar.aimRightFactor);
           }
         }
       // }
@@ -1363,7 +1373,6 @@ class Avatar {
       ),
       'YXZ'
     );
-    // localEuler.y += Math.PI / 2;
     return localEuler.y;
   }
   async setQuality(quality) {
@@ -1402,6 +1411,63 @@ class Avatar {
       }
     }
   }
+  lerpShoulderTransforms() {
+    if (this.shoulderTransforms.handsEnabled[0]) {
+      this.shoulderTransforms.nonIKLeftShoulderAnchor.quaternion.copy(this.shoulderTransforms.leftShoulderAnchor.quaternion);
+      for (let key in this.shoulderTransforms.leftArm) {
+        this.shoulderTransforms.nonIKLeftArm[key].quaternion.copy(this.shoulderTransforms.leftArm[key].quaternion);
+      }
+    }
+    if (this.shoulderTransforms.handsEnabled[1]) {
+      this.shoulderTransforms.nonIKRightShoulderAnchor.quaternion.copy(this.shoulderTransforms.rightShoulderAnchor.quaternion);
+      for (let key in this.shoulderTransforms.rightArm) {
+        this.shoulderTransforms.nonIKRightArm[key].quaternion.copy(this.shoulderTransforms.rightArm[key].quaternion);
+      }
+    }
+
+    this.shoulderTransforms.Update();
+
+    if (this.shoulderTransforms.handsEnabled[0]) {
+      this.shoulderTransforms.lastLeftShoulderAnchor.quaternion.copy(this.shoulderTransforms.leftShoulderAnchor.quaternion);
+      for (let key in this.shoulderTransforms.leftArm) {
+        this.shoulderTransforms.lastLeftArm[key].quaternion.copy(this.shoulderTransforms.leftArm[key].quaternion);
+      }
+    }
+    if (this.shoulderTransforms.handsEnabled[1]) {
+      this.shoulderTransforms.lastRightShoulderAnchor.quaternion.copy(this.shoulderTransforms.rightShoulderAnchor.quaternion);
+      for (let key in this.shoulderTransforms.rightArm) {
+        this.shoulderTransforms.lastRightArm[key].quaternion.copy(this.shoulderTransforms.rightArm[key].quaternion);
+      }
+    }
+
+    if (this.aimRightFactor > 0) {
+      if (this.aimState) {
+        this.shoulderTransforms.leftShoulderAnchor.quaternion.slerp(this.shoulderTransforms.nonIKLeftShoulderAnchor.quaternion, this.aimRightFactorReverse);
+        for (let key in this.shoulderTransforms.leftArm) {
+          this.shoulderTransforms.leftArm[key].quaternion.slerp(this.shoulderTransforms.nonIKLeftArm[key].quaternion, this.aimRightFactorReverse);
+        }
+      } else {
+        this.shoulderTransforms.leftShoulderAnchor.quaternion.slerp(this.shoulderTransforms.lastLeftShoulderAnchor.quaternion, this.aimRightFactor);
+        for (let key in this.shoulderTransforms.leftArm) {
+          this.shoulderTransforms.leftArm[key].quaternion.slerp(this.shoulderTransforms.lastLeftArm[key].quaternion, this.aimRightFactor);
+        }
+      }
+    }
+    if (this.aimLeftFactor > 0) {
+      if (this.aimState) {
+        this.shoulderTransforms.rightShoulderAnchor.quaternion.slerp(this.shoulderTransforms.nonIKRightShoulderAnchor.quaternion, this.aimLeftFactorReverse);
+        for (let key in this.shoulderTransforms.rightArm) {
+          this.shoulderTransforms.rightArm[key].quaternion.slerp(this.shoulderTransforms.nonIKRightArm[key].quaternion, this.aimLeftFactorReverse);
+        }
+      } else {
+        this.shoulderTransforms.rightShoulderAnchor.quaternion.slerp(this.shoulderTransforms.lastRightShoulderAnchor.quaternion, this.aimLeftFactor);
+        for (let key in this.shoulderTransforms.rightArm) {
+          this.shoulderTransforms.rightArm[key].quaternion.slerp(this.shoulderTransforms.lastRightArm[key].quaternion, this.aimLeftFactor);
+        }
+      }
+    }
+  }
+
   update(timestamp, timeDiff) {
     const now = timestamp;
     const timeDiffS = timeDiff / 1000;
@@ -1413,6 +1479,10 @@ class Avatar {
     moveFactors.walkRunFactor = Math.min(Math.max((currentSpeed - walkFactorSpeed) / (runFactorSpeed - walkFactorSpeed), 0), 1);
     moveFactors.crouchFactor = Math.min(Math.max(1 - (this.crouchTime / crouchMaxTime), 0), 1);
     // console.log('current speed', currentSpeed, idleWalkFactor, walkRunFactor);
+    this.aimRightFactor = this.aimRightTransitionTime / aimTransitionMaxTime;
+    this.aimRightFactorReverse = 1 - this.aimRightFactor;
+    this.aimLeftFactor = this.aimLeftTransitionTime / aimTransitionMaxTime;
+    this.aimLeftFactorReverse = 1 - this.aimLeftFactor;
 
     const _updateHmdPosition = () => {
       const currentPosition = this.inputs.hmd.position;
@@ -1887,7 +1957,6 @@ class Avatar {
       `
     }
     _applyAnimation(this, now, moveFactors);
-    // console.log(window.logVector3(this.modelBoneOutputs.Hips.getWorldDirection(localVector)));
 
     if (this.poseAnimation) {
       _overwritePose(this.poseAnimation);
@@ -1908,8 +1977,7 @@ class Avatar {
     } */
 
 
-    // debugger
-    this.shoulderTransforms.Update();
+    this.lerpShoulderTransforms();
     this.legsManager.Update();
 
     _updateEyeTarget();
@@ -1917,12 +1985,11 @@ class Avatar {
 
     this.modelBoneOutputs.Root.updateMatrixWorld();
     Avatar.applyModelBoneOutputs(
+      this,
       this.foundModelBones,
       this.modelBoneOutputs,
       // this.getTopEnabled(),
       this.getBottomEnabled(),
-      this.getHandEnabled(0),
-      this.getHandEnabled(1),
     );
     // this.modelBones.Root.updateMatrixWorld();
 

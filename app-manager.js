@@ -205,11 +205,8 @@ class AppManager extends EventTarget {
   bindEvents() {
     this.addEventListener('trackedappadd', async e => {
       const {trackedApp} = e.data;
-      const trackedAppJson = trackedApp.toJSON();
-      const {instanceId, contentId, position, quaternion, scale, components: componentsString} = trackedAppJson;
-      // if (contentId.indexOf('sword') >= 0) debugger;
-      // if (contentId.indexOf('bow') >= 0) debugger;
-      const components = JSON.parse(componentsString);
+      const trackedAppBinding = trackedApp.toJSON();
+      const {instanceId, contentId, position, quaternion, scale, components} = trackedAppBinding;
       
       const p = makePromise();
       p.instanceId = instanceId;
@@ -246,8 +243,6 @@ class AppManager extends EventTarget {
 
       // attempt to load app
       try {
-        // if (contentId.indexOf('sword') >= 0) debugger;
-        // if (contentId.indexOf('bow') >= 0) debugger;
         const m = await metaversefile.import(contentId);
         if (!live) return _bailout(null);
 
@@ -265,8 +260,6 @@ class AppManager extends EventTarget {
           app.lastMatrix.copy(app.matrixWorld);
 
           // set components
-          // if (contentId.indexOf('sword') >= 0) debugger;
-          // if (contentId.indexOf('bow') >= 0) debugger;
           app.instanceId = instanceId;
           app.setComponent('physics', true);
           for (const {key, value} of components) {
@@ -277,16 +270,11 @@ class AppManager extends EventTarget {
         // initialize app
         {
           // console.log('add module', m);
-          // if (contentId.indexOf('sword') >= 0) debugger;
-          // if (contentId.indexOf('bow') >= 0) debugger;
           const mesh = await app.addModule(m);
           if (!live) return _bailout(app);
           if (!mesh) {
             console.warn('failed to load object', {contentId});
           }
-
-          // if (contentId.indexOf('sword') >= 0) debugger;
-          // if (contentId.indexOf('bow') >= 0) debugger;
 
           this.addApp(app);
         }
@@ -437,7 +425,7 @@ class AppManager extends EventTarget {
     trackedApp.set('position', position);
     trackedApp.set('quaternion', quaternion);
     trackedApp.set('scale', scale);
-    trackedApp.set('components', JSON.stringify(components));
+    trackedApp.set('components', components);
     return trackedApp;
   }
   addTrackedApp(
@@ -667,8 +655,7 @@ class AppManager extends EventTarget {
       const position = trackedApp.get('position');
       const quaternion = trackedApp.get('quaternion');
       const scale = trackedApp.get('scale');
-      const componentsString = trackedApp.get('components');
-      const components = jsonParse(componentsString) ?? [];
+      const components = trackedApp.get('components') ?? [];
       const object = {
         position,
         quaternion,
