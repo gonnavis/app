@@ -332,7 +332,6 @@ export const loadPromise = (async () => {
   aimAnimations = {
     swordSideIdle: animations.index['sword_idle_side.fbx'],
     swordSideIdleStatic: animations.index['sword_idle_side_static.fbx'],
-
     swordSideSlash: animations.index['sword_side_slash.fbx'],
     swordSideSlashStep: animations.index['sword_side_slash_step.fbx'],
     swordTopDownSlash: animations.index['sword_topdown_slash.fbx'],
@@ -963,10 +962,12 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         let useAnimation;
         let t2;
         const useTimeS = avatar.useTime / 1000;
+        let f;
         if (avatar.useAnimation) {
           const useAnimationName = avatar.useAnimation;
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
+          f = useTimeS / useAnimation.duration;
         } else if (avatar.useAnimationCombo.length > 0) {
           const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex] + '2';
           useAnimation = useAnimations[useAnimationName];
@@ -1009,6 +1010,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             //   .add(localVector2);
           }
         }
+        return f;
       };
     } else if (
       avatar.useAnimationEnvelope.length > 0
@@ -1078,7 +1080,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const {
           animationTrackName: k,
           dst,
-          isTop,
+          // isTop,
           isPosition,
         } = spec;
 
@@ -1272,6 +1274,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     }
   };
 
+  let lastF;
   for (const spec of avatar.animationMappings) {
     const {
       // animationTrackName: k,
@@ -1280,7 +1283,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    applyFn(spec);
+    lastF = applyFn(spec);
     _blendFly(spec);
     _blendActivateAction(spec);
 
@@ -1294,6 +1297,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.y = avatar.height * 0.55;
       }
     }
+  }
+  if (lastF >= 1) {
+    avatar.dispatchAnimationEndEvent();
   }
 };
 
