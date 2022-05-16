@@ -750,8 +750,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     //     } = spec;
 
     //     // const animation = animations.index['walking.fbx']
-    //     const animation = animations.index['hit_sword_topdown.fbx']
-    //     debugger
+    //     const animation = animations.index['heavy_sword1.fbx']
     //     const t2 = timeSeconds;
     //     const src2 = animation.interpolants[k];
     //     const v2 = src2.evaluate(t2 % animation.duration);
