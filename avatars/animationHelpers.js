@@ -332,10 +332,17 @@ export const loadPromise = (async () => {
   aimAnimations = {
     swordSideIdle: animations.index['sword_idle_side.fbx'],
     swordSideIdleStatic: animations.index['sword_idle_side_static.fbx'],
+
     swordSideSlash: animations.index['sword_side_slash.fbx'],
     swordSideSlashStep: animations.index['sword_side_slash_step.fbx'],
     swordTopDownSlash: animations.index['sword_topdown_slash.fbx'],
     swordTopDownSlashStep: animations.index['sword_topdown_slash_step.fbx'],
+
+    swordSideSlash2: animations.index['heavy_sword1.fbx'],
+    swordSideSlashStep2: animations.index['heavy_sword2.fbx'],
+    swordTopDownSlash2: animations.index['heavy_sword3.fbx'],
+    swordTopDownSlashStep2: animations.index['heavy_sword4.fbx'],
+
     swordUndraw: animations.index['sword_undraw.fbx'],
   };
   useAnimations = mergeAnimations({
@@ -961,7 +968,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
         } else if (avatar.useAnimationCombo.length > 0) {
-          const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex];
+          const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex] + '2';
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
         }
