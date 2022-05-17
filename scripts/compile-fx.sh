@@ -7,6 +7,7 @@ rm -f *-spritesheet.ktx2
 for f2 in *.mov; do
   rm -f lol0*;
   echo extract frames "$f2"
+  echo ----------
   ffmpeg -i "$f2" -f image2 -vf fps=fps=24 lol%03d.png
   echo montage "$f2"
   a=$(convert "lol001.png" -format '#%[hex:u.p{0,0}]' info:-)
@@ -26,3 +27,6 @@ for f2 in *.mov; do
   fi;
 done;
 node -e 'a = require("fs").readFileSync("./fx-files.txt", "utf8").split("\n").filter(l => !!l).map(s => {m = s.match(/^([0-9\.]+) (.+)$/); numFrames = parseFloat(m[1]); name = m[2]; return {name,numFrames};}); console.log(JSON.stringify(a, null, 2))' >fx-files.json
+
+# Prevent compile window auto close after error, to see the error details. https://askubuntu.com/a/20353/1012283
+exec $SHELL
