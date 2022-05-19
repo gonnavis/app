@@ -27,8 +27,13 @@ import storyManager from './story.js';
 import raycastManager from './raycast-manager.js';
 
 const localVector = new THREE.Vector3();
-// const localVector2 = new THREE.Vector3();
+const localVector2 = new THREE.Vector3();
 const localVector3 = new THREE.Vector3();
+const localVector4 = new THREE.Vector3();
+const localVector5 = new THREE.Vector3();
+const localVector6 = new THREE.Vector3();
+const localVector7 = new THREE.Vector3();
+const localVector8 = new THREE.Vector3();
 const localVector2D = new THREE.Vector2();
 const localVector2D2 = new THREE.Vector2();
 const localQuaternion = new THREE.Quaternion();
@@ -230,10 +235,43 @@ const _updateIo = timeDiff => {
       _updateVertical(keysDirection);
     } else {
       // vismark
-      const cameraEuler = camera.rotation.clone();
-      cameraEuler.x = 0;
-      cameraEuler.z = 0;
-      keysDirection.applyEuler(cameraEuler);
+      const zTargeting = metaversefile.useZTargeting();
+      if (zTargeting?.focusTargetReticle?.position) {
+        const moveDistance = localVector.copy(keysDirection).setY(0)
+          .normalize()
+          .multiplyScalar(game.getSpeed() * timeDiff * timeDiff)
+          .length();
+        if (moveDistance !== 0) {
+          const playerPosition = localVector.copy(localPlayer.position).setY(0);
+          const targetPosition = localVector2.copy(zTargeting.focusTargetReticle.position).setY(0)
+          const distanceVector = localVector4.copy(playerPosition).sub(targetPosition);
+          localVector7.set(0, 0, 0);
+          localVector8.set(0, 0, 0);
+          if (window.ioManager.keys.up || window.ioManager.keys.down) {
+            const sign = window.ioManager.keys.down ? 1 : -1;
+            localVector7.copy(distanceVector).normalize().multiplyScalar(sign * moveDistance);
+          }
+          if (window.ioManager.keys.left || window.ioManager.keys.right) {
+            const arcLength = moveDistance
+            const radius = distanceVector.length();
+            const radian = arcLength / radius;
+            const sign = window.ioManager.keys.right ? 1 : -1;
+            const destVector = localVector5.copy(distanceVector).applyAxisAngle(localVector6.set(0, 1, 0), sign * radian);
+            localVector8.copy(destVector).sub(distanceVector);
+          }
+          keysDirection.addVectors(localVector7, localVector8).multiplyScalar(1 / timeDiff);
+        } else {
+          const cameraEuler = camera.rotation.clone(); // todo: duplicated
+          cameraEuler.x = 0;
+          cameraEuler.z = 0;
+          keysDirection.applyEuler(cameraEuler);
+        }
+      } else {
+        const cameraEuler = camera.rotation.clone();
+        cameraEuler.x = 0;
+        cameraEuler.z = 0;
+        keysDirection.applyEuler(cameraEuler);
+      }
       
       if (ioManager.keys.ctrl && !ioManager.lastCtrlKey) {
         game.toggleCrouch();

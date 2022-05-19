@@ -88,7 +88,7 @@ class CharacterPhysics {
       // if (cameraManager.focus && cameraManager.target2) {
       //   const target2Position = cameraManager.target2.npcPlayer ? cameraManager.target2.npcPlayer.position : cameraManager.target2.position;
       const zTargeting = metaversefileApi.useZTargeting();
-      if (zTargeting?.focusTargetReticle?.position) {
+      if (false && zTargeting?.focusTargetReticle?.position) {
         const moveDistance = localVector.copy(this.velocity).setY(0).length() * timeDiffS;
         if (moveDistance !== 0) {
           const playerPosition = localVector.copy(this.player.position).setY(0);
@@ -101,7 +101,6 @@ class CharacterPhysics {
             localVector7.copy(distanceVector).normalize().multiplyScalar(sign * moveDistance);
           }
           if (window.ioManager.keys.left || window.ioManager.keys.right) {
-            debugger
             const arcLength = moveDistance
             const radius = distanceVector.length();
             const radian = arcLength / radius;
@@ -177,6 +176,7 @@ class CharacterPhysics {
         } else {
           // if (cameraManager.focus && cameraManager.target2) {
           //   const target2Position = cameraManager.target2.npcPlayer ? cameraManager.target2.npcPlayer.position : cameraManager.target2.position;
+          
           const zTargeting = metaversefileApi.useZTargeting();
           if (zTargeting?.focusTargetReticle?.position) {
             localQuaternion.setFromUnitVectors(
