@@ -240,11 +240,13 @@ export const loadPromise = (async () => {
     'left strafe walking.fbx',
     'right strafe walking.fbx',
   ].map(name => animations.index[name]);
+  window.walkingAnimations = walkingAnimations;
   const walkingBackwardAnimations = [
     'walking backwards.fbx',
     'left strafe walking reverse.fbx',
     'right strafe walking reverse.fbx',
   ].map(name => animations.index[name]);
+  window.walkingBackwardAnimations = walkingBackwardAnimations;
   const runningAnimations = [
     'Fast Run.fbx',
     'left strafe.fbx',
