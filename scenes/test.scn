@@ -1,0 +1,55 @@
+{
+  "objects": [
+    {
+      "type": "application/light",
+      "content": {
+        "lightType": "ambient",
+        "args": [[255, 255, 255], 2]
+      }
+    },
+    {
+      "type": "application/light",
+      "content": {
+        "lightType": "directional",
+        "args": [[255, 255, 255], 2],
+        "position": [1, 2, 3]
+      }
+    },
+     {
+      "type": "application/wind",
+      "content": {
+        "windType": "directional",
+        "direction": [1, 0, 0],
+        "Radius": 10,
+        "mainPower": 1,
+        "noiseScale": 1,
+        "windFrequency": 1
+      }
+    },
+    { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/street/index.js" },
+    {
+      "position": [
+        0,
+        5,
+        -7
+      ],
+      "quaternion": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "start_url": "/avatars/drake_hacker_v3_vian.vrm",
+      "components": [
+        {
+          "key": "npc",
+          "value": {
+            "name": "Drake",
+            "voice": "Shining Armor",
+            "bio": "His nickname is DRK. 15/M hacker. Loves guns. Likes plotting new hacks. He has the best equipment and is always ready for a fight."
+          }
+        }
+      ]
+    }
+  ]
+}
