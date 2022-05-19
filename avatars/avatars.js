@@ -467,6 +467,7 @@ class Avatar {
     this.skinnedMeshes = skinnedMeshes;
     this.skeleton = skeleton;
     this.modelBones = modelBones;
+    window.modelBones = modelBones;
     this.foundModelBones = foundModelBones;
     this.flipZ = flipZ;
     this.flipY = flipY;
@@ -787,6 +788,7 @@ class Avatar {
       Left_toe: this.legsManager.leftLeg.toe,
       Right_toe: this.legsManager.rightLeg.toe,
 	  };
+    window.modelBoneOutputs = this.modelBoneOutputs;
 
     this.debugMesh = null;
 
