@@ -41,7 +41,6 @@ import {
   // avatarInterpolationTimeDelay,
   // avatarInterpolationNumFrames,
 } from '../constants.js';
-import game from '../game.js';
 
 const localVector = new Vector3();
 const localVector2 = new Vector3();
@@ -53,8 +52,6 @@ const localQuaternion3 = new Quaternion();
 const localQuaternion4 = new Quaternion();
 const localQuaternion5 = new Quaternion();
 const localQuaternion6 = new Quaternion();
-
-const identityQuaternion = new Quaternion();
 
 let animations;
 let animationStepIndices;
@@ -754,30 +751,36 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     _getHorizontalBlend(k, lerpFn, isPosition, dst);
   };
   const _getApplyFn = () => {
-    // { // play one animation purely.
-    //   return spec => {
-    //     const {
-    //       animationTrackName: k,
-    //       dst,
-    //       // isTop,
-    //     } = spec;
- 
-    //     // const animation = animations.index['walking.fbx']
-    //     const animation = animations.index['pick_up_idle.fbx']
-    //     const t2 = timeSeconds;
-    //     const src2 = animation.interpolants[k];
-    //     const v2 = src2.evaluate(t2 % animation.duration);
+    { // play one animation purely.
+      return spec => {
+        const {
+          animationTrackName: k,
+          dst,
+          // isTop,
+        } = spec;
 
-    //     dst.fromArray(v2);
-    //   };
-    // }
+        // const animation = animations.index['walking.fbx']
+        // const animation = animations.index['2hand Idle.fbx'];
+        // const animation = animations.index['Two Hand Sword Combo.fbx'];
+        // const animation = animations.index['simple_90.fbx']
+        const animation = animations.index['sword_dash.fbx']
+        // debugger
+        const t2 = timeSeconds / 2;
+        // const t2 = timeSeconds;
+        const src2 = animation.interpolants[k];
+        const v2 = src2.evaluate(t2 % animation.duration);
+        // const v2 = src2.evaluate(0);
+        // const v2 = src2.evaluate(1);
+
+        dst.fromArray(v2);
+      };
+    }
     if (avatar.jumpState) {
       return spec => {
         const {
           animationTrackName: k,
           dst,
           // isTop,
-          isArm,
         } = spec;
 
         const t2 = avatar.jumpTime / 1000 * 0.6 + 0.7;
@@ -785,14 +788,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const v2 = src2.evaluate(t2);
 
         dst.fromArray(v2);
-
-        if (avatar.pickUpState && isArm) {
-          const holdAnimation = holdAnimations['pick_up_idle'];
-          const src2 = holdAnimation.interpolants[k];
-          const t2 = (now / 1000) % holdAnimation.duration;
-          const v2 = src2.evaluate(t2);
-          dst.fromArray(v2);
-        }
       };
     }
     if (avatar.sitState) {
@@ -922,17 +917,14 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         let useAnimation;
         let t2;
         const useTimeS = avatar.useTime / 1000;
-        let f;
         if (avatar.useAnimation) {
           const useAnimationName = avatar.useAnimation;
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
-          f = useTimeS / useAnimation.duration;
         } else if (avatar.useAnimationCombo.length > 0) {
           const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex];
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
-          f = useTimeS / useAnimation.duration;
         } else if (avatar.useAnimationEnvelope.length > 0) {
           let totalTime = 0;
           for (let i = 0; i < avatar.useAnimationEnvelope.length - 1; i++) {
@@ -994,7 +986,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
               .add(localVector2);
           }
         }
-        return f;
       };
     } else if (avatar.hurtAnimation) {
       return spec => {
@@ -1147,10 +1138,8 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           animationTrackName: k,
           dst,
           lerpFn,
-          boneName,
           isTop,
           isPosition,
-          isArm,
         } = spec;
 
         _handleDefault(spec);
@@ -1161,37 +1150,11 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         const v2 = src2.evaluate(t2);
 
         if (isTop) {
-          // #version 1
-          if (boneName === 'Left_arm' || boneName === 'Right_arm') {
+          if (isPosition) {
             dst.fromArray(v2);
           } else {
-            // if (boneName === 'Left_elbow' || boneName === 'Right_elbow') {
-            // if (['Left_elbow', 'Right_elbow', 'Left_arm', 'Right_arm', 'Left_shoulder', 'Right_shoulder'].includes(boneName)) {
-            if (isArm) {
-              dst
-                .slerp(identityQuaternion, walkRunFactor * 0.7 + crouchFactor * (1 - idleWalkFactor) * 0.5)
-                .premultiply(localQuaternion2.fromArray(v2));
-            } else {
-              dst
-                .premultiply(localQuaternion2.fromArray(v2));
-            }
+            dst.premultiply(localQuaternion2.fromArray(v2));
           }
-
-          // // #version 2
-          // if (['Spine', 'Chest', 'UpperChest', 'Neck', 'Head'].includes(boneName)) {
-          //   dst.premultiply(localQuaternion2.fromArray(v2));
-          // } else {
-          //   dst.fromArray(v2);
-          // }
-
-          //
-
-          // if (isPosition) {
-          //   dst.fromArray(v2);
-          // } else {
-          //   dst.premultiply(localQuaternion2.fromArray(v2));
-          //   // dst.multiply(localQuaternion2.fromArray(v2));
-          // }
         }
 
         // _clearXZ(dst, isPosition);
@@ -1257,7 +1220,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     }
   };
 
-  let lastF;
   for (const spec of avatar.animationMappings) {
     const {
       // animationTrackName: k,
@@ -1266,9 +1228,9 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
       isPosition,
     } = spec;
 
-    lastF = applyFn(spec);
-    _blendFly(spec);
-    _blendActivateAction(spec);
+    applyFn(spec);
+    // _blendFly(spec);
+    // _blendActivateAction(spec);
 
     // ignore all animation position except y
     if (isPosition) {
@@ -1280,9 +1242,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.y = avatar.height * 0.55;
       }
     }
-  }
-  if (lastF >= 1) {
-    game.handleAnimationEnd();
   }
 };
 
