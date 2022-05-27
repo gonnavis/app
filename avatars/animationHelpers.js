@@ -774,7 +774,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         dst.fromArray(v1);
 
         if (jumpTimeS > 0.5) {
-          const t2 = jumpTimeS;
+          const t2 = jumpTimeS * 2;
           const src2 = fallLoopAnimation.interpolants[k];
           const v2 = src2.evaluate(t2 % fallLoopAnimation.duration);
           if (!isPosition) localQuaternion.fromArray(v2);
@@ -1171,7 +1171,7 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
         // debugger
         // const t2 = unjumpTimeS + 37 / 30;
         // const src2 = jumpAnimation.interpolants[k];
-        const t2 = unjumpTimeS;
+        const t2 = unjumpTimeS * 50;
         const src2 = landingAnimation.interpolants[k];
         // const src2 = sitAnimations.chair.interpolants[k];
         const v2 = src2.evaluate(t2);
