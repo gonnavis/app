@@ -794,6 +794,23 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
     _getHorizontalBlend(k, lerpFn, isPosition, dst);
   };
   const _getApplyFn = () => {
+    if (0) { // play one animation purely.
+      return spec => {
+        const {
+          animationTrackName: k,
+          dst,
+          // isTop,
+        } = spec;
+
+        // const animation = animations.index['walking.fbx']
+        const animation = animations.index['Standing Aim Walk Forward.fbx']
+        const t2 = timeSeconds;
+        const src2 = animation.interpolants[k];
+        const v2 = src2.evaluate(t2 % animation.duration);
+
+        dst.fromArray(v2);
+      };
+    }
     if (avatar.jumpState) {
       return spec => {
         const {
@@ -943,33 +960,6 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
           const useAnimationName = avatar.useAnimationCombo[avatar.useAnimationIndex];
           useAnimation = useAnimations[useAnimationName];
           t2 = Math.min(useTimeS, useAnimation.duration);
-        } else if (avatar.useAnimationEnvelope.length > 0) {
-          let totalTime = 0;
-          for (let i = 0; i < avatar.useAnimationEnvelope.length - 1; i++) {
-            const animationName = avatar.useAnimationEnvelope[i];
-            const animation = useAnimations[animationName];
-            totalTime += animation.duration;
-          }
-
-          if (totalTime > 0) {
-            let animationTimeBase = 0;
-            for (let i = 0; i < avatar.useAnimationEnvelope.length - 1; i++) {
-              const animationName = avatar.useAnimationEnvelope[i];
-              const animation = useAnimations[animationName];
-              if (useTimeS < (animationTimeBase + animation.duration)) {
-                useAnimation = animation;
-                break;
-              }
-              animationTimeBase += animation.duration;
-            }
-            if (useAnimation !== undefined) { // first iteration
-              t2 = Math.min(useTimeS - animationTimeBase, useAnimation.duration);
-            } else { // loop
-              const secondLastAnimationName = avatar.useAnimationEnvelope[avatar.useAnimationEnvelope.length - 2];
-              useAnimation = useAnimations[secondLastAnimationName];
-              t2 = (useTimeS - animationTimeBase) % useAnimation.duration;
-            }
-          }
         }
 
         _handleDefault(spec);
@@ -1002,6 +992,96 @@ export const _applyAnimation = (avatar, now, moveFactors) => {
             dst
               .sub(localVector3)
               .add(localVector2);
+          }
+        }
+      };
+    } else if (
+      avatar.useAnimationEnvelope.length > 0
+    ) {
+      return spec => {
+        const {
+          animationTrackName: k,
+          dst,
+          isTop,
+          isPosition,
+        } = spec;
+
+        let useAnimation;
+        let t2;
+        const useTimeS = avatar.useTime / 1000;
+        let totalTime = 0;
+        for (let i = 0; i < avatar.useAnimationEnvelope.length - 1; i++) {
+          const animationName = avatar.useAnimationEnvelope[i];
+          const animation = useAnimations[animationName];
+          totalTime += animation.duration;
+        }
+
+        if (totalTime > 0) {
+          let animationTimeBase = 0;
+          for (let i = 0; i < avatar.useAnimationEnvelope.length - 1; i++) {
+            const animationName = avatar.useAnimationEnvelope[i];
+            const animation = useAnimations[animationName];
+            if (useTimeS < (animationTimeBase + animation.duration)) {
+              useAnimation = animation;
+              break;
+            }
+            animationTimeBase += animation.duration;
+          }
+          if (useAnimation !== undefined) { // first iteration
+            t2 = Math.min(useTimeS - animationTimeBase, useAnimation.duration);
+          } else { // loop
+            const secondLastAnimationName = avatar.useAnimationEnvelope[avatar.useAnimationEnvelope.length - 2];
+            useAnimation = useAnimations[secondLastAnimationName];
+            t2 = (useTimeS - animationTimeBase) % useAnimation.duration;
+          }
+        }
+
+        _handleDefault(spec);
+
+        if (useAnimation) {
+          if (useAnimation === useAnimations.bowIdle) {
+            const src2 = useAnimations.bowIdle.interpolants[k];
+            const v2 = src2.evaluate(t2 % useAnimations.bowIdle.duration);
+
+            const src3 = animations.index['Standing Aim Walk Forward.fbx'].interpolants[k];
+            const v3 = src3.evaluate((useTimeS * (37 / 32)) % animations.index['Standing Aim Walk Forward.fbx'].duration);
+
+            dst.fromArray(v2);
+
+            if (!isPosition) {
+              localQuaternion3.fromArray(v3);
+              dst.slerp(localQuaternion3, idleWalkFactor);
+            } else {
+              localVector3.fromArray(v3);
+              dst.lerp(localVector3, idleWalkFactor);
+            }
+          } else if (useAnimation === useAnimations.bowDraw) {
+            const src2 = useAnimations.bowDraw.interpolants[k];
+            const v2 = src2.evaluate(t2 % useAnimations.bowDraw.duration);
+
+            const src3 = animations.index['Standing Aim Walk Forward.fbx'].interpolants[k];
+            const v3 = src3.evaluate((useTimeS * (37 / 32)) % animations.index['Standing Aim Walk Forward.fbx'].duration);
+            if (!isPosition) localQuaternion3.fromArray(v3);
+            else localVector3.fromArray(v3);
+
+            dst.fromArray(v2);
+
+            if (isTop) {
+              let t = (useTimeS - useAnimations.bowDraw.duration + 0.3) / 0.3;
+              t = THREE.MathUtils.clamp(t, 0, 1);
+              t *= idleWalkFactor;
+              if (!isPosition) {
+                dst.slerp(localQuaternion3, t);
+              } else {
+                dst.lerp(localVector3, t);
+              }
+            } else {
+              if (!isPosition) {
+                dst.slerp(localQuaternion3, idleWalkFactor);
+              } else {
+                dst.lerp(localVector3, idleWalkFactor);
+              }
+            }
           }
         }
       };
