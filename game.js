@@ -35,6 +35,7 @@ import {getLocalPlayer, setLocalPlayer} from './players.js';
 import npcManager from './npc-manager.js';
 import raycastManager from './raycast-manager.js';
 import zTargeting from './z-targeting.js';
+import mobManager from './mob-manager.js';
 
 // const {contractNames} = metaversefileConstants;
 
@@ -400,7 +401,6 @@ const _getNextUseIndex = animationCombo => {
   }
 }
 const _startUse = () => {
-  const localPlayer = metaversefileApi.useLocalPlayer();
   const wearApp = loadoutManager.getSelectedApp();
   if (wearApp) {
     const useComponent = wearApp.getComponent('use');
@@ -944,7 +944,7 @@ const _gameUpdate = (timestamp, timeDiff) => {
           .unproject(camera);
         localPlayer.avatar.eyeTargetInverted = false;
         localPlayer.avatar.eyeTargetEnabled = true;
-      } else if (zTargeting?.focusTargetReticle) {
+      } else if (zTargeting?.focusTargetReticle?.position) {
         localPlayer.avatar.eyeTarget.copy(zTargeting.focusTargetReticle.position);
         localPlayer.avatar.eyeTargetInverted = true;
         localPlayer.avatar.eyeTargetEnabled = true;
@@ -1042,6 +1042,18 @@ class GameManager extends EventTarget {
     this.usableObject = null;
     this.hoverEnabled = false;
   }
+  //
+  findNearby(){
+    return zTargeting.findNearbyTarget();
+  }
+  menuTarget(newTarget){
+    zTargeting.handleTarget(newTarget)
+  }
+  checkTargetDrop(){
+    zTargeting.checkDrop();
+  }
+
+  //
   getMenu() {
     return this.menuOpen;
   }

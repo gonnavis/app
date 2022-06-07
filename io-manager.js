@@ -67,6 +67,7 @@ ioManager.keys = {
   doubleTap: false,
   space: false,
   ctrl: false,
+  
 };
 const lastKeysDownTime = {
   keyW: 0,
@@ -229,7 +230,6 @@ const _updateIo = timeDiff => {
       keysDirection.applyQuaternion(camera.quaternion);
       _updateVertical(keysDirection);
     } else {
-      // vismark
       const cameraEuler = camera.rotation.clone();
       cameraEuler.x = 0;
       cameraEuler.z = 0;
@@ -242,7 +242,6 @@ const _updateIo = timeDiff => {
       ioManager.lastCtrlKey = ioManager.keys.ctrl;
     }
     if (keysDirection.length() > 0 && physicsManager.getPhysicsEnabled()) {
-      // console.log(JSON.stringify(ioManager.keys));
       localPlayer.characterPhysics.applyWasd(
         keysDirection.normalize()
           .multiplyScalar(game.getSpeed() * timeDiff)
@@ -308,8 +307,12 @@ ioManager.keydown = e => {
     case 9: { // tab
       break;
     }
-    case 49: // 1
-    case 50: // 2
+    case 49:
+    case 50: { // 2 -> temporarilly going to be used to toggle between targets -> issue #3066
+      // to do: find a way to spawn mobs into any scene for testing
+      game.findNearby();
+      break;
+    }
     case 51: // 3
     case 52: // 4
     case 53: // 5
@@ -485,6 +488,7 @@ ioManager.keydown = e => {
       const timeDiff = now - lastKeysDownTime.keyE;
       if (timeDiff < doubleTapTime) {
         game.menuMiddleToggle();
+        //game.findNearby();
       } else {
         game.menuMiddleUp();
 
@@ -699,6 +703,13 @@ ioManager.keyup = e => {
       game.menuUnDoubleTap();
       break;
     }
+
+
+
+
+
+
+
     case 46: { // delete
       const object = game.getMouseSelectedObject();
       if (object) {

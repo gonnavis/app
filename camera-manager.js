@@ -1,3 +1,14 @@
+/* eslint-disable space-before-blocks */
+/* eslint-disable space-infix-ops */
+/* eslint-disable dot-notation */
+/* eslint-disable spaced-comment */
+/* eslint-disable no-multiple-empty-lines */
+/* eslint-disable promise/param-names */
+/* eslint-disable lines-between-class-members */
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable comma-spacing */
+/* eslint-disable linebreak-style */
+/* eslint-disable indent */
 import * as THREE from 'three';
 import {getRenderer, camera, scene} from './renderer.js';
 // import * as notifications from './notifications.js';
@@ -10,8 +21,8 @@ import {getLocalPlayer} from './players.js';
 import {minFov, maxFov, midFov} from './constants.js';
 // import { updateRaycasterFromMouseEvent } from './util.js';
 import easing from './easing.js';
+import { MathUtils } from 'three';
 import zTargeting from './z-targeting.js';
-import game from './game.js';
 
 const cubicBezier = easing(0, 1, 0, 1);
 const cubicBezier2 = easing(0.5, 0, 0.5, 1);
@@ -46,10 +57,9 @@ const cameraOffsetDefault = 0.65;
 const maxFocusTime = 300;
 
 const cameraOffset = new THREE.Vector3();
-window.cameraOffset = cameraOffset;
 let cameraOffsetTargetZ = cameraOffset.z;
 let cameraOffsetLimitZ = Infinity;
-const combatLockBiasQuaternion = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0.5, 0));
+const localPlane = new THREE.Plane();
 
 // let cameraOffsetZ = cameraOffset.z;
 const rayVectorZero = new THREE.Vector3(0,0,0);
@@ -62,15 +72,15 @@ const rayVectorZero = new THREE.Vector3(0,0,0);
 // const rayOriginArray = [new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0),new THREE.Vector3(0,0,0)]; // 6 elements
 // const rayDirectionArray = [new THREE.Quaternion(),new THREE.Quaternion(),new THREE.Quaternion(),new THREE.Quaternion(),new THREE.Quaternion(),new THREE.Quaternion()]; // 6 elements
 
-/* function getNormal(u, v) {
-  return localPlane.setFromCoplanarPoints(zeroVector, u, v).normal;
-} */
-/* function signedAngleTo(u, v) {
-  // Get the signed angle between u and v, in the range [-pi, pi]
-  const angle = u.angleTo(v);
-  console.log('signed angle to', angle, u.dot(v));
-  return (u.dot(v) >= 0 ? 1 : -1) * angle;
-} */
+// function getNormal(u, v) {
+//   return localPlane.setFromCoplanarPoints(zeroVector, u, v).normal;
+// }
+// function signedAngleTo(u, v) {
+//   // Get the signed angle between u and v, in the range [-pi, pi]
+//   const angle = u.angleTo(v);
+//   console.log('signed angle to', angle, u.dot(v));
+//   return (u.dot(v) >= 0 ? 1 : -1) * angle;
+// }
 /* function signedAngleTo(a, b, v) {
   const s = v.crossVectors(a, b).length();
   // s = length(cross_product(a, b))
@@ -84,7 +94,6 @@ const getSideOfY = (() => {
   const localVector = new THREE.Vector3();
   const localVector2 = new THREE.Vector3();
   const localQuaternion = new THREE.Quaternion();
-  const localPlane = new THREE.Plane();
 
   function getSideOfY(a, b) {
     localQuaternion.setFromRotationMatrix(
@@ -177,6 +186,7 @@ class CameraManager extends EventTarget {
     // this.pointerLockEpoch = 0;
     this.shakes = [];
     this.focus = false;
+    this.fullFocus = false;
     this.lastFocusChangeTime = 0; // XXX this needs to be removed
     this.fovFactor = 0;
     this.lastNonzeroDirectionVector = new THREE.Vector3(0, 0, -1);
@@ -299,6 +309,7 @@ class CameraManager extends EventTarget {
     if (!this.target) {
       this.targetQuaternion.copy(camera.quaternion);
     }
+    zTargeting.checkDrop();
   }
   handleWheelEvent(e) {
     if (!this.target) {
@@ -343,8 +354,38 @@ class CameraManager extends EventTarget {
       }));
     }
   }
+  //
+
+  //compare the direction you're looking at to a given object
+  //for example the one you're locked onto
+  compareAngletoCam(objectPos){
+    // var declaration
+    var obToCamVector = new THREE.Vector3();
+    var camVector = new THREE.Vector3(0,0,-1);
+    var angleMag;
+
+    localVector2.copy(camera.position);
+    //grab world pos of object relative to camera
+    obToCamVector = localVector2.sub(objectPos);
+
+    //Get camera direction
+    camera.getWorldDirection(camVector);
+     
+    
+    //normalize vectors
+    obToCamVector.normalize();
+    
+    //compare local angles
+    angleMag = camVector.angleTo(obToCamVector);
+    //convert to deg
+    angleMag = MathUtils.radToDeg(angleMag);
+    // console.log('Cam vec', camVector, 'ob to cam vec', obToCamVector, 'angle dif:', angleMag);`
+    return angleMag;
+  }
+
+
+  //
   setDynamicTarget(target = null, target2 = null) {
-    console.log('setDynamicTarget');
     this.targetType = 'dynamic';
     this.target = target;
     this.target2 = target2;
@@ -415,12 +456,8 @@ class CameraManager extends EventTarget {
         this.lerpStartTime = timestamp;
         this.lastTimestamp = timestamp;
 
-        
-        cameraOffset.x = 0;
-        cameraOffset.y = 0;
         // cameraOffsetZ = -cameraOffsetDefault;
         cameraOffset.z = -cameraOffsetDefault;
-        game.menuUnaim();
       };
       _setCameraToDynamicTarget();
     } else {
@@ -428,7 +465,6 @@ class CameraManager extends EventTarget {
     }
   }
   setStaticTarget(target = null, target2 = null) {
-    console.log('setStaticTarget');
     this.targetType = 'static';
     this.target = target;
     this.target2 = target2;
@@ -458,8 +494,6 @@ class CameraManager extends EventTarget {
         const timestamp = performance.now();
         this.lerpStartTime = timestamp;
         this.lastTimestamp = timestamp;
-        cameraOffset.x = -1;
-        cameraOffset.y = -2.7;
 
         // cameraOffsetZ = -cameraOffsetDefault;
         // cameraOffset.z = -cameraOffsetDefault;
@@ -479,8 +513,6 @@ class CameraManager extends EventTarget {
     const timestamp = performance.now();
     this.lerpStartTime = timestamp;
     this.lastTimestamp = timestamp;
-    cameraOffset.x = 0;
-    cameraOffset.y = 0;
   }
   startCinematicScript(cinematicScript) {
     this.cinematicScript = cinematicScript;
@@ -512,55 +544,6 @@ class CameraManager extends EventTarget {
         this.lastTimestamp = timestamp;
       };
       _setLerpDelta(camera.position, camera.quaternion);
-
-      const _setZLock = () => {
-        const avatarCameraOffset = session ? rayVectorZero : this.getCameraOffset();
-
-        this.targetQuaternion.setFromUnitVectors(
-          localVector3.set(0, 0, -1),
-          localVector.copy(zTargeting.focusTargetReticle.position).setY(0).sub(localVector2.copy(localPlayer.position).setY(0)).normalize(),
-        )
-
-        this.targetPosition.copy(localPlayer.position)
-        .sub(
-          localVector2.copy(avatarCameraOffset)
-            .applyQuaternion(this.targetQuaternion)
-        );
-
-        // look at npcPlayer's side
-        localVector.copy(localPlayer.position).sub(zTargeting.focusTargetReticle.position).setY(0)
-          .applyAxisAngle(localVector2.set(0, 1, 0), - Math.PI / 2)
-          .normalize().multiplyScalar(3)
-          .add(zTargeting.focusTargetReticle.position)
-        // console.log(window.logVector3(localVector));
-
-        if (zTargeting.focusTargetReticle) {
-          localMatrix.lookAt(this.targetPosition, localVector, localVector2.set(0, 1, 0));
-          // localMatrix.lookAt(this.targetPosition, zTargeting.focusTargetReticle.position, localVector2.set(0, 1, 0));
-        } else {
-          localMatrix.lookAt(this.targetPosition, this.target.position, localVector2.set(0, 1, 0));
-        }
-        this.targetQuaternion.setFromRotationMatrix(localMatrix);
-          
-        // // free camera.rotation.x
-        // localEuler.setFromQuaternion(this.targetQuaternion, camera.rotation.order);
-        // localEuler.x = camera.rotation.x;
-        // // this.targetQuaternion.multiply(combatLockBiasQuaternion);
-        // this.targetQuaternion.setFromEuler(localEuler);
-
-        // move up/left whole viewport (move down/right camera)
-        this.targetPosition.add(
-          localVector2.set(0.5, -2, 0).applyQuaternion(this.targetQuaternion)
-        );
-
-        camera.position.copy(this.targetPosition);
-        camera.quaternion.copy(this.targetQuaternion);
-      }
-      if (this.targetType === 'static' && zTargeting.focusTargetReticle) {
-        // console.log('_setZLock()');
-        _setZLock();
-      }
-
       camera.updateMatrixWorld();
     } else if (this.cinematicScript) {
       const timeDiff = timestamp - this.cinematicScriptStartTime;
@@ -721,6 +704,7 @@ class CameraManager extends EventTarget {
         camera.position.copy(this.sourcePosition)
           .lerp(this.targetPosition, factor);
 
+
         localEuler.setFromQuaternion(this.targetQuaternion, 'YXZ');
         localEuler.z = 0;
         camera.quaternion.copy(this.sourceQuaternion)
@@ -797,10 +781,6 @@ class CameraManager extends EventTarget {
       }
     };
     _shakeCamera();
-
-    // if (window.isCombatFocus && window.npcPlayers && window.npcPlayers[0]) {
-    //   this.focusCamera(window.npcPlayers[0].position);
-    // }
 
     camera.updateMatrixWorld();
 

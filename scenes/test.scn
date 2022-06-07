@@ -15,15 +15,12 @@
         "position": [1, 2, 3]
       }
     },
-    { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/atmospheric-sky/" },
-    { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/block/" },
-    { "position": [ -200, 0, 5 ], "scale": [7, 7, 7], "start_url": "http://localhost/lib/webaverse_resource/ramp/" },
-    { "position": [0, 1, 10], "start_url": "http://localhost/lib/webaverse_resource/silsword/" },
+    { "position": [ 0, 0, 0 ], "start_url": "http://localhost/lib/webaverse_resource/street/index.js" },
     {
       "position": [
         0,
-        3,
-        -7
+        0,
+        1
       ],
       "quaternion": [
         0,
@@ -33,13 +30,63 @@
       ],
       "type": "application/npc",
       "content": {
-        "name": "Ann",
+        "name": "Ann0",
         "avatarUrl": "/avatars/ann.vrm",
         "voice": "Maud Pie",
         "bio": "13/F Lisk Witch (black mage). She is 100% quirky and is always creating crazy new potions. She has a dark streak and is known to torment her teachers when they give her bad grades.",
         "wear": [
           {
-            "start_url": "http://localhost/lib/webaverse_resource/character-stats-banner/"
+            "start_url": "https://webaverse.github.io/character-stats-banner/"
+          }
+        ]
+      }
+    },
+    {
+      "position": [
+        2,
+        0,
+        1
+      ],
+      "quaternion": [
+        0,
+        0.7071067811865475,
+        0,
+        0.7071067811865475
+      ],
+      "type": "application/npc",
+      "content": {
+        "name": "Ann2",
+        "avatarUrl": "/avatars/ann.vrm",
+        "voice": "Maud Pie",
+        "bio": "13/F Lisk Witch (black mage). She is 100% quirky and is always creating crazy new potions. She has a dark streak and is known to torment her teachers when they give her bad grades.",
+        "wear": [
+          {
+            "start_url": "https://webaverse.github.io/character-stats-banner/"
+          }
+        ]
+      }
+    }, 
+    {
+      "position": [
+        4,
+        0,
+        1
+      ],
+      "quaternion": [
+        0,
+        0.7071067811865475,
+        0,
+        0.7071067811865475
+      ],
+      "type": "application/npc",
+      "content": {
+        "name": "Ann4",
+        "avatarUrl": "/avatars/ann.vrm",
+        "voice": "Maud Pie",
+        "bio": "13/F Lisk Witch (black mage). She is 100% quirky and is always creating crazy new potions. She has a dark streak and is known to torment her teachers when they give her bad grades.",
+        "wear": [
+          {
+            "start_url": "https://webaverse.github.io/character-stats-banner/"
           }
         ]
       }

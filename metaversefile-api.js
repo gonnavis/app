@@ -47,10 +47,10 @@ import debug from './debug.js';
 import * as sceneCruncher from './scene-cruncher.js';
 import * as scenePreviewer from './scene-previewer.js';
 import * as sounds from './sounds.js';
+import * as lodder from './lod.js';
 import hpManager from './hp-manager.js';
 import particleSystemManager from './particle-system.js';
 import domRenderEngine from './dom-renderer.jsx';
-import zTargeting from './z-targeting.js';
 import dropManager from './drop-manager.js';
 import hitManager from './character-hitter.js';
 
@@ -515,9 +515,6 @@ metaversefile.setApi({
       throw new Error('useCleanup cannot be called outside of render()');
     }
   },
-  useZTargeting() {
-    return zTargeting;
-  },
   useLocalPlayer() {
     return getLocalPlayer();
   },
@@ -542,6 +539,9 @@ metaversefile.setApi({
   },
   useLoaders() {
     return loaders;
+  },
+  useLodder() {
+    return lodder;
   },
   useMeshLodder() {
     return meshLodManager;
