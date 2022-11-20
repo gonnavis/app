@@ -454,7 +454,7 @@ const _startHacks = () => {
 
   window.bodys = []
   {
-    const size = new THREE.Vector3(3, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
+    const size = new THREE.Vector3(2, 1, 1).multiplyScalar(0.9).multiplyScalar(s);
     const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
     const mesh = new THREE.Mesh(geometry, material);
     window.meshRDHips = mesh;
@@ -468,16 +468,12 @@ const _startHacks = () => {
     window.bodys.push(body);
   }
   {
-    const size = new THREE.Vector3(3, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
+    const size = new THREE.Vector3(2, 1, 1).multiplyScalar(0.9).multiplyScalar(s);
     const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
     const mesh = new THREE.Mesh(geometry, material);
     window.meshRDChest = mesh;
     rootScene.add(mesh);
-    mesh.position.set(x, y + 2 * s, z);
-
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+    mesh.position.set(x + 2, y, z);
 
     mesh.updateMatrixWorld();
 
@@ -485,132 +481,132 @@ const _startHacks = () => {
     window.bodyRDChest = body;
     window.bodys.push(body);
   }
-  {
-    const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDHead = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x, y + 4 * s, z);
+  // {
+  //   const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDHead = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x, y + 4 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDHead = body;
-    window.bodys.push(body);
-  }
-  {
-    const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDLeftLeg = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x - 1 * s, y - 2 * s, z);
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDHead = body;
+  //   window.bodys.push(body);
+  // }
+  // {
+  //   const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDLeftLeg = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x - 1 * s, y - 2 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDLeftLeg = body;
-    window.bodys.push(body);
-  }
-  {
-    const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDRightLeg = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x + 1 * s, y - 2 * s, z);
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDLeftLeg = body;
+  //   window.bodys.push(body);
+  // }
+  // {
+  //   const size = new THREE.Vector3(1, 2, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDRightLeg = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x + 1 * s, y - 2 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDRightLeg = body;
-    window.bodys.push(body);
-  }
-  {
-    const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDLeftCalf = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x - 1 * s, y - 4.5 * s, z);
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDRightLeg = body;
+  //   window.bodys.push(body);
+  // }
+  // {
+  //   const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDLeftCalf = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x - 1 * s, y - 4.5 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDLeftCalf = body;
-    window.bodys.push(body);
-  }
-  {
-    const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDRightCalf = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x + 1 * s, y - 4.5 * s, z);
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDLeftCalf = body;
+  //   window.bodys.push(body);
+  // }
+  // {
+  //   const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDRightCalf = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x + 1 * s, y - 4.5 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDRightCalf = body;
-    window.bodys.push(body);
-  }
-  {
-    const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDLeftArm = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x - 2 * s, y + 1.5 * s, z);
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDRightCalf = body;
+  //   window.bodys.push(body);
+  // }
+  // {
+  //   const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDLeftArm = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x - 2 * s, y + 1.5 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDLeftArm = body;
-    window.bodys.push(body);
-  }
-  {
-    const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
-    const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
-    const mesh = new THREE.Mesh(geometry, material);
-    window.meshRDRightArm = mesh;
-    rootScene.add(mesh);
-    mesh.position.set(x + 2 * s, y + 1.5 * s, z);
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDLeftArm = body;
+  //   window.bodys.push(body);
+  // }
+  // {
+  //   const size = new THREE.Vector3(1, 3, 1).multiplyScalar(0.9).multiplyScalar(s);
+  //   const geometry = new THREE.BoxGeometry(size.x, size.y, size.z);
+  //   const mesh = new THREE.Mesh(geometry, material);
+  //   window.meshRDRightArm = mesh;
+  //   rootScene.add(mesh);
+  //   mesh.position.set(x + 2 * s, y + 1.5 * s, z);
 
-    // mesh.position.x += (Math.random() - 0.5) * 10;
-    // mesh.position.y += (Math.random() - 0.5) * 10;
-    // mesh.position.z += (Math.random() - 0.5) * 10;
+  //   // mesh.position.x += (Math.random() - 0.5) * 10;
+  //   // mesh.position.y += (Math.random() - 0.5) * 10;
+  //   // mesh.position.z += (Math.random() - 0.5) * 10;
 
-    mesh.updateMatrixWorld();
+  //   mesh.updateMatrixWorld();
 
-    const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
-    window.bodyRDRightArm = body;
-    window.bodys.push(body);
-  }
+  //   const body = physicsManager.addBoxGeometry(mesh.position, mesh.quaternion, size.clone().multiplyScalar(0.5), true);
+  //   window.bodyRDRightArm = body;
+  //   window.bodys.push(body);
+  // }
 
   const PxD6Axis = {
     eX: 0, // !< motion along the X axis
@@ -628,14 +624,14 @@ const _startHacks = () => {
   };
 
   // bend knee
-  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
-  const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
-  const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
-  const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
-  const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0), new THREE.Vector3(0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
-  const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0), new THREE.Vector3(-0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(1, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Quaternion(), new THREE.Quaternion(), true);
+  // const jointChestHead = physicsManager.addJoint(window.bodyRDChest, window.bodyRDHead, new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsLeftLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDLeftLeg, new THREE.Vector3(-1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointHipsRightLeg = physicsManager.addJoint(window.bodyRDHips, window.bodyRDRightLeg, new THREE.Vector3(1, -1, 0), new THREE.Vector3(0, 1, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
+  // const jointLeftLegLeftCalf = physicsManager.addJoint(window.bodyRDLeftLeg, window.bodyRDLeftCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
+  // const jointRightLegRightCalf = physicsManager.addJoint(window.bodyRDRightLeg, window.bodyRDRightCalf, new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.5, 0), new THREE.Quaternion(), new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI / 2, 0, 0)));
+  // const jointChestLeftArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDLeftArm, new THREE.Vector3(-1.5, 0.5, 0), new THREE.Vector3(0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
+  // const jointChestRightArm = physicsManager.addJoint(window.bodyRDChest, window.bodyRDRightArm, new THREE.Vector3(1.5, 0.5, 0), new THREE.Vector3(-0.5, 1, 0), new THREE.Quaternion(), new THREE.Quaternion());
 
   // // stand
   // const jointHipsChest = physicsManager.addJoint(window.bodyRDHips, window.bodyRDChest, new THREE.Vector3(0, 1, 0).multiplyScalar(s), new THREE.Vector3(0, -1, 0).multiplyScalar(s), new THREE.Quaternion(), new THREE.Quaternion(), true);
